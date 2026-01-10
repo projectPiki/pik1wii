@@ -64,7 +64,7 @@ jaudio/dvdthread.c:
 	.sbss       start:0x8049E098 end:0x8049E0E0
 
 jaudio/rate.c:
-	.sdata      start:0x80497368 end:0x80497380
+	.sdata      start:0x80497368 end:0x80497378
 	.sbss       start:0x8049E0E0 end:0x8049E0E8
 
 jaudio/audiomesg.c:
@@ -73,6 +73,7 @@ jaudio/audiomesg.c:
 jaudio/stackchecker.c:
 	.text       start:0x80009FC0 end:0x8000AFA0
 	.bss        start:0x8035F2D8 end:0x80360140
+	.sdata      start:0x80497378 end:0x80497380
 
 jaudio/dspproc.c:
 	.text       start:0x8000AFA0 end:0x8000B2A0
@@ -3020,16 +3021,21 @@ plugPikiYamashita/simpleParticle.cpp:
 plugPikiYamashita/spectrumCursorMgr.cpp:
 	.text       start:0x80261DF0 end:0x802627B8
 	.ctors      start:0x802F62B0 end:0x802F62B4
+	.rodata     start:0x8030C9B0 end:0x8030C9E8
+	.sdata2     start:0x804A3518 end:0x804A3548
 
 plugPikiYamashita/TAIAattack.cpp:
 	.text       start:0x802627B8 end:0x80263B00
 	.ctors      start:0x802F62B4 end:0x802F62B8
 	.data       start:0x8034EDD0 end:0x8034EE10
+	.sdata2     start:0x804A3548 end:0x804A3568
 
 plugPikiYamashita/TAIAeffect.cpp:
 	.text       start:0x80263B00 end:0x80263F48
 	.ctors      start:0x802F62B8 end:0x802F62BC
 	.data       start:0x8034EE10 end:0x8034EE30
+	.sdata      start:0x8049DB28 end:0x8049DB58
+	.sdata2     start:0x804A3568 end:0x804A3570
 
 plugPikiYamashita/TAIAjudge.cpp:
 	.text       start:0x80263F48 end:0x80264D00
@@ -3054,11 +3060,13 @@ plugPikiYamashita/TAIAreaction.cpp:
 plugPikiYamashita/TAIbeatle.cpp:
 	.text       start:0x80269408 end:0x8026C748
 	.ctors      start:0x802F62CC end:0x802F62D0
+	.rodata     start:0x8030C9E8 end:0x8030CA58
 	.data       start:0x8034F298 end:0x8034F458
 
 plugPikiYamashita/TAIdororo.cpp:
 	.text       start:0x8026C748 end:0x8026F100
 	.ctors      start:0x802F62D0 end:0x802F62D4
+	.rodata     start:0x8030CA58 end:0x8030CC40
 	.data       start:0x8034F458 end:0x8034F628
 
 plugPikiYamashita/TAIeffectAttack.cpp:
@@ -3069,22 +3077,26 @@ plugPikiYamashita/TAIeffectAttack.cpp:
 plugPikiYamashita/TAIhibaA.cpp:
 	.text       start:0x80270260 end:0x80271084
 	.ctors      start:0x802F62D8 end:0x802F62DC
+	.rodata     start:0x8030CC40 end:0x8030CDC0
 	.data       start:0x8034F650 end:0x8034F730
 	.sbss       start:0x8049EF58 end:0x8049EF60
 
 plugPikiYamashita/TAIkabekuiA.cpp:
 	.text       start:0x80271084 end:0x80271FC4
 	.ctors      start:0x802F62DC end:0x802F62E0
+	.rodata     start:0x8030CDC0 end:0x8030CF98
 	.data       start:0x8034F730 end:0x8034F868
 
 plugPikiYamashita/TAIkabekuiB.cpp:
 	.text       start:0x80271FC4 end:0x802730C0
 	.ctors      start:0x802F62E0 end:0x802F62E4
+	.rodata     start:0x8030CF98 end:0x8030D198
 	.data       start:0x8034F868 end:0x8034F950
 
 plugPikiYamashita/TAIkabekuiC.cpp:
 	.text       start:0x802730C0 end:0x80274B34
 	.ctors      start:0x802F62E4 end:0x802F62E8
+	.rodata     start:0x8030D198 end:0x8030D418
 	.data       start:0x8034F950 end:0x8034FB18
 
 os/init/__start.c:
