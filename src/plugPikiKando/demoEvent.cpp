@@ -1,0 +1,237 @@
+#include "DebugLog.h"
+#include "Demo.h"
+#include "GameStat.h"
+#include "GoalItem.h"
+#include "ItemMgr.h"
+#include "NaviMgr.h"
+#include "Pcam/Camera.h"
+#include "Pcam/CameraManager.h"
+#include "PikiMgr.h"
+#include "PlayerState.h"
+#include "Traversable.h"
+#include "UfoItem.h"
+#include "gameflow.h"
+
+DemoEventMgr* demoEventMgr;
+
+/**
+ * @todo: Documentation
+ * @note UNUSED Size: 00009C
+ */
+DEFINE_ERROR(__LINE__) // Never used in the DLL
+
+/**
+ * @todo: Documentation
+ * @note UNUSED Size: 0000F4
+ */
+DEFINE_PRINT("demoEvent")
+
+/**
+ * @todo: Documentation
+ * @note UNUSED Size: 000090
+ */
+immut char* DemoEventMgr::getEventName(int, int)
+{
+	// UNUSED FUNCTION
+}
+
+/**
+ * @todo: Documentation
+ * @note UNUSED Size: 000018
+ */
+immut char* DemoEventMgr::getSenderName(int)
+{
+	// UNUSED FUNCTION
+}
+
+/**
+ * @todo: Documentation
+ */
+DemoEventMgr::DemoEventMgr()
+{
+}
+
+/**
+ * @todo: Documentation
+ */
+void DemoEventMgr::act(int cmd, int type)
+{
+	switch (cmd) {
+	case 5:
+	{
+		switch (type) {
+		case 0:
+		{
+			gameflow.mWorldClock.setTime(gameflow.mParameters->mEndHour());
+			break;
+		}
+		case 1:
+		{
+			int count = 0;
+			Iterator it(pikiMgr);
+			CI_LOOP(it)
+			{
+				Piki* piki = (Piki*)(*it);
+				if (piki->isAlive()) {
+					GoalItem* goal = itemMgr->getContainer(piki->mColor);
+					if (goal) {
+						goal->enterGoal(piki);
+						count++;
+					}
+				}
+			}
+			PRINT("***** FORCE ENTERPIKIS %d\n", count);
+			break;
+		}
+		}
+		break;
+	}
+	case 0:
+	{
+		switch (type) {
+		case 0:
+		{
+			naviMgr->getNavi()->enterAllPikis();
+			break;
+		}
+		}
+		break;
+	}
+	case 1:
+	{
+		UfoItem* ufo = itemMgr->getUfo();
+		if (ufo) {
+			switch (type) {
+			case 0:
+			{
+				ufo->startConeEffect(0);
+				break;
+			}
+			case 4:
+			{
+				ufo->startConeEffect(1);
+				break;
+			}
+			case 5:
+			{
+				ufo->startConeEffect(2);
+				break;
+			}
+			case 6:
+			{
+				ufo->finishConeEffect();
+				ufo->setSpotActive(false);
+				playerState->setNavi(true);
+				Navi* navi = naviMgr->getNavi();
+				if (navi) {
+					PRINT("**** RIDE UFO \n");
+					navi->rideUfo();
+				}
+				break;
+			}
+			case 1:
+			{
+				ufo->startTakeoff();
+				pikiMgr->dumpAll();
+				break;
+			}
+			case 2:
+			{
+				ufo->startLevelFlag(playerState->mShipUpgradeLevel);
+				break;
+			}
+			case 3:
+			{
+				PRINT("__________________________________________________\n");
+				PRINT("******************* START YOZORA *****************\n");
+				PRINT("__________________________________________________\n");
+				ufo->startYozora();
+				break;
+			}
+			case 7:
+			{
+				PRINT("__________________________________________________\n");
+				PRINT("******************* START GALAXY *****************\n");
+				PRINT("__________________________________________________\n");
+				ufo->startGalaxy();
+				break;
+			}
+			}
+		}
+		break;
+	}
+	case 2:
+	case 3:
+	case 4:
+	{
+		int goalID     = cmd - 2;
+		GoalItem* goal = itemMgr->getContainer(goalID);
+		if (goal) {
+			switch (type) {
+			case 0:
+			{
+				goal->mCurrAnimId++;
+				goal->emitPiki();
+				break;
+			}
+			case 2:
+			{
+				goal->startConeShrink();
+				break;
+			}
+			case 4:
+			{
+				if (playerState->hasContainer(goalID + 3)) {
+					goal->startConeEmit();
+				}
+				break;
+			}
+			case 1:
+			{
+				if (playerState->hasContainer(goalID)) {
+					goal->startTakeoff();
+				}
+				break;
+			}
+			case 3:
+			{
+				if (playerState->hasContainer(goalID)) {
+					goal->startLand();
+				}
+				break;
+			}
+			case 5:
+			{
+				PRINT("boot onion\n");
+				goal->startBoot();
+				playerState->setContainer(goalID + 3);
+				if (playerState->isTutorial() && playerState->mShipEffectPartFlag & 8) {
+					Navi* navi = naviMgr->getNavi();
+					playerState->mShipEffectPartFlag &= ~8;
+					cameraMgr->mCamera->finishMotion();
+					cameraMgr->mCamera->mControlsEnabled = true;
+#if defined(VERSION_PIKIDEMO)
+					cameraMgr->mCamera->startCamera(navi, 1, 0);
+#else
+					cameraMgr->mCamera->startMotion(1, 0);
+#endif
+					PRINT("*** FINISH MOTION \n");
+				}
+				break;
+			}
+			case 6:
+			{
+				if (playerState->hasContainer(goalID) && GameStat::allPikis[goalID] == 0) {
+					PRINT("***** SUPPLY 1 PiKI (COLOR = %d)\n", goalID);
+					playerState->mResultFlags.setOn(zen::RESFLAG_PikminSeedStageUp);
+					goal->mCurrAnimId++;
+					goal->emitPiki();
+				}
+				break;
+			}
+			}
+		}
+		break;
+	}
+	}
+}
