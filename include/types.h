@@ -134,12 +134,13 @@ typedef u32 HWND;
 // original codebase is represented as closely as possible, warts and all, but portability (MWCC 1.2.5 was the *last* version of MWCC
 // to allow this non-standard behavior) is also desireable.  Luckily, almost all const-incorrectness in the codebase is merely a result
 // of apathy, so this cv-qualifier macro exists to document and fix the places that could have been const-correct but weren't.
-#define immut TERNARY_BUILD_MATCHING(, const)
+#define immut const
 
 // Nakata had a bad habit of writing mutable references to lifetime-extended rvalues when a value type would have sufficed, so this macro
 // is named for him.  MWCC 1.2.5 sometimes optimizes `Type foo = Type(...)` *really* poorly compared to `Type foo(...)`, so unless you are
 // using a different compiler, this const-correctness fix might generate worse code.
-#define NRef TERNARY_BUILD_MATCHING(&, )
+// #define NRef TERNARY_BUILD_MATCHING(&, )
+#define NRef
 
 // In early revisions of Pikmin 1, Ogawa was confused on which enum he was supposed to use for `SeSystem::playSysSe`/`stopSysSe`.
 #if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
@@ -190,7 +191,8 @@ typedef u32 HWND;
 #define STACK_PAD_VAR(n) TERNARY_BUILD_MATCHING(do { int pad[n]; } while (0), (void)0)
 
 // Create a temporary struct to pad the stack by some number of words
-#define STACK_PAD_STRUCT(n) TERNARY_BUILD_MATCHING(if (0)(struct { int pad[n]; }) {}, (void)0)
+// #define STACK_PAD_STRUCT(n) TERNARY_BUILD_MATCHING(if (0)(struct { int pad[n]; }) {}, (void)0)
+#define STACK_PAD_STRUCT(n) (void)0
 
 inline void padStack(void)
 {

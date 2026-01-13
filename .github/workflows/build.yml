@@ -6,16 +6,13 @@ on:
 
 jobs:
   build:
-    # This is a *private* build container.
-    # See docs/github_actions.md for more information.
-    container: ghcr.io/my/game-build:main
+    container: ghcr.io/projectpiki/build:main
 
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # Add game versions here
-        version: [GAMEID]
+        version: [R9IE01] # TODO: other versions
 
     steps:
     # Checkout the repository

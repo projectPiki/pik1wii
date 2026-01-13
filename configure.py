@@ -230,6 +230,7 @@ cflags_base = [
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
+    f"-DDTK_CONFIG_NONMATCHING={config.non_matching:d}",
 ]
 
 # Debug flags
@@ -240,7 +241,7 @@ else:
     cflags_base.extend(
         ["-DNDEBUG=1", "-w off"]
     )  # no I DO not want to talk about my car's extended warranty.
-    
+
 # DEVELOP flags
 if args.develop:
     cflags_base.extend(["-DDEVELOP=1"])
@@ -283,7 +284,7 @@ cflags_jaudio = [
     "-common on",
     "-func_align 32",
     "-lang c++",
-    "-DNDEBUG=1", 
+    "-DNDEBUG=1",
     "-w off",
     "-use_lmw_stmw on",
 ]
@@ -324,7 +325,6 @@ cflags_runtime = [
 ]
 
 
-
 config.linker_version = "GC/3.0a5.2"
 
 
@@ -358,7 +358,7 @@ config.libs = [
         "lib": "sysBootup",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "sysBootup.cpp"),
         ],
@@ -367,7 +367,7 @@ config.libs = [
         "lib": "jaudio",
         "cflags": cflags_jaudio,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "jaudio",
+        "progress_category": "jaudio",
         "objects": [
             Object(NonMatching, "jaudio/dummyprobe.c"),
             Object(NonMatching, "jaudio/memory.c"),
@@ -487,9 +487,7 @@ config.libs = [
                 extra_cflags=["-sdata 8"],
             ),
             Object(NonMatching, "TRK_Hollywood_Revolution/CircleBuffer.c"),
-            Object(
-                NonMatching, "TRK_Hollywood_Revolution/MWCriticalSection_gc.c"
-            ),
+            Object(NonMatching, "TRK_Hollywood_Revolution/MWCriticalSection_gc.c"),
         ],
     },
     {
@@ -662,7 +660,7 @@ config.libs = [
             Object(NonMatching, "mtx/vec.c"),
         ],
     ),
-     RevolutionLib(
+    RevolutionLib(
         "NdevExi2A",
         [
             Object(NonMatching, "NdevExi2A/DebuggerDriver.c"),
@@ -914,7 +912,7 @@ config.libs = [
         "lib": "sysCommon",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "sysCommon/atx.cpp"),
             Object(NonMatching, "sysCommon/ayuStack.cpp"),
@@ -943,7 +941,7 @@ config.libs = [
         "lib": "sysDolphin",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "sysDolphin/dgxGraphics.cpp"),
             Object(NonMatching, "sysDolphin/gameApp.cpp"),
@@ -951,14 +949,13 @@ config.libs = [
             Object(NonMatching, "sysDolphin/system.cpp"),
             Object(NonMatching, "sysDolphin/texture.cpp"),
             Object(NonMatching, "sysDolphin/controllerMgr.cpp"),
-            
         ],
     },
     {
         "lib": "plugPikiColin",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiColin/animMgr.cpp"),
             Object(NonMatching, "plugPikiColin/cardSelect.cpp"),
@@ -985,14 +982,14 @@ config.libs = [
             Object(NonMatching, "plugPikiColin/ninLogo.cpp"),
             Object(NonMatching, "plugPikiColin/parameters.cpp"),
             Object(NonMatching, "plugPikiColin/plugPiki.cpp"),
-            Object(NonMatching, "plugPikiColin/titles.cpp"), 
+            Object(NonMatching, "plugPikiColin/titles.cpp"),
         ],
     },
     {
         "lib": "THPSimple",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "thp",
+        "progress_category": "thp",
         "objects": [
             Object(NonMatching, "THPSimple.c"),
         ],
@@ -1001,7 +998,7 @@ config.libs = [
         "lib": "plugPikiKando",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiKando/testSoundSection.cpp"),
             Object(NonMatching, "plugPikiKando/ufoAnim.cpp"),
@@ -1085,7 +1082,7 @@ config.libs = [
             Object(NonMatching, "plugPikiKando/globalShapes.cpp"),
             Object(NonMatching, "plugPikiKando/gmWin.cpp"),
             Object(NonMatching, "plugPikiKando/goalItem.cpp"),
-            Object(NonMatching, "plugPikiKando/interactBattle.cpp"), 
+            Object(NonMatching, "plugPikiKando/interactBattle.cpp"),
             Object(NonMatching, "plugPikiKando/interactEtc.cpp"),
             Object(NonMatching, "plugPikiKando/interactGrab.cpp"),
             Object(NonMatching, "plugPikiKando/interactPullout.cpp"),
@@ -1126,7 +1123,7 @@ config.libs = [
             Object(NonMatching, "plugPikiKando/plantMgr.cpp"),
             Object(NonMatching, "plugPikiKando/playerState.cpp"),
             Object(NonMatching, "plugPikiKando/radarInfo.cpp"),
-            Object(NonMatching, "plugPikiKando/resultFlag.cpp"),  
+            Object(NonMatching, "plugPikiKando/resultFlag.cpp"),
             Object(NonMatching, "plugPikiKando/ropeCreature.cpp"),
             Object(NonMatching, "plugPikiKando/ropeItem.cpp"),
             Object(NonMatching, "plugPikiKando/routeMgr.cpp"),
@@ -1137,14 +1134,14 @@ config.libs = [
             Object(NonMatching, "plugPikiKando/seMgr.cpp"),
             Object(NonMatching, "plugPikiKando/simpleAI.cpp"),
             Object(NonMatching, "plugPikiKando/smartPtr.cpp"),
-            Object(NonMatching, "plugPikiKando/soundMgr.cpp"),  
+            Object(NonMatching, "plugPikiKando/soundMgr.cpp"),
         ],
     },
     {
         "lib": "plugPikiNakata",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiNakata/taijudgementactions.cpp"),
             Object(NonMatching, "plugPikiNakata/taikinoko.cpp"),
@@ -1178,8 +1175,8 @@ config.libs = [
             Object(NonMatching, "plugPikiNakata/nlibgeometry3d.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibgeometry.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibgraphics.cpp"),
-            Object(NonMatching, "plugPikiNakata/nlibmath.cpp"),   
-            Object(NonMatching, "plugPikiNakata/nlibspline.cpp"), 
+            Object(NonMatching, "plugPikiNakata/nlibmath.cpp"),
+            Object(NonMatching, "plugPikiNakata/nlibspline.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibsystem.cpp"),
             Object(NonMatching, "plugPikiNakata/panianimator.cpp"),
             Object(NonMatching, "plugPikiNakata/panipikianimmgr.cpp"),
@@ -1201,14 +1198,13 @@ config.libs = [
             Object(NonMatching, "plugPikiNakata/taicollisionactions.cpp"),
             Object(NonMatching, "plugPikiNakata/taieffectactions.cpp"),
             Object(NonMatching, "plugPikiNakata/taiiwagen.cpp"),
-            
         ],
     },
     {
         "lib": "plugPikiNishimura",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiNishimura/Pom.cpp"),
             Object(NonMatching, "plugPikiNishimura/PomAi.cpp"),
@@ -1243,14 +1239,14 @@ config.libs = [
             Object(NonMatching, "plugPikiNishimura/MizuAi.cpp"),
             Object(NonMatching, "plugPikiNishimura/nscalculation.cpp"),
             Object(NonMatching, "plugPikiNishimura/Nucleus.cpp"),
-            Object(NonMatching, "plugPikiNishimura/NucleusAi.cpp"),     
+            Object(NonMatching, "plugPikiNishimura/NucleusAi.cpp"),
         ],
     },
     {
         "lib": "plugPikiOgawa",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiOgawa/ogStart.cpp"),
             Object(NonMatching, "plugPikiOgawa/ogSub.cpp"),
@@ -1275,14 +1271,14 @@ config.libs = [
             Object(NonMatching, "plugPikiOgawa/ogPause.cpp"),
             Object(NonMatching, "plugPikiOgawa/ogRader.cpp"),
             Object(NonMatching, "plugPikiOgawa/ogResult.cpp"),
-            Object(NonMatching, "plugPikiOgawa/ogSave.cpp"),  
+            Object(NonMatching, "plugPikiOgawa/ogSave.cpp"),
         ],
     },
     {
         "lib": "plugPikiYamashita",
         "cflags": cflags_pikmin,
         "mw_version": "GC/3.0a3p1",
-        "progress_category" : "game",
+        "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiYamashita/TAImar.cpp"),
             Object(NonMatching, "plugPikiYamashita/TAImiurin.cpp"),

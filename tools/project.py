@@ -200,12 +200,12 @@ class ProjectConfig:
         self.link_order_callback: Optional[Callable[[int, List[str]], List[str]]] = (
             None  # Callback to add/remove/reorder units within a module
         )
-        self.context_exclude_globs: List[
-            str
-        ] = []  # Globs to exclude from context files
-        self.context_defines: List[
-            str
-        ] = []  # Macros to define at the top of context files
+        self.context_exclude_globs: List[str] = (
+            []
+        )  # Globs to exclude from context files
+        self.context_defines: List[str] = (
+            []
+        )  # Macros to define at the top of context files
 
         # Progress output and report.json config
         self.progress = True  # Enable report.json generation and CLI progress output
@@ -1615,6 +1615,7 @@ def generate_objdiff_config(
         "GC/2.6": "mwcc_247_107",
         "GC/2.7": "mwcc_247_108",
         "GC/3.0a3": "mwcc_41_51213",
+        "GC/3.0a3p1": "mwcc_41_51213",  # TODO: adjust this once the patched compiler is added to decomp me
         "GC/3.0a3.2": "mwcc_41_60126",
         "GC/3.0a3.3": "mwcc_41_60209",
         "GC/3.0a3.4": "mwcc_42_60308",

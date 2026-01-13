@@ -36,12 +36,21 @@ extern const f32 __float_nan[];
 extern const f64 __double_huge[];
 extern const f64 __double_nan[];
 
-f64 cos(f64);
-f32 cosf(f32);
 f64 sin(f64);
-f32 sinf(f32);
+f64 cos(f64);
 f64 tan(f64);
-f32 tanf(f32);
+static inline f32 cosf(f32 x)
+{
+	return cos(x);
+}
+static inline f32 sinf(f32 x)
+{
+	return sin(x);
+}
+static inline f32 tanf(f32 x)
+{
+	return tan(x);
+}
 
 f64 acos(f64);
 f32 acosf(f32);
@@ -139,17 +148,24 @@ namespace std {
 
 inline f32 sqrtf(f32 x)
 {
-	// these REALLY don't have to be static.
-	static const f64 _half  = 0.5;
-	static const f64 _three = 3.0;
+	// // these REALLY don't have to be static.
+	// static const f64 _half  = 0.5;
+	// static const f64 _three = 3.0;
 
+	// vf32 y;
+	// if (x > 0.0f) {
+
+	// 	f64 guess = __frsqrte((f64)x);                            // returns an approximation to
+	// 	guess     = _half * guess * (_three - guess * guess * x); // now have 12 sig bits
+	// 	guess     = _half * guess * (_three - guess * guess * x); // now have 24 sig bits
+	// 	guess     = _half * guess * (_three - guess * guess * x); // now have 32 sig bits
+	// 	y         = (f32)(x * guess);
+	// 	return y;
+	// }
+	// return x;
 	vf32 y;
 	if (x > 0.0f) {
-
-		f64 guess = __frsqrte((f64)x);                            // returns an approximation to
-		guess     = _half * guess * (_three - guess * guess * x); // now have 12 sig bits
-		guess     = _half * guess * (_three - guess * guess * x); // now have 24 sig bits
-		guess     = _half * guess * (_three - guess * guess * x); // now have 32 sig bits
+		f64 guess = __frsqrte((f64)x);
 		y         = (f32)(x * guess);
 		return y;
 	}
