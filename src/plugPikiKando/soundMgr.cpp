@@ -369,6 +369,7 @@ SoundTableInfo soundTable[] = {
 	{ SYSSE_YMENU_SCROLL, JACSYS_MenuScroll, "SYSSE_YMENU_SCROLL", FALSE, JACEVENT_System },
 	{ Sound_Config, JACSYS_SoundConfig, "Sound Config", FALSE, JACEVENT_System },
 	{ YMENU_SELECT2, JACSYS_MessageClose, "YMENU SELECT", FALSE, JACEVENT_System },
+	{ Change_Piki, JACSYS_ChangePiki, "Change Piki", FALSE, JACEVENT_System },
 
 	// PLAYER sounds
 	{ SE_ORIMA_TOUCHPLANTS, JACORIMA_OrimaTouchPlants, "SE_ORIMA_TOUCHPLANTS", FALSE, JACEVENT_Player },
@@ -472,7 +473,8 @@ int SeContext::getObjType()
 void SeContext::createEvent(int eventType)
 {
 	mEventType = eventType;
-	seSystem->calcCameraPos(getPos(), mSourceListenerOffset);
+	Vector3f pos = getPos();
+	seSystem->calcCameraPos(pos, mSourceListenerOffset);
 	mEventHandle = seSystem->createEvent(this, mEventType, (SVector_*)&mSourceListenerOffset);
 }
 
@@ -516,7 +518,8 @@ void SeContext::update()
 	if (mEventHandle == -1) {
 		return;
 	}
-	seSystem->calcCameraPos(getPos(), mSourceListenerOffset);
+	Vector3f pos = getPos();
+	seSystem->calcCameraPos(pos, mSourceListenerOffset);
 	Jac_UpdateEventPosition(mEventHandle, (SVector_*)&mSourceListenerOffset);
 }
 
@@ -611,7 +614,7 @@ int SeSystem::createEvent(SeContext* context, int eventType, SVector_* soundOffs
 		int handle = Jac_CreateEvent(eventType, soundOffset);
 		if (handle == -1) {
 			// we failed to make an event, better print everything.
-			dumpEvents();
+			//dumpEvents();
 			for (int x = 0; x < 10; x++) { }
 			newHandle = -1;
 
@@ -668,7 +671,7 @@ int SeSystem::createEvent(SeContext* context, int eventType, SVector_* soundOffs
 /**
  * @todo: Documentation
  */
-void SeSystem::playPikiSound(int id, immut Vector3f& sourcePos)
+void SeSystem::playPikiSound(int id, Vector3f& sourcePos)
 {
 	playSoundDirect(JACEVENT_Piki, id, sourcePos);
 }
@@ -676,7 +679,7 @@ void SeSystem::playPikiSound(int id, immut Vector3f& sourcePos)
 /**
  * @todo: Documentation
  */
-void SeSystem::playSoundDirect(int eventType, int sound, immut Vector3f& sourcePos)
+void SeSystem::playSoundDirect(int eventType, int sound, Vector3f& sourcePos)
 {
 	if (mIsClosed) {
 		PRINT("seSystem は閉店です!\n");
@@ -862,42 +865,36 @@ void SeSystem::draw2d(Graphics& gfx)
  */
 void SeSystem::dumpEvents()
 {
-	PRINT("***** SE EVENTS ****** %d / %d \n", mCurrentEventCount, mMaxEventCount);
+	/*PRINT("***** SE EVENTS ****** %d / %d \n", mCurrentEventCount, mMaxEventCount);
 
 	for (int i = 0; i < mMaxEventCount; i++) {
 		PRINT("\t(%d) : handle %d , seContext = %x\n", i, mEvents[i].mHandle, mEvents[i].mContext);
 		if (mEvents[i].mContext) {
 			mEvents[i].mContext->dump();
 		}
-	}
+	}*/
 
 	u32 test[0x20];
 	u32 max = Jac_GetActiveEvents(test);
-	Jac_CheckFreeEvents();
+	//Jac_CheckFreeEvents();
 
 	for (int i = 0; i < max; i++) {
 		// probably something like this
 		PRINT("%d\n", test[i]);
 	}
+	
+	FORCE_DONT_INLINE;
 }
 
 /**
  * @todo: Documentation
  */
-void SeSystem::update(Graphics& gfx, immut Vector3f& listenerPos)
+void SeSystem::update(Graphics& gfx, Vector3f& listenerPos)
 {
 	if (mIsClosed) {
 		PRINT("... seSystem closed\n");
 		return;
 	}
-
-#if defined(VERSION_GPIE01_00) || defined(VERSION_GPIE01_01) || defined(VERSION_GPIP01_00) || defined(VERSION_GPIJ01_01)
-#else
-	++mClock;
-	if (mClock >= 30 * 60 * 60) {
-		mClock = 0; // Reset the clock every hour (30 Hz * 60 seconds * 60 minutes)
-	}
-#endif
 
 	mListenerPosition = listenerPos;
 	mCameraMtx        = gfx.mCamera->mLookAtMtx;
@@ -945,7 +942,7 @@ void SeSystem::update(Graphics& gfx, immut Vector3f& listenerPos)
 /**
  * @todo: Documentation
  */
-void SeSystem::calcCameraPos(immut Vector3f& objectPos, Vector3f& normalisedCamDir)
+void SeSystem::calcCameraPos(Vector3f& objectPos, Vector3f& normalisedCamDir)
 {
 	Vector3f tmpDir         = objectPos;
 	Vector3f tmpListenerPos = mListenerPosition;
@@ -967,11 +964,7 @@ void SeSystem::calcCameraPos(immut Vector3f& objectPos, Vector3f& normalisedCamD
  */
 int SeSystem::getJacID(int soundID)
 {
-#if defined(VERSION_GPIJ01_01)
-	if (soundID < 0 || soundID >= mMaxSoundID) {
-#else
 	if (soundID < 0 || soundID > mMaxSoundID) {
-#endif
 		PRINT("soundID = %d\n", soundID);
 		ERROR("go to HELL!\n"); // rude.
 	}

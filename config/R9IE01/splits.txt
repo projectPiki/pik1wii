@@ -2162,7 +2162,9 @@ plugPikiKando/soundMgr.cpp:
 	.ctors      start:0x802F6038 end:0x802F603C
 	.rodata     start:0x803039D8 end:0x80304EC8
 	.data       start:0x80341868 end:0x80343258
+	.sdata      start:0x8049B340 end:0x8049B3A0
 	.sbss       start:0x8049EEC8 end:0x8049EED0
+	.sdata2     start:0x804A1620 end:0x804A1638
 
 plugPikiNakata/taijudgementactions.cpp:
 	.text       start:0x801A5900 end:0x801A5F74

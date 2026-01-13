@@ -451,7 +451,8 @@ void PaniTestNode::draw(Graphics& gfx)
 	}
 
 	mapMgr->refresh(gfx);
-	seSystem->update(gfx, Vector3f(0.0f, 0.0f, 0.0f));
+	Vector3f pos(0.0f, 0.0f, 0.0f);
+	seSystem->update(gfx, pos);
 
 	Matrix4f mtx3;
 	gfx.calcViewMatrix(Matrix4f::ident, mtx3);

@@ -47,6 +47,7 @@ typedef enum JacSystemSoundID {
 	JACSYS_DVDPause         = 38,
 	JACSYS_DVDUnpause       = 39,
 	JACSYS_Unk40            = 40,
+	JACSYS_ChangePiki       = 41,
 } JacSystemSoundID;
 
 //////////// JAUDIO "VERY SIMPLE" FUNCTIONS ////////////
