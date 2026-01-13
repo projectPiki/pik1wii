@@ -136,6 +136,8 @@ struct LifeGauge {
 	f32 mCurrentDisplayHealthRatio; ///< _30, health ratio currently being rendered, to allow for gradual filling/depleting.
 	f32 mScale;                     ///< _34, display scale of gauge.
 	GaugeInfo* mActiveCarryNumber;  ///< _38, associated carry number display, managed by `LifeGaugeMgr`.
+	Colour mColor;
+	bool mUnk;
 };
 
 extern LifeGaugeMgr* lgMgr;

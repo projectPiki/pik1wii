@@ -148,10 +148,14 @@ void GaugeInfo::showDigits(Vector3f centerPos, immut Colour& colour, int number,
 		// grab appropriate texture start/stop points for the ones digit
 		f32 uvStart = (num % 10) * texEntryWidth;
 		f32 uvEnd   = ((num % 10) + 1.0f) * texEntryWidth;
+		
+		Vector2f uvMin(uvStart, 0.0f);
+		Vector2f uvMax(uvEnd, 1.0f);
+		Vector2f size(digitHalfWidth, digitHalfHeight);
 
 		// draw the colored texture digit (flare)
-		lgMgr->mDigitFlareGroup->addLFlare(colour, centerPos, Vector2f(digitHalfWidth, digitHalfHeight), &Vector2f(uvStart, 0.0f),
-		                                   &Vector2f(uvEnd, 1.0f));
+		lgMgr->mDigitFlareGroup->addLFlare(colour, centerPos, size, &uvMin,
+		                                   &uvMax);
 
 		// get tens digit, in case it's a 2-digit number
 		num /= 10;
@@ -191,9 +195,15 @@ void GaugeInfo::refresh(Graphics& gfx)
 	// "-" is at the end of the 11 .bti digits, so UV goes from 10/11 to 11/11 (1)
 	f32 uvEnd   = 1.0f;
 	f32 uvStart = 10.0f / 11.0f;
+	
+	
 	// add to flare queue to draw
-	lgMgr->mDigitFlareGroup->addLFlare(colour, pos, Vector2f(mDigitHalfWidth, mDigitHalfHeight), &Vector2f(uvStart, 0.0f),
-	                                   &Vector2f(uvEnd, 1.0f));
+	
+	Vector2f uvMin(uvStart, 0.0f);
+	Vector2f uvMax(uvEnd, 1.0f);
+	Vector2f size(mDigitHalfWidth, mDigitHalfHeight);
+	lgMgr->mDigitFlareGroup->addLFlare(colour, pos, size, &uvMin,
+	                                   &uvMax);
 
 	// draw center of top number (blue, static value showing target amount to move object) 10 units above line
 	pos.y += 10.0f;
@@ -321,6 +331,8 @@ LifeGauge::LifeGauge()
 	mOffset.set(0.0f, 100.0f, 0.0f);
 	mScale             = 48.0f;
 	mActiveCarryNumber = nullptr;
+	mColor.set(255, 255, 255, 255);
+	mUnk        = false;
 }
 
 /**
