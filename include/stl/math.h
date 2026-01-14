@@ -65,7 +65,6 @@ f64 floor(f64);
 f64 frexp(f64, int*);
 f64 ldexp(f64, int);
 f64 sqrt(f64);
-
 f64 pow(f64, f64);
 f64 log(f64);
 f64 log10(f64);
@@ -124,30 +123,6 @@ inline f128 fabsl(f128 x)
 
 inline f32 sqrtf(f32 x)
 {
-	// these REALLY don't have to be static.
-	static const f64 _half  = .5;
-	static const f64 _three = 3.0;
-
-	vf32 y;
-	if (x > 0.0f) {
-
-		f64 guess = __frsqrte((f64)x);                            // returns an approximation to
-		guess     = _half * guess * (_three - guess * guess * x); // now have 12 sig bits
-		guess     = _half * guess * (_three - guess * guess * x); // now have 24 sig bits
-		guess     = _half * guess * (_three - guess * guess * x); // now have 32 sig bits
-		y         = (f32)(x * guess);
-		return y;
-	}
-	return x;
-}
-
-END_SCOPE_EXTERN_C
-
-#ifdef __cplusplus
-namespace std {
-
-inline f32 sqrtf(f32 x)
-{
 	// // these REALLY don't have to be static.
 	// static const f64 _half  = 0.5;
 	// static const f64 _three = 3.0;
@@ -170,6 +145,15 @@ inline f32 sqrtf(f32 x)
 		return y;
 	}
 	return x;
+}
+
+END_SCOPE_EXTERN_C
+
+#ifdef __cplusplus
+namespace std {
+
+inline f32 sqrtf(f32 x) {
+    return sqrt(x);
 }
 
 inline f32 fmodf(f32 x, f32 m)
