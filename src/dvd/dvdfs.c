@@ -1,5 +1,5 @@
-#include "Dolphin/dvd.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/dvd.h"
+#include "RevoSDK/os.h"
 #include <ctype.h>
 #include <stddef.h>
 

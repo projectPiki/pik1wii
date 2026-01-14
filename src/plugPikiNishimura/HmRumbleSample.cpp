@@ -1,4 +1,4 @@
-#include "Dolphin/pad.h"
+#include "RevoSDK/pad.h"
 #include "RumbleMgr.h"
 
 /**

@@ -1,5 +1,5 @@
-#include "Dolphin/PPCArch.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/PPCArch.h"
+#include "RevoSDK/os.h"
 #include "types.h"
 
 BEGIN_SCOPE_EXTERN_C

@@ -1,6 +1,6 @@
 #include "jaudio/dvdthread.h"
-#include "Dolphin/ar.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/ar.h"
+#include "RevoSDK/os.h"
 #include "jaudio/aictrl.h"
 #include "jaudio/sample.h"
 #include <stddef.h>

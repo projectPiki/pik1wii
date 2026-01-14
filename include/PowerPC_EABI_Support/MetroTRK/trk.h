@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_TRK_H
-#define _DOLPHIN_TRK_H
+#ifndef _REVOSDK_TRK_H
+#define _REVOSDK_TRK_H
 
 #include "PowerPC_EABI_Support/MetroTRK/ppc_reg.h"
 #include "PowerPC_EABI_Support/MetroTRK/trktypes.h"

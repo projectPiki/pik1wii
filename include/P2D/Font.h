@@ -2,7 +2,7 @@
 #define _P2D_FONT_H
 
 #include "Colour.h"
-#include "Dolphin/gx.h"
+#include "RevoSDK/gx.h"
 #include "GfxObject.h"
 #include "Texture.h"
 #include "types.h"

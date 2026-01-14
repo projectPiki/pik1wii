@@ -1,9 +1,9 @@
 #ifndef _CARDUTIL_H
 #define _CARDUTIL_H
 
-#include "Dolphin/OS/OSMutex.h"
-#include "Dolphin/OS/OSThread.h"
-#include "Dolphin/card.h"
+#include "RevoSDK/OS/OSMutex.h"
+#include "RevoSDK/OS/OSThread.h"
+#include "RevoSDK/card.h"
 #include "types.h"
 
 struct CARDStat;

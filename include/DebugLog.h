@@ -1,7 +1,7 @@
 #ifndef _DEBUGLOG_H
 #define _DEBUGLOG_H
 
-#include "Dolphin/OS/OSError.h"
+#include "RevoSDK/OS/OSError.h"
 #include "Stream.h"
 #include "system.h"
 #include "types.h"

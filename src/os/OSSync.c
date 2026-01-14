@@ -1,4 +1,4 @@
-#include "Dolphin/os.h"
+#include "RevoSDK/os.h"
 #include <string.h>
 
 #define OS_SYS_CALL_HANDLER  ((void*)0x80000C00)

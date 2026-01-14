@@ -1,4 +1,4 @@
-#include "Dolphin/PPCArch.h"
+#include "RevoSDK/PPCArch.h"
 
 #ifdef __MWERKS__
 #define MOVE_FROM_SPR(name, rD) asm { mfspr rD, name }

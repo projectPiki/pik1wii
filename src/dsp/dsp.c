@@ -1,7 +1,7 @@
-#include "Dolphin/dsp.h"
+#include "RevoSDK/dsp.h"
 
-#include "Dolphin/hw_regs.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/hw_regs.h"
+#include "RevoSDK/os.h"
 
 /**
  * @TODO: Documentation

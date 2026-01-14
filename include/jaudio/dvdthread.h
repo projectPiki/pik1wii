@@ -1,7 +1,7 @@
 #ifndef _JAUDIO_DVDTHREAD_H
 #define _JAUDIO_DVDTHREAD_H
 
-#include "Dolphin/dvd.h"
+#include "RevoSDK/dvd.h"
 #include "jaudio/audiostruct.h"
 #include "types.h"
 #include <stddef.h>

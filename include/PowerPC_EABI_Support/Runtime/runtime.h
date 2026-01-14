@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_RUNTIME_H
-#define _DOLPHIN_RUNTIME_H
+#ifndef _REVOSDK_RUNTIME_H
+#define _REVOSDK_RUNTIME_H
 
 #include "types.h"
 #include <stddef.h>

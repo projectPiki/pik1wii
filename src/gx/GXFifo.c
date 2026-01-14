@@ -1,6 +1,6 @@
-#include "Dolphin/PPCArch.h"
-#include "Dolphin/gx.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/PPCArch.h"
+#include "RevoSDK/gx.h"
+#include "RevoSDK/os.h"
 #include <stddef.h>
 
 static OSThread* __GXCurrentThread;

@@ -1,7 +1,7 @@
-#include "Dolphin/dvd.h"
+#include "RevoSDK/dvd.h"
 
-#include "Dolphin/hw_regs.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/hw_regs.h"
+#include "RevoSDK/os.h"
 #include <stddef.h>
 #include <string.h>
 

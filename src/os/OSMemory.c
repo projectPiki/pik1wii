@@ -2,8 +2,8 @@
 
 #if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
 
-#include "Dolphin/OS/OSError.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/OS/OSError.h"
+#include "RevoSDK/os.h"
 
 #define TRUNC(n, a) (((u32)(n)) & ~((a) - 1))
 #define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))

@@ -1,6 +1,6 @@
-#include "Dolphin/pad.h"
-#include "Dolphin/os.h"
-#include "Dolphin/vi.h"
+#include "RevoSDK/pad.h"
+#include "RevoSDK/os.h"
+#include "RevoSDK/vi.h"
 #include <stddef.h>
 #include <string.h>
 

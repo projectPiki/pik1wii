@@ -2,9 +2,9 @@
 
 #include "jaudio/dummyrom.h"
 
-#include "Dolphin/OS/OSCache.h"
-#include "Dolphin/OS/OSMessage.h"
-#include "Dolphin/ar.h"
+#include "RevoSDK/OS/OSCache.h"
+#include "RevoSDK/OS/OSMessage.h"
+#include "RevoSDK/ar.h"
 #include <stddef.h>
 
 #define DMABUFFER_SIZE (0x10000)

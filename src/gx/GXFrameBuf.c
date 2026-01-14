@@ -1,4 +1,4 @@
-#include "Dolphin/gx.h"
+#include "RevoSDK/gx.h"
 
 GXRenderModeObj GXNtsc240Ds = { 1,
 	                            640,

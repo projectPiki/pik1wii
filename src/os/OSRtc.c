@@ -1,6 +1,6 @@
-#include "Dolphin/OS/OSRtc.h"
+#include "RevoSDK/OS/OSRtc.h"
 
-#include "Dolphin/os.h"
+#include "RevoSDK/os.h"
 #include <stddef.h>
 
 // forward declarations.

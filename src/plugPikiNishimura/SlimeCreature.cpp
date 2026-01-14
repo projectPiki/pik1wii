@@ -1,5 +1,5 @@
 #include "DebugLog.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/os.h"
 #include "Slime.h"
 #include "system.h"
 

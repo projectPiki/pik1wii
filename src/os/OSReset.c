@@ -1,5 +1,5 @@
-#include "Dolphin/hw_regs.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/hw_regs.h"
+#include "RevoSDK/os.h"
 #include <stddef.h>
 
 static OSResetQueue ResetFunctionQueue;

@@ -1,5 +1,5 @@
-#include "Dolphin/PPCArch.h"
-#include "Dolphin/gx.h"
+#include "RevoSDK/PPCArch.h"
+#include "RevoSDK/gx.h"
 #include <stddef.h>
 
 static GXDrawSyncCallback TokenCB;

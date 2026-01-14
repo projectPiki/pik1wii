@@ -1,6 +1,6 @@
 #include "ItemObject.h"
 #include "DebugLog.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/os.h"
 
 /**
  * @todo: Documentation

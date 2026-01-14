@@ -1,7 +1,7 @@
 #ifndef _JAUDIO_AUDIOSTRUCT_H
 #define _JAUDIO_AUDIOSTRUCT_H
 
-#include "Dolphin/os.h"
+#include "RevoSDK/os.h"
 #include "jaudio/bx.h"
 #include "types.h"
 

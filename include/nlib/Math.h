@@ -1,7 +1,7 @@
 #ifndef _NLIB_MATH_H
 #define _NLIB_MATH_H
 
-#include "Dolphin/mtx.h"
+#include "RevoSDK/mtx.h"
 #include "Vector.h"
 #include "nlib/System.h"
 #include "types.h"

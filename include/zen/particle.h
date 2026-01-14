@@ -2,8 +2,8 @@
 #define _ZEN_PARTICLE_H
 
 #include "Colour.h"
-#include "Dolphin/gx.h"
-#include "Dolphin/mtx.h"
+#include "RevoSDK/gx.h"
+#include "RevoSDK/mtx.h"
 #include "sysNew.h"
 #include "types.h"
 #include "zen/CallBack.h"

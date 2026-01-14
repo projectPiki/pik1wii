@@ -1,9 +1,9 @@
-#include "Dolphin/OS/OSError.h"
+#include "RevoSDK/OS/OSError.h"
 
-#include "Dolphin/OS/OSException.h"
-#include "Dolphin/OS/OSInterrupt.h"
-#include "Dolphin/PPCArch.h"
-#include "Dolphin/hw_regs.h"
+#include "RevoSDK/OS/OSException.h"
+#include "RevoSDK/OS/OSInterrupt.h"
+#include "RevoSDK/PPCArch.h"
+#include "RevoSDK/hw_regs.h"
 
 #include <stddef.h>
 #include <stdarg.h>

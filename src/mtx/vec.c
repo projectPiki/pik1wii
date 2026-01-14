@@ -1,5 +1,5 @@
-#include "Dolphin/vec.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/vec.h"
+#include "RevoSDK/os.h"
 #include <math.h>
 
 #pragma - fp_contract off

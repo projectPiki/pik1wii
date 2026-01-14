@@ -1,4 +1,4 @@
-#include "Dolphin/gx.h"
+#include "RevoSDK/gx.h"
 #include <string.h>
 
 static struct __GXFifoObj DisplayListFifo;

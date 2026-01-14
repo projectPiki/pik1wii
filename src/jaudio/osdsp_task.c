@@ -1,5 +1,5 @@
-#include "Dolphin/dsp.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/dsp.h"
+#include "RevoSDK/os.h"
 #include "jaudio/dspproc.h"
 
 #if defined(VERSION_GPIP01_00)

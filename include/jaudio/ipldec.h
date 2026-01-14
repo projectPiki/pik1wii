@@ -1,7 +1,7 @@
 #ifndef _JAUDIO_IPLDEC_H
 #define _JAUDIO_IPLDEC_H
 
-#include "Dolphin/dsp.h"
+#include "RevoSDK/dsp.h"
 #include "types.h"
 
 /////////// JAUDIO IPL DEC DEFINITIONS ///////////

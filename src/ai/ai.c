@@ -1,6 +1,6 @@
-#include "Dolphin/ai.h"
-#include "Dolphin/hw_regs.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/ai.h"
+#include "RevoSDK/hw_regs.h"
+#include "RevoSDK/os.h"
 #include <stddef.h>
 
 static AISCallback __AIS_Callback = NULL;

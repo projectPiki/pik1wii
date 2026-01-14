@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_STL_H
-#define _DOLPHIN_STL_H
+#ifndef _REVOSDK_STL_H
+#define _REVOSDK_STL_H
 
 #include "types.h"
 #include <stddef.h>

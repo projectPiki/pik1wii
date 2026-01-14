@@ -1,7 +1,7 @@
-#include "Dolphin/GX/GXPerf.h"
+#include "RevoSDK/GX/GXPerf.h"
 
-#include "Dolphin/GX/GXData.h"
-#include "Dolphin/GX/GXMisc.h"
+#include "RevoSDK/GX/GXData.h"
+#include "RevoSDK/GX/GXMisc.h"
 
 /**
  * @TODO: Documentation

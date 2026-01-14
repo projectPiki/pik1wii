@@ -1,7 +1,7 @@
-#include "Dolphin/db.h"
+#include "RevoSDK/db.h"
 
-#include "Dolphin/PPCArch.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/PPCArch.h"
+#include "RevoSDK/os.h"
 
 BOOL DBVerbose;
 DBInterface* __DBInterface;

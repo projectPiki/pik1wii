@@ -1,7 +1,7 @@
 #ifndef _METROTRK_TRKTYPES_H
 #define _METROTRK_TRKTYPES_H
 
-#include "Dolphin/OS/OSInterrupt.h"
+#include "RevoSDK/OS/OSInterrupt.h"
 #include "PowerPC_EABI_Support/MetroTRK/trkenum.h"
 #include "types.h"
 

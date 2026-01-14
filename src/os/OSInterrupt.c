@@ -1,5 +1,5 @@
-#include "Dolphin/hw_regs.h"
-#include "Dolphin/os.h"
+#include "RevoSDK/hw_regs.h"
+#include "RevoSDK/os.h"
 #include <string.h>
 
 ASM static void ExternalInterruptHandler(register __OSException exception, register OSContext* context);

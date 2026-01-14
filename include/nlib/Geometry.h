@@ -1,7 +1,7 @@
 #ifndef _NLIB_GEOMETRY_H
 #define _NLIB_GEOMETRY_H
 
-#include "Dolphin/mtx.h"
+#include "RevoSDK/mtx.h"
 #include "Matrix4f.h"
 #include "Vector.h"
 #include "nlib/Math.h"

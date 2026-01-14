@@ -1,6 +1,6 @@
-#include "Dolphin/os.h"
-#include "Dolphin/PPCArch.h"
-#include "Dolphin/hw_regs.h"
+#include "RevoSDK/os.h"
+#include "RevoSDK/PPCArch.h"
+#include "RevoSDK/hw_regs.h"
 #include <stddef.h>
 #include <string.h>
 

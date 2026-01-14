@@ -1,4 +1,4 @@
-#include "Dolphin/OS/OSArena.h"
+#include "RevoSDK/OS/OSArena.h"
 
 static void* __OSArenaHi = (void*)0x00000000;
 static void* __OSArenaLo = (void*)0xffffffff;

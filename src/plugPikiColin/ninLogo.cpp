@@ -2,8 +2,8 @@
 
 #include "Controller.h"
 #include "DebugLog.h"
-#include "Dolphin/os.h"
-#include "Dolphin/vi.h"
+#include "RevoSDK/os.h"
+#include "RevoSDK/vi.h"
 #include "Geometry.h"
 #include "Graphics.h"
 #include "Menu.h"
