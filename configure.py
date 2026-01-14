@@ -292,7 +292,6 @@ cflags_jaudio = [
 # Game code flags
 cflags_pikmin = [
     *cflags_base,
-    "-char unsigned",
     "-str reuse, readonly",
     "-use_lmw_stmw on",
 ]
