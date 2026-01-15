@@ -58,7 +58,10 @@ f64 asin(f64);
 f64 atan(f64);
 f32 atanf(f32);
 f64 atan2(f64, f64);
-f32 atan2f(f32, f32);
+static inline f32 atan2f(f32 x, f32 x2)
+{
+	return atan2(x, x2);
+}
 
 f64 ceil(f64);
 f64 floor(f64);
