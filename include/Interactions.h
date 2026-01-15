@@ -57,6 +57,7 @@ struct InteractAttack : public Interaction {
 	    , mDamage(damage)
 	    , mCollPart(collPart)
 	    , _10(p4)
+	    , _14(p4)
 	{
 	}
 
@@ -74,6 +75,7 @@ struct InteractAttack : public Interaction {
 	f32 mDamage;         // _08
 	CollPart* mCollPart; // _0C
 	bool _10;            // _10
+	bool _14;            // _14, new
 };
 
 /**
