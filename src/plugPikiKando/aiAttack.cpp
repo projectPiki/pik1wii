@@ -93,7 +93,9 @@ void ActAttack::startLost()
 {
 	mHasLost          = true;
 	mIsAttackFinished = false;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Sagasu2, this), PaniMotionInfo(PIKIANIM_Sagasu2));
+	PaniMotionInfo anim2(PIKIANIM_Sagasu2);
+	PaniMotionInfo anim1(PIKIANIM_Sagasu2, this);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -340,15 +342,21 @@ void ActJumpAttack::init(Creature* creature)
 		if (mPiki->mStickPart && mPiki->mStickPart->isClimbable()) {
 			mPiki->startClimb();
 			mState = 6;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Noboru, this), PaniMotionInfo(PIKIANIM_Noboru));
+			PaniMotionInfo anim2(PIKIANIM_Noboru);
+			PaniMotionInfo anim1(PIKIANIM_Noboru, this);
+			mPiki->startMotion(anim1, anim2);
 		} else {
 			mState         = 5;
 			mIsCriticalHit = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+			PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+			PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+			mPiki->startMotion(anim1, anim2);
 		}
 		mAttackState = 0;
 	} else {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
+		PaniMotionInfo anim2(PIKIANIM_Run);
+		PaniMotionInfo anim1(PIKIANIM_Run, this);
+		mPiki->startMotion(anim1, anim2);
 	}
 
 	mTargetCollider = creature->getNearestCollPart(mPiki->mSRT.t, '*t**');
@@ -385,7 +393,9 @@ void ActJumpAttack::procStickMsg(Piki* piki, MsgStick* msg)
 {
 	mState         = 5;
 	mIsCriticalHit = false;
-	piki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+	PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+	PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+	piki->startMotion(anim1, anim2);
 	mAttackState       = 0;
 	piki->mWantToStick = false;
 }
@@ -468,17 +478,19 @@ void ActJumpAttack::procCollideMsg(Piki* piki, MsgCollide* msg)
 	mState = 5;
 	if (msg->mEvent.mColliderPart && msg->mEvent.mColliderPart->mPartType == PART_Platform && msg->mEvent.mColliderPart->isClimbable()) {
 		piki->startClimb();
-		piki->startMotion(PaniMotionInfo(PIKIANIM_Noboru, this), PaniMotionInfo(PIKIANIM_Noboru));
+		PaniMotionInfo anim2(PIKIANIM_Noboru);
+		PaniMotionInfo anim1(PIKIANIM_Noboru, this);
+		piki->startMotion(anim1, anim2);
 		mState = 6;
 	} else {
 		mIsCriticalHit = false;
-		piki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+		PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+		PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+		piki->startMotion(anim1, anim2);
 	}
 
 	mAttackState       = 0;
 	piki->mWantToStick = false;
-
-	STACK_PAD_VAR(2);
 }
 
 /**
@@ -525,7 +537,6 @@ int ActJumpAttack::exec()
 			break;
 		}
 
-		STACK_PAD_VAR(1);
 		if (dist2D > size + 6.0f) {
 			mPiki->setSpeed(0.5f, direction);
 			break;
@@ -535,7 +546,9 @@ int ActJumpAttack::exec()
 		if (angle < PI / 10.0f) {
 			f32 vertSpeed = 200.0f;
 			mPiki->mVelocity.set(100.0f * direction.x, vertSpeed, 100.0f * direction.z);
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_StillJump, this), PaniMotionInfo(PIKIANIM_StillJump));
+			PaniMotionInfo anim2(PIKIANIM_StillJump);
+			PaniMotionInfo anim1(PIKIANIM_StillJump, this);
+			mPiki->startMotion(anim1, anim2);
 			mState              = 1;
 			mPiki->mWantToStick = true;
 			PRINT_KANDO("jump !\n");
@@ -555,7 +568,9 @@ int ActJumpAttack::exec()
 		    && dist3D < getAttackSize() + mPiki->getCentreSize() + 10.0f) {
 			if (!mPiki->isStickTo()) {
 				mIsCriticalHit = false;
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Attack, this), PaniMotionInfo(PIKIANIM_Attack));
+				PaniMotionInfo anim4(PIKIANIM_Attack);
+				PaniMotionInfo anim3(PIKIANIM_Attack, this);
+				mPiki->startMotion(anim3, anim4);
 				mPiki->playEventSound(target, SE_PIKI_ATTACK_VOICE);
 				mAttackState = 0;
 				mState       = 4;
@@ -577,7 +592,9 @@ int ActJumpAttack::exec()
 			mState = 5;
 			PRINT("start ATTACK(KUTTUKU)!\n");
 			mIsCriticalHit = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+			PaniMotionInfo anim6(PIKIANIM_Kuttuku);
+			PaniMotionInfo anim5(PIKIANIM_Kuttuku, this);
+			mPiki->startMotion(anim5, anim6);
 			mPiki->playEventSound(target, SE_PIKI_ATTACK_VOICE);
 			mAttackState = 0;
 		}
@@ -589,7 +606,9 @@ int ActJumpAttack::exec()
 		if (mPiki->isStickTo() && !mPiki->mGroundTriangle) {
 			mState         = 5;
 			mIsCriticalHit = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+			PaniMotionInfo anim8(PIKIANIM_Kuttuku);
+			PaniMotionInfo anim7(PIKIANIM_Kuttuku, this);
+			mPiki->startMotion(anim7, anim8);
 			mPiki->playEventSound(target, SE_PIKI_ATTACK_VOICE);
 			mAttackState = 0;
 			break;
@@ -699,7 +718,9 @@ int ActJumpAttack::exec()
 
 		if (!mPiki->isStickTo()) {
 			PRINT_KANDO("jump attack : finish stick\n");
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
+			PaniMotionInfo anim10(PIKIANIM_Walk);
+			PaniMotionInfo anim9(PIKIANIM_Walk, this);
+			mPiki->startMotion(anim9, anim10);
 			mState = 0;
 			return ACTOUT_Continue;
 		}
@@ -782,8 +803,10 @@ void ActJumpAttack::doClimb()
 			PRINT_KANDO("  :: climb target distance = %.1f\n", dist);
 			if (dist < 5.0f) {
 				mState         = 5;
-				mIsCriticalHit = false;
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+				mIsCriticalHit = false;	
+				PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+				PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+				mPiki->startMotion(anim1, anim2);
 				mPiki->mVelocity.set(0.0f, 0.0f, 0.0f);
 				mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 				mAttackState = 0;
