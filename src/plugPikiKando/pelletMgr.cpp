@@ -183,7 +183,8 @@ void PelletView::becomePellet(u32 id, Vector3f NRef pos, f32 direction)
 
 	pellet->init(pos);
 	pellet->mFaceDirection = direction;
-	pellet->mRotationQuat.fromEuler(Vector3f(0.0f, direction, 0.0f));
+	Vector3f vec(0.0f, direction, 0.0f);
+	pellet->mRotationQuat.fromEuler(vec);
 	pellet->mSRT.r.set(0.0f, direction, 0.0f);
 	pellet->mVelocity.set(0.0f, 0.0f, 0.0f);
 	pellet->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
@@ -368,9 +369,12 @@ void Pellet::startPick()
 
 	if (!mPelletView) {
 		if (isMotionFlag(PelletMotionFlags::UsePiston)) {
-			mAnimator.startMotion(PaniMotionInfo(PelletMotion::Carry), PaniMotionInfo(PelletMotion::Piston, this));
+			PaniMotionInfo anim1(PelletMotion::Carry);
+			PaniMotionInfo anim2(PelletMotion::Piston, this);
+			mAnimator.startMotion(anim1, anim2);
 		} else {
-			mAnimator.startMotion(PaniMotionInfo(PelletMotion::Carry));
+			PaniMotionInfo anim3(PelletMotion::Carry);
+			mAnimator.startMotion(anim3);
 		}
 	}
 
@@ -969,7 +973,8 @@ void Pellet::doSave(RandomAccessStream& output)
  */
 void Pellet::startAI(int doSpawnScaleOff)
 {
-	mRotationQuat.fromEuler(Vector3f(0.0f, mFaceDirection, 0.0f));
+	Vector3f vec(0.0f, mFaceDirection, 0.0f);
+	mRotationQuat.fromEuler(vec);
 	mSRT.r.set(0.0f, mFaceDirection, 0.0f);
 	mLastPosition = mSRT.t;
 	enableFixPos();
@@ -1000,10 +1005,13 @@ void Pellet::startAI(int doSpawnScaleOff)
 
 	if (mPelletView == nullptr) {
 		if (isMotionFlag(PelletMotionFlags::UsePiston)) {
-			mAnimator.startMotion(PaniMotionInfo(PelletMotion::Carry), PaniMotionInfo(PelletMotion::Piston, this));
+			PaniMotionInfo anim1(PelletMotion::Carry);
+			PaniMotionInfo anim2(PelletMotion::Piston, this);
+			mAnimator.startMotion(anim1, anim2);
 			badMotionOverride = false;
 		} else {
-			mAnimator.startMotion(PaniMotionInfo(PelletMotion::Carry));
+			PaniMotionInfo anim(PelletMotion::Carry);
+			mAnimator.startMotion(anim);
 		}
 	} else {
 		startCarryMotion(0.0f);
@@ -1086,7 +1094,8 @@ void Pellet::startAppear()
 	mTargetGoal  = nullptr;
 	mPikiCarrier = nullptr;
 	if (!mPelletView) {
-		mAnimator.startMotion(PaniMotionInfo(PelletMotion::Carry));
+		PaniMotionInfo anim(PelletMotion::Carry);
+		mAnimator.startMotion(anim);
 		mMotionSpeed = 30.0f;
 	}
 	mStateMachine->transit(this, PELSTATE_Appear);
@@ -1174,7 +1183,7 @@ void Pellet::update()
 	int state   = getState();
 
 	// TODO: This is supposed to use `isMovieFlag(1)`, but the stack gets too inflated if it does.
-	if (state == PELSTATE_Swallowed && !(pelletMgr->mMovieFlags & 1)) {
+	if (state == PELSTATE_Swallowed && !(pelletMgr->isMovieFlag(1))) {
 		mVolatileVelocity.set(0.0f, 0.0f, 0.0f);
 		return;
 	}
@@ -1325,7 +1334,8 @@ void Pellet::update()
  */
 void Pellet::bounceCallback()
 {
-	MsgBounce msg(Vector3f(0.0f, 1.0f, 0.0f));
+	Vector3f vec(0.0f, 1.0f, 0.0f);
+	MsgBounce msg(vec);
 	sendMsg(&msg);
 }
 
@@ -1359,7 +1369,10 @@ void Pellet::doRender(Graphics& gfx, Matrix4f& mtx)
 		Matrix4f jointMtx = mStuckMouthPart->getJointMatrix();
 		Matrix4f transformMtx;
 		f32 scale = 1.0f / reinterpret_cast<Vector3f*>(&jointMtx)->length();
-		transformMtx.makeSRT(Vector3f(scale, scale, scale), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+		Vector3f scalevec(scale, scale, scale);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		Vector3f trans(0.0f, 0.0f, 0.0f);
+		transformMtx.makeSRT(scalevec, rot, trans);
 		mSRT.t = mStuckMouthPart->mCentre;
 		jointMtx.multiplyTo(transformMtx, mtx);
 	}
@@ -1396,8 +1409,6 @@ void Pellet::doRender(Graphics& gfx, Matrix4f& mtx)
  */
 void Pellet::doCreateColls(Graphics& gfx)
 {
-	STACK_PAD_VAR(2); // this is ACTUALLY from unused temps according to the DLL
-
 	mMass              = 0.0f;
 	f32 rad            = getBottomRadius();
 	f32 firstPtclSize  = 0.75f;
@@ -1827,7 +1838,8 @@ void PelletMgr::refresh(Graphics& gfx)
 	{
 		Pellet* pellet = static_cast<Pellet*>(*iter);
 		if (AIPerf::kandoOnly) {
-			gfx.setColour(Colour(0, 255, 0, 255), true);
+			Colour colour(0, 255, 0, 255);
+			gfx.setColour(colour, true);
 			char buf[16];
 			if (pellet->isFrontFace()) {
 				sprintf(buf, "front");

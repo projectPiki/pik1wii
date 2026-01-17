@@ -860,10 +860,14 @@ void System::showDvdError(Graphics& gfx)
 		return;
 	}
 
-	gfx.setColour(COLOUR_BLACK, true);
-	gfx.fillRectangle(AREA_FULL_SCREEN(gfx));
-	gfx.setColour(COLOUR_WHITE, true);
-	gfx.setAuxColour(COLOUR_WHITE);
+	Colour black(COLOUR_BLACK);
+	gfx.setColour(black, true);
+	RectArea area(AREA_FULL_SCREEN(gfx));
+	gfx.fillRectangle(area);
+	Colour white(COLOUR_WHITE);
+	gfx.setColour(white, true);
+	Colour white2(COLOUR_WHITE);
+	gfx.setAuxColour(white2);
 
 	if (mDvdErrorCode) { // DvdError::ReadingDisc or higher
 		int y = 160;
@@ -1049,12 +1053,16 @@ void* loadFunc(void* idler)
 		STACK_PAD_VAR(1);
 		Matrix4f mtx;
 		DGXGraphics* gfx = static_cast<DGXGraphics*>(gsys->mDGXGfx);
-		gfx->setOrthogonal(mtx.mMtx, RectArea(0, 0, gfx->mScreenWidth, gfx->mScreenHeight));
+		RectArea area1(0, 0, gfx->mScreenWidth, gfx->mScreenHeight);
+		gfx->setOrthogonal(mtx.mMtx, area1);
 
 		if (gsys->mIsLoadScreenActive) {
-			gfx->setColour(Colour(0, 0, 0, 32), true);
-			gfx->setAuxColour(Colour(0, 0, 0, 32));
-			gfx->fillRectangle(RectArea(0, 0, gfx->mScreenWidth, gfx->mScreenHeight));
+			Colour colour1(0, 0, 0, 32);
+			gfx->setColour(colour1, true);
+			Colour colour2(0, 0, 0, 32);
+			gfx->setAuxColour(colour2);
+			RectArea area2(0, 0, gfx->mScreenWidth, gfx->mScreenHeight);
+			gfx->fillRectangle(area2);
 		}
 
 		if (loadIdler && frameCount >= gsys->mLoadTimeBeforeIdling) {

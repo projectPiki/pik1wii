@@ -30,7 +30,9 @@ ActExit::ActExit(Piki* piki)
 void ActExit::init(Creature*)
 {
 	mPiki->mActionState = 0;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_HNoboru), PaniMotionInfo(PIKIANIM_HNoboru));
+	PaniMotionInfo anim1(PIKIANIM_HNoboru);
+	PaniMotionInfo anim2(PIKIANIM_HNoboru);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->mSRT.s.set(0.0f, 0.0f, 0.0f);
 	mPrevPosition = mPiki->mSRT.t;
 	mPiki->mOdometer.start(1.0f, 5.0f);
@@ -96,8 +98,6 @@ int ActExit::exec()
 
 	mPiki->mVelocity = ropeDir * -baseVelocity + sideDir * sideVelocity;
 	return ACTOUT_Continue;
-
-	STACK_PAD_VAR(2);
 }
 
 /**

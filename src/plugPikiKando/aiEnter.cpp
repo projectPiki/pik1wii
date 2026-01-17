@@ -62,8 +62,10 @@ void ActEnter::init(Creature* target)
 		Creature* held = mPiki->getHoldCreature();
 		held->stimulate(release);
 	}
-
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -134,7 +136,9 @@ int ActEnter::exec()
 void ActEnter::procCollideMsg(Piki*, MsgCollide* msg)
 {
 	if (msg->mEvent.mCollider->mObjType == OBJTYPE_Pellet && (mState == STATE_GotoLeg || mState == STATE_Climb)) {
+#if defined (DEVELOP)
 		PRINT("enter : collide with %s\n", ObjType::getName(msg->mEvent.mCollider->mObjType));
+#endif
 		mHasCollided = true;
 	}
 }
@@ -150,7 +154,9 @@ int ActEnter::gotoLeg()
 		mPiki->playEventSound(mOnyon, SE_CONTAINER_CLIMB);
 		mPiki->mVelocity.set(0.0f, 0.0f, 0.0f);
 		mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_HNoboru), PaniMotionInfo(PIKIANIM_HNoboru));
+		PaniMotionInfo anim1(PIKIANIM_HNoboru);
+		PaniMotionInfo anim2(PIKIANIM_HNoboru);
+		mPiki->startMotion(anim1, anim2);
 		return ACTOUT_Continue;
 	}
 

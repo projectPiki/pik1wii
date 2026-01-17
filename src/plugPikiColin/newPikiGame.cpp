@@ -426,7 +426,8 @@ struct MessageModeState : public ModeState {
 	{
 		Matrix4f orthoMtx;
 		if (gameoverWindow) {
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area);
 			gameoverWindow->draw(gfx);
 		}
 	}
@@ -483,16 +484,13 @@ struct DayOverModeState : public ModeState {
 		gamecore->mDrawGameInfo->lowerFrameOut(0.5f, true);
 
 		if (startState == STATE_PhaseZero) {
-#if defined(VERSION_GPIP01_00)
+
 			OSReport("!!!!!!!!!!!!!! CLEANUPDAYEND!!!!\n");
 			OSReport("!!!!!!!!!!!!!! CLEANUPDAYEND!!!!\n");
 			OSReport("!!!!!!!!!!!!!! CLEANUPDAYEND!!!!\n");
 			OSReport("!!!!!!!!!!!!!! CLEANUPDAYEND!!!!\n");
 			OSReport("!!!!!!!!!!!!!! CLEANUPDAYEND!!!!\n");
 			OSReport("!!!!!!!!!!!!!! CLEANUPDAYEND!!!!\n");
-#else
-			PRINT("CLEANUPDAYEND!!!!\n");
-#endif
 
 			// you heard the man, clean up day end!
 			gamecore->cleanupDayEnd();
@@ -525,13 +523,15 @@ struct DayOverModeState : public ModeState {
 		Matrix4f orthoMtx;
 		// if we have text open, handle that
 		if (tutorialWindow) {
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area1(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area1);
 			tutorialWindow->draw(gfx);
 		}
 
 		// if we have a game over text overlay, handle that
 		if (gameoverWindow) {
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area2(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area2);
 			gameoverWindow->draw(gfx);
 		}
 	}
@@ -763,7 +763,8 @@ BaseGameSection::BaseGameSection()
 void BaseGameSection::draw(Graphics& gfx)
 {
 	Matrix4f orthoMtx;
-	gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area1(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(orthoMtx.mMtx, area1);
 
 	// Update fade transition - fade of 1 = black screen, fade of 0 = no fade
 	if (mCurrentFade < mTargetFade) {
@@ -789,9 +790,12 @@ void BaseGameSection::draw(Graphics& gfx)
 			fade = 1.0f;
 		}
 
-		gfx.setColour(Colour(0, 0, 0, (int)((1.0f - fade) * 255.0f)), true);
-		gfx.setAuxColour(Colour(0, 0, 0, (int)((1.0f - fade) * 255.0f)));
-		gfx.fillRectangle(AREA_FULL_SCREEN(gfx));
+		Colour colour1(0, 0, 0, (int)((1.0f - fade) * 255.0f));
+		gfx.setColour(colour1, true);
+		Colour colour2(0, 0, 0, (int)((1.0f - fade) * 255.0f));
+		gfx.setAuxColour(colour2);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.fillRectangle(area2);
 	}
 
 	// draw level banner, if active
@@ -1031,7 +1035,8 @@ void IntroGameModeState::postRender(Graphics& gfx)
 	Matrix4f orthoMtx;
 	if (tutorialWindow) {
 		// render the text window over the top
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area);
 		tutorialWindow->draw(gfx);
 	}
 }
@@ -1049,11 +1054,15 @@ void RunningModeState::postRender(Graphics& gfx)
 
 	// unused - idk what the point of this would've even been.
 	Matrix4f unusedMtx;
-	unusedMtx.makeSRT(Vector3f(0.1f, 0.1f, 0.1f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, -5.0f));
+	Vector3f scale(0.1f, 0.1f, 0.1f);
+	Vector3f rot(0.0f, 0.0f, 0.0f);
+	Vector3f trans(0.0f, 0.0f, -5.0f);
+	unusedMtx.makeSRT(scale, rot, trans);
 
 	if (!menuOn) {
 		// no map menu open, draw any other 2D screen objects (enemy health gauges, debug text, etc)
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area1);
 		gamecore->draw1D(gfx);
 	}
 
@@ -1077,22 +1086,26 @@ void RunningModeState::postRender(Graphics& gfx)
 
 	// draw text screens if any are active
 	if (tutorialWindow) {
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area2);
 		tutorialWindow->draw(gfx);
 	}
 
 	// draw the HUD, onion menus, results screens, etc
-	gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area3(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(orthoMtx.mMtx, area3);
 	gamecore->draw2D(gfx);
 
 	// draw any game over text if required
 	if (gameoverWindow) {
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area4(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area4);
 		gameoverWindow->draw(gfx);
 	}
 
 	// draw the pause menu if active
-	gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area5(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(orthoMtx.mMtx, area5);
 	pauseWindow->draw(gfx);
 }
 
@@ -1770,7 +1783,9 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		// start off in intro mode, to handle any area entry cutscenes
 		mCurrentModeState = new IntroGameModeState(this);
 
-		gameflow.mMoviePlayer->setGameCamInfo(false, 60.0f, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+		Vector3f pos1(0.0f, 0.0f, 0.0f);
+		Vector3f pos2(0.0f, 0.0f, 0.0f);
+		gameflow.mMoviePlayer->setGameCamInfo(false, 60.0f, pos1, pos2);
 
 		dontShowFrame                  = false;
 		gameflow.mIsTutorialTextActive = FALSE;
@@ -2116,7 +2131,8 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 			gsys->mTimer->start("postRender", true);
 #endif
 			menuOn = false;
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area);
 			postRender(gfx);
 			if (!mActiveMenu && menuWindow) {
 				menuOn = menuWindow->draw(gfx);
@@ -2126,11 +2142,13 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 #endif
 		}
 
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area1);
 
 		// whole section in DLL here about printing some debug text to screen
 
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area2);
 
 		// draw the debug menu if it's open
 		if (mActiveMenu) {
@@ -2140,21 +2158,25 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		if (!mActiveMenu || gameflow.mMoviePlayer->mIsActive) {
 			// draw any other main windows we might have open
 			if (challengeWindow) {
-				gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+				RectArea area3(AREA_FULL_SCREEN(gfx));
+				gfx.setOrthogonal(orthoMtx.mMtx, area3);
 				challengeWindow->draw(gfx);
 			}
 			if (resultWindow) {
-				gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+				RectArea area4(AREA_FULL_SCREEN(gfx));
+				gfx.setOrthogonal(orthoMtx.mMtx, area4);
 				resultWindow->draw(gfx);
 			}
 			if (totalWindow) {
-				gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+				RectArea area5(AREA_FULL_SCREEN(gfx));
+				gfx.setOrthogonal(orthoMtx.mMtx, area5);
 				totalWindow->draw(gfx);
 			}
 #if defined(VERSION_G98E01_PIKIDEMO)
 #else
 			if (memcardWindow) {
-				gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+				RectArea area6(AREA_FULL_SCREEN(gfx));
+				gfx.setOrthogonal(orthoMtx.mMtx, area6);
 				memcardWindow->draw(gfx);
 			}
 #endif
@@ -2276,9 +2298,12 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 	 */
 	void mainRender(Graphics& gfx)
 	{
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area1);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setScissor(area2);
+		Colour transparent(COLOUR_TRANSPARENT);
+		gfx.setClearColour(transparent);
 		gfx.clearBuffer(3, false);
 		gfx.setPerspective(gfx.mCamera->mPerspectiveMatrix.mMtx, gfx.mCamera->mFov, gfx.mCamera->mAspectRatio, gfx.mCamera->mNear,
 		                   gfx.mCamera->mFar, 1.0f);
@@ -2318,12 +2343,16 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		gfx.setPerspective(gfx.mCamera->mPerspectiveMatrix.mMtx, 60.0f, gfx.mCamera->mAspectRatio, 1.0f, gfx.mCamera->mFar, 1.0f);
 
 		Matrix4f unused;
-		unused.makeSRT(Vector3f(0.1f, 0.1f, 0.1f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, -5.0f));
+		Vector3f scale(0.1f, 0.1f, 0.1f);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		Vector3f trans(0.0f, 0.0f, -5.0f);
+		unused.makeSRT(scale, rot, trans);
 
 		gfx.mMatRenderMask = (MATFLAG_Opaque | MATFLAG_AlphaTest | MATFLAG_AlphaBlend);
 		mCurrentModeState->postRender(gfx);
 		Matrix4f orthoMtx;
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area);
 	}
 
 	/**

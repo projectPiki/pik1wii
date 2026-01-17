@@ -30,7 +30,8 @@ TAIAmotion::TAIAmotion(int nextState, int motionID)
  */
 void TAIAmotion::start(Teki& teki)
 {
-	teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+	PaniMotionInfo anim(mMotionID, &teki);
+	teki.mTekiAnimator->startMotion(anim);
 }
 
 /**
@@ -61,26 +62,31 @@ void TAIAreserveMotion::start(Teki& teki)
 {
 	if (mMotionID != teki.mTekiAnimator->mMotionIdx) {
 		if (teki.mTekiAnimator->mMotionIdx < 0) {
-			teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+			PaniMotionInfo anim1(mMotionID, &teki);
+			teki.mTekiAnimator->startMotion(anim1);
 			return;
 		}
 
 		if (teki.mTekiAnimator->getCounter() >= f32(teki.mTekiAnimator->mAnimInfo->mData->mTotalFrameCount - 2)) {
-			teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+			PaniMotionInfo anim2(mMotionID, &teki);
+			teki.mTekiAnimator->startMotion(anim2);
 			return;
 		}
 
-		teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+		PaniMotionInfo anim3(PANI_NO_MOTION, &teki);
+		teki.mTekiAnimator->finishMotion(anim3);
 		return;
 	}
 
 	if (teki.mTekiAnimator->getCounter() >= f32(teki.mTekiAnimator->mAnimInfo->mData->mTotalFrameCount - 2)) {
-		teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+		PaniMotionInfo anim4(mMotionID, &teki);
+		teki.mTekiAnimator->startMotion(anim4);
 	}
 
 	if (teki.mTekiAnimator->mIsFinished) {
 		f32 frame = teki.mTekiAnimator->getCounter();
-		teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+		PaniMotionInfo anim5(mMotionID, &teki);
+		teki.mTekiAnimator->startMotion(anim5);
 		teki.mTekiAnimator->setCounter(frame);
 	}
 }
@@ -92,7 +98,8 @@ bool TAIAreserveMotion::act(Teki& teki)
 {
 	if (mMotionID != teki.mTekiAnimator->mMotionIdx) {
 		if (teki.mTekiAnimator->getCurrentKeyIndex() < 0) {
-			teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+			PaniMotionInfo anim(mMotionID, &teki);
+			teki.mTekiAnimator->startMotion(anim);
 			teki.mCurrentAnimEvent = KEY_Reserved;
 			return true;
 		}
@@ -121,7 +128,8 @@ bool TAIAmotionLoop::act(Teki& teki)
 		teki.addFrameCounter(gsys->getFrameTime());
 		if (teki.getFrameCounter() > getFrameMax(teki)) {
 			res = true;
-			teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+			PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+			teki.mTekiAnimator->finishMotion(anim);
 		}
 	}
 	return res;

@@ -70,7 +70,9 @@ bool Creature::isTerrible()
  */
 void Creature::load(RandomAccessStream& stream, bool doLoadPosition)
 {
+#if defined (DEVELOP)
 	PRINT("* loading creature %s\n", ObjType::getName(mObjType));
+#endif
 	int startPos = stream.getPosition();
 	if (doLoadPosition) {
 		// idk why they didn't use the Vector3f::read inline here, but they didn't
@@ -80,7 +82,9 @@ void Creature::load(RandomAccessStream& stream, bool doLoadPosition)
 	}
 
 	doLoad(stream);
+#if defined (DEVELOP)
 	PRINT("******** done : %d\n", stream.getPosition() - startPos);
+#endif
 }
 
 /**
@@ -88,7 +92,9 @@ void Creature::load(RandomAccessStream& stream, bool doLoadPosition)
  */
 void Creature::save(RandomAccessStream& stream, bool doSavePosition)
 {
+#if defined (DEVELOP)
 	PRINT("* saving creature %s\n", ObjType::getName(mObjType));
+#endif
 	int startPos = stream.getPosition();
 	if (doSavePosition) {
 		// idk why they didn't use the Vector3f::write inline here but they didn't
@@ -98,7 +104,9 @@ void Creature::save(RandomAccessStream& stream, bool doSavePosition)
 	}
 
 	doSave(stream);
+#if defined (DEVELOP)
 	PRINT("******** done : %d\n", stream.getPosition() - startPos);
+#endif
 }
 
 /**
@@ -342,7 +350,9 @@ u32 Creature::getGeneratorID()
  */
 bool Creature::stimulate(immut Interaction& interaction)
 {
+#if defined (DEVELOP)
 	PRINT("objType=%s creature %x got interaction %x\n", ObjType::getName(mObjType), &interaction);
+#endif
 	return false;
 }
 
@@ -359,7 +369,8 @@ bool Creature::setStateGrabbed(Creature* holder)
 	mHoldingCreature.set(holder);
 	holder->mGrabbedCreature.set(this);
 	mPreGrabRotation = mRotationQuat;
-	_100.fromEuler(Vector3f(0.39269909f, 0.0f, 0.0f));
+	Vector3f vec(0.39269909f, 0.0f, 0.0f);
+	_100.fromEuler(vec);
 	_110 = 0.0f;
 
 	PRINT("setStateGrabbed : this=%x c=%x\n", this, holder);
@@ -608,7 +619,8 @@ Creature::Creature(CreatureProp* props)
 	mFormPoint       = nullptr;
 	resetCreatureFlag(CF_DisableAutoFaceDir);
 
-	mRotationQuat.fromEuler(Vector3f(0.0f, 0.0f, 0.0f));
+	Vector3f vec(0.0f, 0.0f, 0.0f);
+	mRotationQuat.fromEuler(vec);
 	mPrevAngularVelocity.set(0.0f, 0.0f, 0.0f);
 
 	resetCreatureFlag(CF_Unk1 | CF_SkipPhysicsAndCollision);
@@ -997,7 +1009,6 @@ void Creature::collisionCheck(f32 _unused)
 				}
 				continue;
 			}
-			STACK_PAD_VAR(1); // there's an extra variable *somewhere* but idk where.
 
 			// we have info for both of us, so pass it off to CollInfo to do the work
 			CollPart* ourPart;
@@ -1158,14 +1169,16 @@ void Creature::drawShadow(Graphics& gfx)
 			return;
 		}
 
-		gfx.setColour(Colour(255, 255, 255, u8(255.0f * alphaFactor)), true);
+		Colour colour(255, 255, 255, u8(255.0f * alphaFactor));
+		gfx.setColour(colour, true);
 
 		// get direction sun is in from object
 		Vector3f sunDirection = gfx.mSunPosition - shadowPos;
 		f32 unusedVertical    = sunDirection.y;
 
 		// project to flat direction
-		sunDirection.project(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec(0.0f, 1.0f, 0.0f);
+		sunDirection.project(vec);
 
 		f32 unusedRatio = sunDirection.length() / unusedVertical;
 
@@ -1216,7 +1229,6 @@ void Creature::drawShadow(Graphics& gfx)
 		// draw texture using the above vertices/coordinates
 		gfx.drawOneTri(vertices, nullptr, texCoords, 6);
 
-		STACK_PAD_VAR(1);
 		return;
 	}
 
@@ -1317,10 +1329,14 @@ void Creature::renderAtari(Graphics& gfx)
 		Matrix4f mtx1;
 		Matrix4f mtx2;
 
-		mtx1.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), mSRT.t);
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		mtx1.makeSRT(scale, rot, mSRT.t);
 		gfx.mCamera->mLookAtMtx.multiplyTo(mtx1, mtx2);
-		gfx.setColour(Colour(0, 255, 0, 255), true);
-		gfx.drawSphere(Vector3f(0.0f, -mGroundOffset, 0.0f), mCollisionRadius, mtx2);
+		Colour colour(0, 255, 0, 255);
+		gfx.setColour(colour, true);
+		Vector3f vec(0.0f, -mGroundOffset, 0.0f);
+		gfx.drawSphere(vec, mCollisionRadius, mtx2);
 		return;
 	}
 
@@ -1331,29 +1347,39 @@ void Creature::renderAtari(Graphics& gfx)
 
 		Vector3f pos(0.0f, 0.5f * h, 0.0f);
 		Matrix4f mtx;
-		mtx.makeVQS(Vector3f(0.0f, 0.0f, 0.0f), mRotationQuat, Vector3f(1.0f, 1.0f, 1.0f));
+		Vector3f v(0.0f, 0.0f, 0.0f);
+		Vector3f s(1.0f, 1.0f, 1.0f);
+		mtx.makeVQS(v, mRotationQuat, s);
 		pos.multMatrix(mtx);
 		Vector3f unused(pos);
 		pos = pos + mSRT.t;
 
 		Matrix4f mtx2;
 		Matrix4f mtx3;
-
-		mtx2.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), pos);
+		
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		mtx2.makeSRT(scale, rot, pos);
 		gfx.mCamera->mLookAtMtx.multiplyTo(mtx2, mtx3);
 
-		gfx.setColour(Colour(255, 0, 0, 255), true);
-		gfx.drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 0.5f * h + pickOffs, mtx3);
+		Colour colour(255, 0, 0, 255);
+		gfx.setColour(colour, true);
+		Vector3f vec(0.0f, 0.0f, 0.0f);
+		gfx.drawSphere(vec, 0.5f * h + pickOffs, mtx3);
 		return;
 	}
 
 	// pellet but not a ufo part
 	Matrix4f mtx1;
 	Matrix4f mtx2;
-	mtx1.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), mSRT.t);
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	Vector3f rot(0.0f, 0.0f, 0.0f);
+	mtx1.makeSRT(scale, rot, mSRT.t);
 	gfx.mCamera->mLookAtMtx.multiplyTo(mtx1, mtx2);
-	gfx.setColour(Colour(0, 255, 0, 255), true);
-	gfx.drawSphere(Vector3f(0.0f, -mGroundOffset, 0.0f), mCollisionRadius, mtx2);
+	Colour colour(0, 255, 0, 255);
+	gfx.setColour(colour, true);
+	Vector3f vec(0.0f, -mGroundOffset, 0.0f);
+	gfx.drawSphere(vec, mCollisionRadius, mtx2);
 }
 
 /**

@@ -667,15 +667,20 @@ void Menu::draw(Graphics& gfx, f32 fadeFactor)
 
 	// draw menu background (with gradient)
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(Colour(mGradBGTopColour.r, mGradBGTopColour.g, mGradBGTopColour.b, mGradBGTopColour.a * menuBoxAlphaFactor), true);
-	gfx.setAuxColour(
-	    Colour(mGradBGBottomColour.r, mGradBGBottomColour.g, mGradBGBottomColour.b, mGradBGBottomColour.a * menuBoxAlphaFactor));
-	gfx.fillRectangle(RectArea(centerX - halfWidth, centerY - halfHeight, centerX + halfWidth, centerY + halfHeight));
+	Colour colour1(mGradBGTopColour.r, mGradBGTopColour.g, mGradBGTopColour.b, mGradBGTopColour.a * menuBoxAlphaFactor);
+	gfx.setColour(colour1, true);
+	Colour colour2(mGradBGBottomColour.r, mGradBGBottomColour.g, mGradBGBottomColour.b, mGradBGBottomColour.a * menuBoxAlphaFactor);
+	gfx.setAuxColour(colour2);
+	RectArea area1(centerX - halfWidth, centerY - halfHeight, centerX + halfWidth, centerY + halfHeight);
+	gfx.fillRectangle(area1);
 
 	// draw menu box outline
-	gfx.setColour(Colour(64, 64, 192, 255.0f * menuBoxAlphaFactor), true);
-	gfx.setAuxColour(Colour(64, 64, 192, 255.0f * menuBoxAlphaFactor));
-	gfx.lineRectangle(RectArea(centerX - halfWidth, centerY - halfHeight, centerX + halfWidth, centerY + halfHeight));
+	Colour colour3(64, 64, 192, 255.0f * menuBoxAlphaFactor);
+	gfx.setColour(colour3, true);
+	Colour colour4(64, 64, 192, 255.0f * menuBoxAlphaFactor);
+	gfx.setAuxColour(colour4);
+	RectArea area2(centerX - halfWidth, centerY - halfHeight, centerX + halfWidth, centerY + halfHeight);
+	gfx.lineRectangle(area2);
 
 	// iterate through the menu items/options and draw each one's label
 	if (isFullDisplay) {
@@ -691,19 +696,23 @@ void Menu::draw(Graphics& gfx, f32 fadeFactor)
 					// highlighted/focused items get a different colour
 					if (mState == MenuStateType::Idle) {
 						// this is for if a menu is open behind another menu (unused pop-out submenus)
-						gfx.setColour(Colour(192, 192, 0, (int)labelAlpha), true);
+						Colour colour5(192, 192, 0, (int)labelAlpha);
+						gfx.setColour(colour5, true);
 					} else {
 						mCurrentItemDisplayIndex = i;
 						// this goes from 64 (dark grey) to 192 (light grey)
 						int greyRGB = int((sinf(mSelectedLabelPulsePhase) + 1.0f) * 64.0f) + 64;
-						gfx.setColour(Colour(greyRGB, greyRGB, greyRGB, (int)labelAlpha), true);
+						Colour grey(greyRGB, greyRGB, greyRGB, (int)labelAlpha);
+						gfx.setColour(grey, true);
 					}
 				} else if (!item->mIsEnabled) {
 					// light yellow for unselectable items
-					gfx.setColour(Colour(255, 255, 128, (int)labelAlpha), true);
+					Colour colour6(255, 255, 128, (int)labelAlpha);
+					gfx.setColour(colour6, true);
 				} else {
 					// dark gold for everything else
-					gfx.setColour(Colour(128, 128, 64, (int)labelAlpha), true);
+					Colour colour7(128, 128, 64, (int)labelAlpha);
+					gfx.setColour(colour7, true);
 				}
 
 				// prepare and draw the label
@@ -722,11 +731,14 @@ void Menu::draw(Graphics& gfx, f32 fadeFactor)
 
 		// highlight the currently selected item with a rectangle
 		int currItemTopY = topY + MENU_ITEM_HEIGHT * mCurrentItemDisplayIndex + 1;
-		gfx.setColour(Colour(128, 128, 128, 128), true); // light grey
-		gfx.setAuxColour(Colour(192, 192, 192, 128));    // even lighter grey
+		Colour colour8(128, 128, 128, 128);
+		gfx.setColour(colour8, true); // light grey
+		Colour colour9(192, 192, 192, 128);
+		gfx.setAuxColour(colour9);    // even lighter grey
 		gfx.useTexture(nullptr, GX_TEXMAP0);
-		gfx.lineRectangle(RectArea(centerX - maxStrHalfWidth + 4, currItemTopY, mCenterPoint.mMinX + maxStrHalfWidth - 4,
-		                           currItemTopY + MENU_ITEM_HEIGHT));
+		RectArea area3(centerX - maxStrHalfWidth + 4, currItemTopY, mCenterPoint.mMinX + maxStrHalfWidth - 4,
+		                           currItemTopY + MENU_ITEM_HEIGHT);
+		gfx.lineRectangle(area3);
 	}
 }
 

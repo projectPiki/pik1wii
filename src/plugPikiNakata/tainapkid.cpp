@@ -904,7 +904,8 @@ TaiNapkidStrategy::TaiNapkidStrategy(TekiParameters* params)
  */
 void TaiNapkidStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Frog_Water2, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Frog_Water2, pos, nullptr, nullptr);
 	teki.stopParticleGenerator(0);
 	TaiStrategy::start(teki);
 }
@@ -933,9 +934,12 @@ void TaiNapkidStrategy::draw(Teki& teki, Graphics& gfx)
  */
 void TaiNapkidStrategy::drawDebugInfo(Teki& teki, Graphics& gfx)
 {
-	teki.drawRange(gfx, teki.getPosition(), teki.getParameterF(TPF_VisibleRange), Colour(0, 0, 255, 255));
-	teki.drawRange(gfx, teki.getPosition(), 130.0f, Colour(30, 30, 30, 255));
-	teki.drawRange(gfx, teki.getPosition(), teki.getAttackableRange(), Colour(255, 255, 0, 255));
+	Colour colour1(0, 0, 255, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getParameterF(TPF_VisibleRange), colour1);
+	Colour colour2(30, 30, 30, 255);
+	teki.drawRange(gfx, teki.getPosition(), 130.0f, colour2);
+	Colour colour3(255, 255, 0, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getAttackableRange(), colour3);
 
 	if (teki.mTekiAnimator->getCurrentMotionIndex() == TekiMotion::Attack) {
 		f32 counter  = teki.mTekiAnimator->getCounter();
@@ -944,11 +948,13 @@ void TaiNapkidStrategy::drawDebugInfo(Teki& teki, Graphics& gfx)
 		if (startKey <= counter && counter <= endKey) {
 			NVector3f hitCenter;
 			teki.outputHitCenter(hitCenter);
-			teki.drawRange(gfx, hitCenter, teki.getAttackHitRange(), Colour(255, 0, 0, 255));
+			Colour colour4(255, 0, 0, 255);
+			teki.drawRange(gfx, hitCenter, teki.getAttackHitRange(), colour4);
 		}
 	}
 
-	teki.drawRange(gfx, teki.getPosition(), teki.getLowerRange(), Colour(255, 0, 255, 255));
+	Colour colour5(255, 0, 255, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getLowerRange(), colour5);
 }
 
 /**
@@ -994,8 +1000,6 @@ bool TekiNapkidShortRangeCondition::satisfy(Creature* target) immut
 		return true;
 	}
 
-	STACK_PAD_VAR(2);
-	STACK_PAD_TERNARY(target, 1);
 	return false;
 	TekiDistanceCondition(nullptr, 0.0f);
 }
@@ -1183,7 +1187,8 @@ void TaiNapkidCirclingAction::start(Teki& teki)
 	teki.outputDirectionVector(directionVec);
 
 	NVector3f cross;
-	cross.cross(NVector3f(0.0f, 1.0f, 0.0f), directionVec);
+	NVector3f dir(0.0f, 1.0f, 0.0f);
+	cross.cross(dir, directionVec);
 	bool check = false;
 	if (cross.dot(sep) < 0.0f) {
 		check = true;
@@ -1202,12 +1207,12 @@ void TaiNapkidCirclingAction::start(Teki& teki)
 		angleInc = -angleInc;
 	}
 
-	STACK_PAD_VAR(4);
 	NVector3f targetVelocity;
 	targetVelocity.add2(teki.getPosition(), normalized);
 	teki.mVelocityIO.input(targetVelocity);
 
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	teki.mCircleMoveEvent->makeCircleMoveEvent(timeLimit, &teki.mPositionIO, &teki.mVelocityIO, 1.0f, rad, 0.0f, angleInc);
 	teki.mCircleMoveEvent->reset();
@@ -1331,7 +1336,8 @@ bool TaiNapkidCatchingAction::act(Teki& teki)
 				break;
 			}
 
-			piki->stimulate(InteractSwallow(&teki, freeSlot, 0));
+			InteractSwallow swallow(&teki, freeSlot, 0);
+			piki->stimulate(swallow);
 		}
 	}
 
@@ -1349,7 +1355,8 @@ void TaiNapkidCatchDescendingAction::start(Teki& teki)
 {
 	teki.stopMove();
 
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	NVector3f velocity;
 	teki.outputDirectionVector(velocity);
@@ -1396,7 +1403,8 @@ bool TaiNapkidCatchTracingAction::act(Teki& teki)
 		acceleration.z = 0.0f;
 	} else {
 		NVector3f crossVec2;
-		crossVec2.cross(dir, NVector3f(0.0f, 1.0f, 0.0f));
+		NVector3f vec(0.0f, 1.0f, 0.0f);
+		crossVec2.cross(dir, vec);
 		crossVec2.normalizeCheck();
 		crossVec2.scale(300.0f);
 
@@ -1426,7 +1434,8 @@ bool TaiNapkidCatchTracingAction::act(Teki& teki)
  */
 void TaiNapkidCatchFlyingAction::start(Teki& teki)
 {
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	NVector3f vel;
 	teki.mVelocityIO.output(vel);
@@ -1445,7 +1454,8 @@ void TaiNapkidCatchFlyingAction::start(Teki& teki)
  */
 void TaiNapkidCatchAscendingAction::start(Teki& teki)
 {
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	NVector3f vel;
 	teki.mVelocityIO.output(vel);
@@ -1472,7 +1482,8 @@ void TaiNapkidTakingOffAscendingAction::start(Teki& teki)
 	linearFunc.makeClampLinearFunction(0.0f, 1.0f, 10.0f, 0.7f);
 	f32 linFuncValue = linearFunc.getValue(f32(stickerCount));
 
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	NVector3f takeOffVel;
 	teki.outputDirectionVector(takeOffVel);
@@ -1492,7 +1503,8 @@ void TaiNapkidTakingOffAscendingAction::start(Teki& teki)
  */
 void TaiNapkidRisingAscendingAction::start(Teki& teki)
 {
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	NVector3f newVel;
 	teki.outputDirectionVector(newVel);
@@ -1527,7 +1539,8 @@ bool TaiNapkidThrowingPikiAction::act(Teki& teki)
 					PRINT_NAKATA("TaiNapkidThrowingPikiAction::act:%08x:endStickObject\n", &teki);
 					throwPiki->endStickMouth();
 
-					throwPiki->stimulate(InteractThrowAway(&teki));
+					InteractThrowAway throwaway(&teki);
+					throwPiki->stimulate(throwaway);
 
 					throwPiki->mVelocity.set(throwVel);
 					iter.dec();
@@ -1541,7 +1554,6 @@ bool TaiNapkidThrowingPikiAction::act(Teki& teki)
 	}
 	PRINT_NAKATA("!TaiNapkidThrowingPikiAction::act:%08x\n", &teki);
 
-	STACK_PAD_TERNARY(&teki, 1);
 	return false;
 }
 
@@ -1563,7 +1575,6 @@ bool TaiNapkidFlickAction::act(Teki& teki)
 		return false;
 	}
 
-	STACK_PAD_VAR(2);
 	return true;
 }
 
@@ -1573,7 +1584,8 @@ bool TaiNapkidFlickAction::act(Teki& teki)
 void TaiNapkidFallingAction::start(Teki& teki)
 {
 	PRINT_NAKATA("TaiNapkidFallingAction::start:%08x\n", &teki);
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 
 	NVector3f fallVel(0.0f, -20.0f, 0.0f);
 	teki.mParabolaEvent->makeParabolaEvent(nullptr, &teki.mPositionIO, fallVel, 1000.0f, teki.getGravity());

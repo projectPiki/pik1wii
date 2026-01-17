@@ -43,7 +43,9 @@ void ActGuard::init(Creature*)
 	mTimer       = 6.0f;
 	mIsWaiting   = false;
 	mIsGuardable = true;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait), PaniMotionInfo(PIKIANIM_Wait));
+	PaniMotionInfo anim1(PIKIANIM_Wait);
+	PaniMotionInfo anim2(PIKIANIM_Wait);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -66,7 +68,6 @@ void ActGuard::cleanup()
 
 	// this isn't elaborated on in the DLL either.
 	rand();
-	STACK_PAD_VAR(4);
 }
 
 /**

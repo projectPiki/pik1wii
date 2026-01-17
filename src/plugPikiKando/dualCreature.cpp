@@ -134,7 +134,8 @@ void DualCreature::rotateY(f32 rotY)
 {
 	if (mIsRealDynamics) {
 		Quat q1;
-		q1.fromEuler(Vector3f(0.0f, rotY, 0.0f));
+		Vector3f vec(0.0f, rotY, 0.0f);
+		q1.fromEuler(vec);
 		q1.multiply(mRotationQuat);
 		mRotationQuat = q1;
 		mRotationQuat.normalise();
@@ -162,9 +163,6 @@ void DualCreature::update()
 void DualCreature::refresh(Graphics& gfx)
 {
 	Matrix4f mtx;
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-	// I don't enjoy splitting this difference in two, but syntax highlighting really hates extra opening braces.
-#else
 	bool isPointVisible = gfx.mCamera->isPointVisible(mSRT.t, 2.0f * getBoundingSphereRadius());
 
 	if (isPointVisible) {
@@ -172,14 +170,10 @@ void DualCreature::refresh(Graphics& gfx)
 	} else {
 		enableAICulling();
 	}
-#endif
+
 
 	if (!_43E) {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		if (!mIsDynamicsSimpleFixed && gfx.mCamera->isPointVisible(mSRT.t, 2.0f * getBoundingSphereRadius()))
-#else
 		if (!mIsDynamicsSimpleFixed && isPointVisible)
-#endif
 		{
 			if (!mIsRealDynamics) {
 				useRealDynamics();
@@ -251,7 +245,8 @@ void PelCreature::startAI(int)
 {
 	mCollInfo = &mItemCollInfo;
 	mCollInfo->initInfo(mItemShape->mShape, mItemParts, mPartIDs);
-	mItemAnimator.startMotion(PaniMotionInfo(0));
+	PaniMotionInfo anim(0);
+	mItemAnimator.startMotion(anim);
 }
 
 /**

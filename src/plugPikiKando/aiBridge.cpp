@@ -79,7 +79,6 @@ bool ActBridge::collideBridgeSurface()
 			return true;
 		}
 	}
-	STACK_PAD_TERNARY(platform, 1);
 	return false;
 }
 
@@ -92,7 +91,8 @@ bool ActBridge::collideBridgeBlocker()
 	Creature* platform = mPiki->getCollidePlatformCreature();
 	if (platform && platform == mBridge) {
 		Vector3f normal = mPiki->getCollidePlatformNormal();
-		if (normal.dot(mBridge->getBridgeZVec()) < -0.8f) {
+		Vector3f zVec = mBridge->getBridgeZVec();
+		if (normal.dot(zVec) < -0.8f) {
 			return true;
 		}
 	}
@@ -170,7 +170,9 @@ void ActBridge::procWallMsg(Piki* piki, MsgWall* msg)
 void ActBridge::initClimb()
 {
 	mState = STATE_Climb;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Noboru, this), PaniMotionInfo(PIKIANIM_Noboru));
+	PaniMotionInfo anim1(PIKIANIM_Noboru, this);
+	PaniMotionInfo anim2(PIKIANIM_Noboru);
+	mPiki->startMotion(anim1, anim2);
 	Vector3f normal(mBridgeWallNormal);
 	normal.y = 0.0f;
 	normal.normalise();
@@ -205,7 +207,9 @@ void ActBridge::initApproach()
 {
 	mState          = STATE_Approach;
 	mClimbingBridge = false;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk, this);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -310,7 +314,9 @@ void ActBridge::cleanup()
 void ActBridge::newInitApproach()
 {
 	mState = STATE_Approach;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk, this);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 	PRINT("approach init\n");
 }
 
@@ -333,12 +339,10 @@ int ActBridge::newExeApproach()
 	}
 
 	Vector3f direction = mBridge->getStartPos() - mPiki->getPosition();
-	STACK_PAD_VAR(1);
 	if (direction.normalise() < 300.0f) {
 		f32 bridgePosY;
 		f32 bridgePosX;
 		mBridge->getBridgePos(mPiki->mSRT.t, bridgePosX, bridgePosY);
-		STACK_PAD_VAR(3);
 		int currStage = mBridge->getFirstUnfinishedStage();
 		if (currStage == -1) {
 			PRINT("** newExeApp: SUCCESS * fstStage = -1!\n");
@@ -362,8 +366,6 @@ int ActBridge::newExeApproach()
 				return ACTOUT_Fail;
 			}
 		} else {
-			STACK_PAD_VAR(1);
-
 			Vector3f newDir;
 			if (bridgePosY > -10.0f) {
 				newDir = mBridge->getBridgeZVec();
@@ -381,8 +383,6 @@ int ActBridge::newExeApproach()
 	}
 
 	return ACTOUT_Continue;
-
-	STACK_PAD_TERNARY(mBridge, 6);
 }
 
 /**
@@ -398,7 +398,9 @@ void ActBridge::newInitGo()
 		mStageID = -1;
 	}
 
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk, this);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -420,8 +422,6 @@ int ActBridge::newExeGo()
 		return ACTOUT_Fail;
 	}
 
-	STACK_PAD_STRUCT(3);
-	STACK_PAD_TERNARY(this, 1);
 	if (mBridge->isStageFinished(mStageID)) {
 		PRINT("stage %d is finished\n", mStageID);
 		newInitGo();
@@ -433,9 +433,7 @@ int ActBridge::newExeGo()
 		return ACTOUT_Continue;
 	}
 
-	STACK_PAD_INLINE(1);
 	bool c = collideBridgeSurface();
-	STACK_PAD_TERNARY(c, 2);
 
 	Vector3f stagePos = mBridge->getStagePos(mStageID);
 	Vector3f xVec     = mBridge->getBridgeXVec();
@@ -448,7 +446,7 @@ int ActBridge::newExeGo()
 	direction.normalise();
 
 	mPiki->setSpeed(0.70f, direction);
-	STACK_PAD_VAR(1);
+
 	return ACTOUT_Continue;
 }
 
@@ -467,7 +465,9 @@ void ActBridge::newInitWork()
 		return;
 	}
 
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+	PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+	PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+	mPiki->startMotion(anim1, anim2);
 	mAnimationFinished = false;
 	if (AIPerf::bridgeFast) {
 		mPiki->setCreatureFlag(CF_DisableMovement);
@@ -542,8 +542,6 @@ int ActBridge::newExeWork()
 		newInitApproach();
 		return ACTOUT_Continue;
 	}
-
-	STACK_PAD_TERNARY(this, 3);
 
 	if (absF(xDist) > 0.3f * mBridge->getStageWidth()) {
 		if (xDist < 0.0f) {

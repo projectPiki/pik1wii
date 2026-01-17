@@ -162,7 +162,7 @@ struct MovSampleSetupSection : public Node {
 		};
 		int size  = 0xe00000;
 		u8* store = new (0x20) u8[size];
-		Jac_StreamMovieInit(movieNames[gameflow.mCurrIntroMovieID], store, size);
+		//Jac_StreamMovieInit(movieNames[gameflow.mCurrIntroMovieID], store, size);
 		ImgW      = 640;
 		ImgH      = 480;
 		int size2 = 0x70800;
@@ -223,7 +223,7 @@ struct MovSampleSetupSection : public Node {
 	virtual void draw(Graphics& gfx) // _14 (weak)
 	{
 		// NON-MATCHING
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
+		/*gfx.setViewport(AREA_FULL_SCREEN(gfx));
 		gfx.setScissor(AREA_FULL_SCREEN(gfx));
 		gfx.setClearColour(COLOUR_TRANSPARENT);
 		gfx.clearBuffer(3, false);
@@ -302,7 +302,7 @@ struct MovSampleSetupSection : public Node {
 		gfx.setColour(Colour(255, 255, 64, 255), true);
 		gfx.setAuxColour(Colour(255, 0, 64, 255));
 
-		gameflow.drawLoadLogo(gfx, false, gameflow.mLevelBannerTex, gameflow.mLevelBannerFadeValue);
+		gameflow.drawLoadLogo(gfx, false, gameflow.mLevelBannerTex, gameflow.mLevelBannerFadeValue);*/
 	}
 
 	// not in the DLL, but needed for stack ordering

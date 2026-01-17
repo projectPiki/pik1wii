@@ -225,7 +225,8 @@ void TaiShellStrategy::createEffect(Teki& teki, int p2)
  */
 void TaiShellStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Shell_Twinkle, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Shell_Twinkle, pos, nullptr, nullptr);
 	TaiStrategy::start(teki);
 	teki.clearTekiOption(BTeki::TEKI_OPTION_ORGANIC);
 	teki.clearTekiOption(BTeki::TEKI_OPTION_LIFE_GAUGE_VISIBLE);
@@ -281,8 +282,6 @@ void TaiShellStrategy::draw(Teki& teki, Graphics& gfx)
 			teki.setParticleGeneratorPosition(0, animPos);
 		}
 	}
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -313,7 +312,6 @@ void TaiShellSetPositionAction::setPosition(Teki& teki, Creature* pearl)
  */
 bool TaiShellSaveItemPositionAction::act(Teki& teki)
 {
-	STACK_PAD_VAR(4);
 	if (teki.mTekiAnimator->getCounter() > teki.mTekiAnimator->getKeyValueByKeyType(2)) {
 		return false;
 	}
@@ -374,7 +372,8 @@ bool TaiShellEatAction::act(Teki& teki)
 	NVector3f spawnPos;
 	teki.outputSpawnPosition(spawnPos);
 	TekiAndCondition posDistAndAnd(&andCond, &TekiPositionDistanceCondition(spawnPos, teki.getAttackableRange()));
-	return teki.interactNaviPiki(InteractSwallow(&teki, nullptr, 0), posDistAndAnd);
+	InteractSwallow swallow(&teki, nullptr, 0);
+	return teki.interactNaviPiki(swallow, posDistAndAnd);
 
 	// i am not proud of what this project has required of me spiritually
 	TekiAndCondition(nullptr, nullptr);
@@ -434,8 +433,6 @@ TaiPearlParameters::TaiPearlParameters()
 	multiP->setF(TPF_CorpseVelocityVert, 300.0f);
 	multiP->setF(TPF_BombDamageRate, 1.0f);
 	multiP->setF(TPF_CollisionRadius, 16.0f);
-
-	STACK_PAD_VAR(4);
 }
 
 /**
@@ -463,8 +460,6 @@ TaiRocpearlParameters::TaiRocpearlParameters()
 	multiP->setF(TPF_SpawnPelletVelocityVert, 300.0f);
 	multiP->setF(TPF_BombDamageRate, 1.0f);
 	multiP->setF(TPF_CollisionRadius, 16.0f);
-
-	STACK_PAD_VAR(4);
 }
 
 /**

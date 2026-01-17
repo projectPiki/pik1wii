@@ -783,13 +783,17 @@ TaiCollecStrategy::TaiCollecStrategy(TekiParameters* params)
  */
 void TaiCollecStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Collec_HmA, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos1(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Collec_HmA, pos1, nullptr, nullptr);
 	teki.stopParticleGenerator(0);
-	teki.mParticleGenerators[1] = effectMgr->create(EffectMgr::EFF_Collec_HmB, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos2(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[1] = effectMgr->create(EffectMgr::EFF_Collec_HmB, pos2, nullptr, nullptr);
 	teki.stopParticleGenerator(1);
-	teki.mParticleGenerators[2] = effectMgr->create(EffectMgr::EFF_Collec_Hiki, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos3(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[2] = effectMgr->create(EffectMgr::EFF_Collec_Hiki, pos3, nullptr, nullptr);
 	teki.stopParticleGenerator(2);
-	teki.mParticleGenerators[3] = effectMgr->create(EffectMgr::EFF_Collec_Ashi, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos4(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[3] = effectMgr->create(EffectMgr::EFF_Collec_Ashi, pos4, nullptr, nullptr);
 	teki.stopParticleGenerator(3);
 
 	TaiStrategy::start(teki);
@@ -1060,13 +1064,17 @@ bool TaiCollecPelletDisappearedAction::act(Teki& teki)
 {
 	Creature* target = teki.getCreaturePointer(2);
 	if (!target) {
+#if defined (DEVELOP)
 		PRINT("!TaiCollecPelletDisappearedAction::act:target==null:%08x,%d\n", &teki, teki.mStateID);
+#endif
 		return true;
 	}
 
 	TekiVisibleCondition NRef cond = TekiVisibleCondition(&teki);
 	if (!cond.satisfy(target)) {
+#if defined (DEVELOP)
 		PRINT("!TaiCollecPelletDisappearedAction::act:!condition.satisfy:%08x,%d\n", &teki, teki.mStateID);
+#endif
 		teki.clearCreaturePointer(2);
 		return true;
 	}
@@ -1195,7 +1203,6 @@ bool TaiCollecWinCarryingAction::act(Teki& teki)
 		return false;
 	}
 
-	STACK_PAD_TERNARY(target, 1);
 	return true;
 }
 
@@ -1215,7 +1222,6 @@ bool TaiCollecDefeatCarryingAction::act(Teki& teki)
 		return false;
 	}
 
-	STACK_PAD_TERNARY(target, 1);
 	return true;
 }
 
@@ -1236,8 +1242,7 @@ bool TaiCollecPutAction::act(Teki& teki)
 	if (!teki.arrivedAt(dist, teki.getParameterF(TPF_WalkVelocity))) {
 		return false;
 	}
-
-	STACK_PAD_TERNARY(dist, 3);
+	
 	return true;
 }
 
@@ -1260,7 +1265,8 @@ void TaiCollecPuttingPelletAction::start(Teki& teki)
 
 	Pellet* pellet = (Pellet*)target;
 	pellet->endStickTeki(&teki);
-	pellet->stimulate(InteractSwallow(&teki, teki.mCollInfo->getSphere('slot')->getChildAt(0), 0));
+	InteractSwallow swallow(&teki, teki.mCollInfo->getSphere('slot')->getChildAt(0), 0);
+	pellet->stimulate(swallow);
 }
 
 /**
@@ -1286,7 +1292,8 @@ bool TaiCollecPuttingPelletAction::act(Teki& teki)
 	if (teki.animationFinished()) {
 		teki.flickUpper();
 		Pellet* pellet = (Pellet*)target;
-		pellet->stimulate(InteractKill(&teki, 0));
+		InteractKill kill(&teki, 0);
+		pellet->stimulate(kill);
 		teki.clearCreaturePointer(2);
 		teki.stopParticleGenerator(2);
 	}

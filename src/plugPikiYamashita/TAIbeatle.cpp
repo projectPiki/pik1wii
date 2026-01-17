@@ -164,7 +164,8 @@ public:
 		teki.setPtclGenPtr(YTeki::PTCL_Unk4, nullptr);
 		teki.setPtclGenPtr(YTeki::PTCL_Unk5, nullptr);
 
-		teki.mTekiAnimator->startMotion(PaniMotionInfo(mMotionID, &teki));
+		PaniMotionInfo anim(mMotionID, &teki);
+		teki.mTekiAnimator->startMotion(anim);
 		teki.playEventSound(&teki, SE_KABUTO_OVERHEAT);
 		teki.setRunAwaySwitch(false);
 	}
@@ -456,8 +457,6 @@ public:
 				ptclGen->setNewtonField(attractorPos, ptclGen->getNewtonFieldFrc(), true);
 			}
 
-			STACK_PAD_STRUCT(3);
-
 			ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk7);
 			if (ptclGen != nullptr) {
 				Vector3f particleNormal;
@@ -468,7 +467,6 @@ public:
 			}
 
 			if (zen::RoundOff(teki.mTekiAnimator->mAnimationCounter) > 4 && teki.getPtclGenPtr(YTeki::PTCL_Unk6) != nullptr) {
-				STACK_PAD_VAR(2);
 				Iterator pikiIter(pikiMgr);
 				CI_LOOP(pikiIter)
 				{
@@ -498,7 +496,6 @@ public:
 								                 -pikiSlotSep.z * knockbackStrength);
 
 								InteractWind wind(&teki, knockbackVel, 0.0f, nullptr);
-								STACK_PAD_VAR(1);
 								piki->stimulate(wind);
 							}
 						}
@@ -551,13 +548,15 @@ public:
 						ptclGen = effectMgr->create(EffectMgr::EFF_Beatle_ShootRockHalo, nozzlePart->mCentre, nullptr, nullptr);
 						if (ptclGen != nullptr) {
 							ptclGen->setEmitDir(emitDir);
-							ptclGen->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+							Vector3f vec1(0.0f, 1.0f, 0.0f);
+							ptclGen->setOrientedNormalVector(vec1);
 						}
 
 						ptclGen = effectMgr->create(EffectMgr::EFF_Beatle_ShootRockSpecks, nozzlePart->mCentre, nullptr, nullptr);
 						if (ptclGen != nullptr) {
 							ptclGen->setEmitDir(emitDir);
-							ptclGen->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+							Vector3f vec2(0.0f, 1.0f, 0.0f);
+							ptclGen->setOrientedNormalVector(vec2);
 						}
 
 						teki.playEventSound(&teki, SE_KABUTO_TUMARI);
@@ -632,7 +631,8 @@ public:
 
 			if (teki.getCreaturePointer(2) == nullptr && teki.mCurrentAnimEvent == KEY_LoopEnd) {
 				mNextState = _0C;
-				teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+				PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+				teki.mTekiAnimator->finishMotion(anim);
 			}
 
 			if (teki.mCurrentAnimEvent == KEY_Finished) {
@@ -645,8 +645,6 @@ public:
 			teki.setPtclGenPtr(YTeki::PTCL_Unk7, nullptr);
 		}
 
-		STACK_PAD_TERNARY(result, 3);
-		STACK_PAD_VAR(3);
 		return result;
 	}
 
@@ -1143,7 +1141,8 @@ void TAIbeatleStrategy::act(Teki& teki)
 		ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk0);
 		if (ptclGen != nullptr) {
 			ptclGen->startGen();
-			ptclGen->setEmitPos(eyePart->mCentre + vec1 + vec2 + vec3);
+			Vector3f pos1(eyePart->mCentre + vec1 + vec2 + vec3);
+			ptclGen->setEmitPos(pos1);
 		}
 	}
 
@@ -1166,7 +1165,8 @@ void TAIbeatleStrategy::act(Teki& teki)
 		ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk1);
 		if (ptclGen != nullptr) {
 			ptclGen->startGen();
-			ptclGen->setEmitPos(eyePart->mCentre + vec1 + vec2 + vec3);
+			Vector3f pos2(eyePart->mCentre + vec1 + vec2 + vec3);
+			ptclGen->setEmitPos(pos2);
 		}
 	}
 }

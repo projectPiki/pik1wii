@@ -76,7 +76,8 @@ public:
 		bool res = false;
 		if (TAIAreserveMotion::act(teki)) {
 			if (teki.addFrameCounter(gsys->getFrameTime()) > teki.getParameterF(TAImiurinFloatParams::EyeRollTime)) {
-				teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+				PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+				teki.mTekiAnimator->finishMotion(anim);
 			}
 
 			if (teki.mCurrentAnimEvent == KEY_Finished) {
@@ -262,7 +263,8 @@ public:
 		bool res = false;
 		if (TAIAreserveMotion::act(teki)) {
 			if (teki.addFrameCounter(gsys->getFrameTime()) > teki.getParameterF(TAImiurinFloatParams::RelaxTime)) {
-				teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+				PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+				teki.mTekiAnimator->finishMotion(anim);
 			}
 
 			if (teki.mCurrentAnimEvent == KEY_Finished) {
@@ -532,7 +534,8 @@ public:
 			}
 
 			if (teki.mCurrentAnimEvent == KEY_LoopStart) {
-				teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+				PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+				teki.mTekiAnimator->finishMotion(anim);
 			}
 
 			if (teki.mCurrentAnimEvent == KEY_Finished) {
@@ -721,7 +724,8 @@ public:
 	{
 		teki.addFrameCounter(gsys->getFrameTime());
 		if (teki.getFrameCounter() > 1.5f) {
-			teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+			PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+			teki.mTekiAnimator->finishMotion(anim);
 		}
 		if (teki.mCurrentAnimEvent == KEY_Action0) {
 			Vector3f pos(teki.getPosition());

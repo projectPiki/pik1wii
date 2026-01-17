@@ -329,9 +329,11 @@ struct TitleSetupSection : public Node {
 			f32 stickY = mController->mMainStickY * 1.25f;
 
 			Vector3f xVec(mCamera.mViewXAxis.x * stickX, 0.0f, mCamera.mViewXAxis.z * stickX);
-			xVec.project(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f vec1(0.0f, 1.0f, 0.0f);
+			xVec.project(vec1);
 			Vector3f yVec(mCamera.mViewZAxis.x * stickY, 0.0f, mCamera.mViewZAxis.z * stickY);
-			yVec.project(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f vec2(0.0f, 1.0f, 0.0f);
+			yVec.project(vec2);
 			mCameraFocusPoint.add(xVec);
 			mCameraFocusPoint.add(yVec);
 
@@ -561,9 +563,12 @@ struct TitleSetupSection : public Node {
 		}
 
 		Matrix4f orthoMtx;
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area1);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setScissor(area2);
+		Colour transparent(COLOUR_TRANSPARENT);
+		gfx.setClearColour(transparent);
 		gfx.clearBuffer(3, false);
 		gfx.mAmbientColour.set(48, 48, 48, 255);
 
@@ -635,7 +640,8 @@ struct TitleSetupSection : public Node {
 		gfx.flushCachedShapes();
 		gsys->flushLFlares(gfx);
 
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area);
 		gfx.useMatrix(Matrix4f::ident, 0); // colin i think it's been set mate
 
 		// this is just for fading the debug menu
@@ -654,8 +660,10 @@ struct TitleSetupSection : public Node {
 		}
 
 		if (mfade > 0.0f) {
-			gfx.setColour(Colour(255, 255, 64, (int)mfade), true);
-			gfx.setAuxColour(Colour(255, 0, 64, (int)(mfade * 0.5f)));
+			Colour colour1(255, 255, 64, (int)mfade);
+			gfx.setColour(colour1, true);
+			Colour colour2(255, 0, 64, (int)(mfade * 0.5f));
+			gfx.setAuxColour(colour2);
 		}
 
 		gfx.setCBlending(BLEND_Alpha);
@@ -670,7 +678,8 @@ struct TitleSetupSection : public Node {
 			titleWindow->draw(gfx);
 			if (totalWindow) {
 				// hiscore menu is a full-screen overlay
-				gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+				RectArea area(AREA_FULL_SCREEN(gfx));
+				gfx.setOrthogonal(orthoMtx.mMtx, area);
 				totalWindow->draw(gfx);
 			}
 		}

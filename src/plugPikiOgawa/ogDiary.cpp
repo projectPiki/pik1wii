@@ -97,9 +97,12 @@ void zen::ogScrDiaryMgr::draw(Graphics& gfx)
 
 	if (!playerState) {
 		Matrix4f mtx;
-		gfx.setOrthogonal(mtx.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(Colour(255, 255, 150, 255));
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(mtx.mMtx, area);
+		Colour colour1(COLOUR_WHITE);
+		gfx.setColour(colour1, true);
+		Colour colour2(255, 255, 150, 255);
+		gfx.setAuxColour(colour2);
 
 		char path[256];
 		sprintf(path, "tx??の数(%d個)", mMesgMgr->getTxtLineMax());

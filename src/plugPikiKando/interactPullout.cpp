@@ -44,9 +44,13 @@ bool InteractPullout::actPiki(Piki* piki) immut
 
 	piki->mFSM->transit(piki, PIKISTATE_Nukare);
 	if (piki->mNavi->mFastPluckKeyTaps > 0) {
-		piki->mPikiAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Nukare_Fast, piki), PaniMotionInfo(PIKIANIM_Nukare_Fast));
+		PaniMotionInfo anim1(PIKIANIM_Nukare_Fast, piki);
+		PaniMotionInfo anim2(PIKIANIM_Nukare_Fast);
+		piki->mPikiAnimMgr.startMotion(anim1, anim2);
 	} else {
-		piki->mPikiAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Nukareru, piki), PaniMotionInfo(PIKIANIM_Nukareru));
+		PaniMotionInfo anim1(PIKIANIM_Nukareru, piki);
+		PaniMotionInfo anim2(PIKIANIM_Nukareru);
+		piki->mPikiAnimMgr.startMotion(anim1, anim2);
 	}
 
 	Vector3f sideComponent = piki->mSRT.t - mOwner->mSRT.t;

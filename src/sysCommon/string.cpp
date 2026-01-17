@@ -165,7 +165,7 @@ bool String::contains(immut char* str, immut char* substr)
 #if defined(BUGFIX)
 			str = ++submatchStart;
 #endif
-			substr = substrBackup;
+			//substr = substrBackup;
 		}
 	}
 

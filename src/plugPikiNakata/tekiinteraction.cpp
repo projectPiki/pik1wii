@@ -29,7 +29,8 @@ TekiInteractionKey::TekiInteractionKey(int type, immut Interaction* interaction)
  */
 bool InteractAttack::actTeki(Teki* teki) immut
 {
-	return teki->interact(TekiInteractionKey(TekiInteractType::Attack, this));
+	TekiInteractionKey attack(TekiInteractType::Attack, this);
+	return teki->interact(attack);
 }
 
 /**
@@ -38,7 +39,8 @@ bool InteractAttack::actTeki(Teki* teki) immut
 bool InteractBomb::actTeki(Teki* teki) immut
 {
 	f32 bombFactor = teki->getParameterF(TPF_BombDamageRate);
-	return teki->interact(TekiInteractionKey(TekiInteractType::Attack, &InteractAttack(mOwner, nullptr, mDamage * bombFactor, false)));
+	TekiInteractionKey attack(TekiInteractType::Attack, &InteractAttack(mOwner, nullptr, mDamage * bombFactor, false));
+	return teki->interact(attack);
 }
 
 /**
@@ -46,7 +48,8 @@ bool InteractBomb::actTeki(Teki* teki) immut
  */
 bool InteractHitEffect::actTeki(Teki* teki) immut
 {
-	return teki->interact(TekiInteractionKey(TekiInteractType::HitEffect, this));
+	TekiInteractionKey hiteffect(TekiInteractType::HitEffect, this);
+	return teki->interact(hiteffect);
 }
 
 /**
@@ -62,7 +65,8 @@ bool InteractSwallow::actTeki(Teki*) immut
  */
 bool InteractPress::actTeki(Teki* teki) immut
 {
-	teki->eventPerformed(TekiEvent(TekiEventType::Pressed, teki, mOwner));
+	TekiEvent event(TekiEventType::Pressed, teki, mOwner);
+	teki->eventPerformed(event);
 	return true;
 }
 

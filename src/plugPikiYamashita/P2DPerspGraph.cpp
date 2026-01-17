@@ -152,9 +152,15 @@ void P2DPerspGraph::makeLookat()
 	upDir.z = 0.0f;
 
 	mViewMtx.makeLookat(cameraPos, targetPos, &upDir);
-	mViewMtx.makeLookat(Vector3f(0.0f, 0.0f, 250.0f), Vector3f(0.0f, 0.0f, 0.0f), &Vector3f(0.0f, 1.0f, 0.0f));
-	mViewMtx.makeLookat(Vector3f(halfWidth, halfHeight, -mDistance), Vector3f(1.0f, 0.0f, 0.0f), Vector3f(0.0f, -1.0f, 0.0f),
-	                    Vector3f(0.0f, 0.0f, -1.0f));
+	Vector3f pos1(0.0f, 0.0f, 250.0f);
+	Vector3f pos2(0.0f, 0.0f, 0.0f);
+	Vector3f pos3(0.0f, 1.0f, 0.0f);
+	mViewMtx.makeLookat(pos1, pos2, &pos3);
+	Vector3f pos4(halfWidth, halfHeight, -mDistance);
+	Vector3f pos5(1.0f, 0.0f, 0.0f);
+	Vector3f pos6(0.0f, -1.0f, 0.0f);
+	Vector3f pos7(0.0f, 0.0f, -1.0f);
+	mViewMtx.makeLookat(pos4, pos5, pos6, pos7);
 
 	GXLoadPosMtxImm(mViewMtx.mMtx, 0);
 }

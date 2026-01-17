@@ -148,9 +148,11 @@ void TaiIwagonStrategy::start(Teki& teki)
 {
 	int param = teki.getPersonalityI(TekiPersonality::INT_Parameter0);
 	if (param == 0) {
-		teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Iwagon_Start1, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+		Vector3f pos1(0.0f, 0.0f, 0.0f);
+		teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Iwagon_Start1, pos1, nullptr, nullptr);
 	} else if (param == 1) {
-		teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Iwagon_Start2, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+		Vector3f pos2(0.0f, 0.0f, 0.0f);
+		teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Iwagon_Start2, pos2, nullptr, nullptr);
 	} else {
 		ERROR("TaiIwagonStrategy::start\n");
 	}

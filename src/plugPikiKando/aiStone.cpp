@@ -90,7 +90,9 @@ void ActStone::initApproach()
 
 	mState = STATE_Approach;
 
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -155,7 +157,9 @@ int ActStone::exeAdjust()
 void ActStone::initAttack()
 {
 	mState = STATE_Attack;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Job2, this), PaniMotionInfo(PIKIANIM_Job2));
+	PaniMotionInfo anim1(PIKIANIM_Job2, this);
+	PaniMotionInfo anim2(PIKIANIM_Job2);
+	mPiki->startMotion(anim1, anim2);
 	mIsAttackReady = false;
 	mPiki->enableFixPos();
 }

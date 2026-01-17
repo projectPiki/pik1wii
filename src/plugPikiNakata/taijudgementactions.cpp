@@ -107,7 +107,8 @@ bool TaiInsideTerritoryAction::act(Teki& teki)
  */
 bool TaiTargetVisibleNaviPikiAction::act(Teki& teki)
 {
-	Creature* naviPiki = teki.getClosestNaviPiki(TekiVisibleCondition(&teki), nullptr);
+	TekiVisibleCondition cond(&teki);
+	Creature* naviPiki = teki.getClosestNaviPiki(cond, nullptr);
 	if (!naviPiki) {
 		return false;
 	}

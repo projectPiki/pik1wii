@@ -148,9 +148,13 @@ void ActFlower::init(Creature*)
 
 	mIsCarryEmpty = false;
 	if (mPiki->mFloweringTimer + 1 >= C_PIKI_PROP(mPiki).mFlowerEnergyRequirement()) {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_GrowUp2, this), PaniMotionInfo(PIKIANIM_GrowUp2));
+		PaniMotionInfo anim1(PIKIANIM_GrowUp2, this);
+		PaniMotionInfo anim2(PIKIANIM_GrowUp2);
+		mPiki->startMotion(anim1, anim2);
 	} else {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_GrowUp1, this), PaniMotionInfo(PIKIANIM_GrowUp1));
+		PaniMotionInfo anim1(PIKIANIM_GrowUp1, this);
+		PaniMotionInfo anim2(PIKIANIM_GrowUp1);
+		mPiki->startMotion(anim1, anim2);
 	}
 
 	mElapsedTime = 0.0f;
@@ -165,7 +169,8 @@ void ActFlower::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 	case KEY_Action0:
 	{
 		Creature* held = mPiki->getHoldCreature();
-		held->stimulate(InteractRelease(mPiki, 1.0f));
+		InteractRelease release(mPiki, 1.0f);
+		held->stimulate(release);
 		held->kill(false);
 		mPiki->mFloweringTimer++;
 		if (mPiki->mFloweringTimer >= C_PIKI_PROP(mPiki).mFlowerEnergyRequirement()) {

@@ -171,18 +171,22 @@ void drawBattenPole(Graphics& gfx, immut Vector3f& pos, f32 size, immut char* na
 	Vector3f pos3(pos2);
 	pos3.y += size;
 
-	gfx.setColour(Colour(255, 0, 0, 255), true);
+	Colour colour1(255, 0, 0, 255);
+	gfx.setColour(colour1, true);
 	drawBatten(gfx, pos2, 8.0f);
-	gfx.setColour(Colour(255, 255, 0, 255), true);
+	Colour colour2(255, 255, 0, 255);
+	gfx.setColour(colour2, true);
 	drawBatten(gfx, pos3, 8.0f);
 
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
-	gfx.setColour(Colour(0, 255, 0, 255), true);
+	Colour colour3(0, 255, 0, 255);
+	gfx.setColour(colour3, true);
 	gfx.drawLine(pos2, pos3);
 
 	if (name) {
 		gfx.useMatrix(Matrix4f::ident, 0);
-		gfx.setColour(COLOUR_WHITE, true);
+		Colour colour4(COLOUR_WHITE);
+		gfx.setColour(colour4, true);
 		pos3.y += 10.0f;
 		pos3.multMatrix(gfx.mCamera->mLookAtMtx);
 		gfx.perspPrintf(gsys->mConsFont, pos3, -gsys->mConsFont->stringWidth(name) / 2, 0, name);
@@ -195,7 +199,8 @@ void drawBattenPole(Graphics& gfx, immut Vector3f& pos, f32 size, immut char* na
 void drawArrow(Graphics& gfx, immut Vector3f& from, immut Vector3f& to, f32 size)
 {
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
-	gfx.setColour(Colour(255, 125, 0, 255), true);
+	Colour colour(255, 125, 0, 255);
+	gfx.setColour(colour, true);
 
 	Vector3f pos1 = from;
 	Vector3f pos2 = to;
@@ -224,7 +229,8 @@ void drawArrow(Graphics& gfx, immut Vector3f& from, immut Vector3f& to, f32 size
 void CRSplineDraw(Graphics& gfx, int numSides, immut Vector3f* origin)
 {
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
-	gfx.setColour(Colour(255, 10, 100, 255), true);
+	Colour colour1(255, 10, 100, 255);
+	gfx.setColour(colour1, true);
 	f32 calc = 1.0f / (f32)numSides;
 	f32 b    = 0.0f;
 	STACK_PAD_VAR(2);
@@ -235,7 +241,8 @@ void CRSplineDraw(Graphics& gfx, int numSides, immut Vector3f* origin)
 		pos1.y += 10.0f;
 		pos2.y += 10.0f;
 
-		gfx.setColour(Colour(255, 10, 100, 255), true);
+		Colour colour2(255, 10, 100, 255);
+		gfx.setColour(colour2, true);
 		gfx.drawLine(pos1, pos2);
 		Vector3f pos3(CRSplineTangent(b, origin));
 		Vector3f pos4(pos1);
@@ -250,7 +257,8 @@ void CRSplineDraw(Graphics& gfx, int numSides, immut Vector3f* origin)
 void drawCube(Graphics& gfx, immut Vector3f& pos, f32 size)
 {
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
-	gfx.setColour(Colour(255, 125, 0, 255), true);
+	Colour colour(255, 125, 0, 255);
+	gfx.setColour(colour, true);
 
 	Vector3f corners[8];
 	corners[0] = pos + Vector3f(-size, -size, -size);

@@ -51,7 +51,8 @@ void AICreature::collisionCallback(immut CollEvent& event)
  */
 void AICreature::bounceCallback()
 {
-	MsgBounce msg(Vector3f(0.0f, 1.0f, 0.0f));
+	Vector3f vec(0.0f, 1.0f, 0.0f);
+	MsgBounce msg(vec);
 	if (mStateMachine) {
 		static_cast<SimpleAI*>(mStateMachine)->procMsg(this, &msg);
 	}

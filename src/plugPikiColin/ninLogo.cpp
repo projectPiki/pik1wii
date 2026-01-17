@@ -95,16 +95,22 @@ struct NinLogoSetupSection : public Node {
 	 */
 	virtual void draw(Graphics& gfx) // _14
 	{
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area1);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setScissor(area2);
+		Colour transparent(COLOUR_TRANSPARENT);
+		gfx.setClearColour(transparent);
 		gfx.clearBuffer(3, false);
 
 		// draw debug menu or progressive scan choice screen full-screen
 		Matrix4f orthoMtx;
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setColour(Colour(255, 255, 64, 255), true);
-		gfx.setAuxColour(Colour(255, 0, 64, 255));
+		RectArea area3(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area3);
+		Colour colour1(255, 255, 64, 255);
+		gfx.setColour(colour1, true);
+		Colour colour2(255, 0, 64, 255);
+		gfx.setAuxColour(colour2);
 
 		if (mActiveDebugMenu) {
 			drawMenu(gfx, mActiveDebugMenu, 1.0f);

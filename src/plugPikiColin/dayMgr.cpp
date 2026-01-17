@@ -994,7 +994,10 @@ void DayMgr::refresh(Graphics& gfx, f32 time, int numLights)
 	// calculate appropriate sun position based on time-of-day
 	// sun should move from east (positive x) to west (negative x) and always in the sky, never at the horizon (infinite shadows)
 	Matrix4f sunTransformMtx;
-	sunTransformMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(time / 24.0f * PI - HALF_PI, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+	Vector3f sunscale(1.0f, 1.0f, 1.0f);
+	Vector3f sunrot(time / 24.0f * PI - HALF_PI, 0.0f, 0.0f);
+	Vector3f suntrans(0.0f, 0.0f, 0.0f);
+	sunTransformMtx.makeSRT(sunscale, sunrot, suntrans);
 	mCurrentSunPosition.set(0.0f, 2500.0f, 0.0f);
 	mCurrentSunPosition.multMatrix(sunTransformMtx);
 	// adjust axes so sun goes the direction we want - east (positive x) to west (negative x)
@@ -1029,8 +1032,10 @@ void DayMgr::refresh(Graphics& gfx, f32 time, int numLights)
 			// (non-parallel) light moves with captain, calculate directions and positions
 			// calc rotation in navi local coordinates, then move with navi
 			Matrix4f naviLocalMtx;
-			naviLocalMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, naviMgr->getNavi()->mFaceDirection, 0.0f),
-			                     Vector3f(0.0f, 0.0f, 0.0f));
+			Vector3f naviscale(1.0f, 1.0f, 1.0f);
+			Vector3f navirot(0.0f, naviMgr->getNavi()->mFaceDirection, 0.0f);
+			Vector3f navitrans(0.0f, 0.0f, 0.0f);
+			naviLocalMtx.makeSRT(naviscale, navirot, navitrans);
 			mCurrentTimeSetting.mLights[i].mDirection.rotate(naviLocalMtx);
 			mCurrentTimeSetting.mLights[i].mPosition.rotate(naviLocalMtx);
 			mCurrentTimeSetting.mLights[i].mPosition.add(naviMgr->getNavi()->mSRT.t);

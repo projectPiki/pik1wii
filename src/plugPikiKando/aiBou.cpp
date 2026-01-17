@@ -37,7 +37,9 @@ void ActBou::init(Creature* creature)
 	}
 
 	mState = STATE_GotoLeg;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 
 	if (mPiki->isHolding()) {
 		mPiki->mActionState = 3;
@@ -77,7 +79,9 @@ int ActBou::gotoLeg()
 		mState = STATE_Climb;
 		mPiki->mVelocity.set(0.0f, 0.0f, 0.0f);
 		mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_HNoboru), PaniMotionInfo(PIKIANIM_HNoboru));
+		PaniMotionInfo anim1(PIKIANIM_HNoboru, mPiki);
+		PaniMotionInfo anim2(PIKIANIM_HNoboru);
+		mPiki->startMotion(anim1, anim2);
 
 		mPiki->setCreatureFlag(CF_IgnoreGravity);
 		mPiki->finishLook();
@@ -172,5 +176,5 @@ void ActBou::cleanup()
 	mPiki->mVelocity       = mClimbDirection * 150.0f;
 	mPiki->mTargetVelocity = mPiki->mVelocity;
 	mPiki->endStickObject();
-	mPiki->mCreatureFlags &= ~(CF_IgnoreGravity); // should use the inline, but stack
+	mPiki->resetCreatureFlag(CF_IgnoreGravity);
 }

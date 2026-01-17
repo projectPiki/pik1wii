@@ -223,14 +223,19 @@ void PaniAnimator::animate(f32 speed)
 void PaniAnimator::checkConstantKeys()
 {
 	int iKeyCount;
+#if defined(DEVELOP)
 	if (mCurrentKeyIndex < 0) {
+
 		iKeyCount = mAnimInfo->countIKeys();
 		ERROR("checkConstantKeys:nextKeyInfoIndex:%d,%d\n", mCurrentKeyIndex, iKeyCount);
 	}
+#endif
 
 	if (mAnimInfo->countIKeys() > 16) {
+#if defined(DEVELOP)
 		iKeyCount = mAnimInfo->countIKeys();
 		ERROR("checkConstantKeys:getKeyInfoCount():%d,%d\n", mCurrentKeyIndex, iKeyCount);
+#endif
 	}
 
 	for (; mCurrentKeyIndex < mAnimInfo->countIKeys(); mCurrentKeyIndex++) {
@@ -299,7 +304,6 @@ void PaniAnimator::checkEventKeys(f32 startKeyframe, f32 endKeyframe)
 
 		// f32 val2 = eventKey->mKeyframeIndex;
 		f32 frame = eventKey->mFrameIndex;
-		STACK_PAD_VAR(1);
 		if (startKeyframe <= frame && frame < endKeyframe) {
 			int type = KEY_Finished;
 			if (eventKey->mEventType == ANIMEVENT_Notify) {
@@ -310,10 +314,10 @@ void PaniAnimator::checkEventKeys(f32 startKeyframe, f32 endKeyframe)
 				PRINT("!checkEventKeys:%08x:not supported event type:%d\n", this, eventKey->mEventType);
 			}
 
-			mListener->animationKeyUpdated(PaniAnimKeyEvent(type, eventKey->mKeyType));
+			PaniAnimKeyEvent key(type, eventKey->mKeyType);
+			mListener->animationKeyUpdated(key);
 		}
 	}
-	STACK_PAD_TERNARY(startKeyframe, 1);
 }
 
 /**
@@ -323,7 +327,8 @@ void PaniAnimator::finishAnimation()
 {
 	mCurrentKeyIndex = -1;
 	if (mListener) {
-		mListener->animationKeyUpdated(PaniAnimKeyEvent(KEY_Finished));
+		PaniAnimKeyEvent key(KEY_Finished);
+		mListener->animationKeyUpdated(key);
 	}
 }
 

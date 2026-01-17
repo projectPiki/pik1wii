@@ -47,7 +47,9 @@ void NaviDemoSunsetState::DemoStateMachine::init(NaviDemoSunsetState*)
  */
 void NaviDemoSunsetState::GoState::init(NaviDemoSunsetState* state)
 {
-	state->mNavi->mNaviAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Run, state->mNavi), PaniMotionInfo(PIKIANIM_Run));
+	PaniMotionInfo anim1(PIKIANIM_Run, state->mNavi);
+	PaniMotionInfo anim2(PIKIANIM_Run);
+	state->mNavi->mNaviAnimMgr.startMotion(anim1, anim2);
 	_14 = false;
 }
 
@@ -68,7 +70,9 @@ void NaviDemoSunsetState::GoState::exec(NaviDemoSunsetState* state)
 
 	if (nrm > 0.7f && nrm < 0.71f && gsys->getRand(1.0f) >= 0.9999f) {
 		_14 = true;
-		state->mNavi->mNaviAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Korobu, state->mNavi), PaniMotionInfo(PIKIANIM_Korobu));
+		PaniMotionInfo anim1(PIKIANIM_Korobu, state->mNavi);
+		PaniMotionInfo anim2(PIKIANIM_Korobu);
+		state->mNavi->mNaviAnimMgr.startMotion(anim1, anim2);
 		_10 = (int)(4.0f * gsys->getRand(1.0f)) + 2;
 		return;
 	}
@@ -81,8 +85,6 @@ void NaviDemoSunsetState::GoState::exec(NaviDemoSunsetState* state)
 		diff                          = (diff * C_NAVI_PROP(state->mNavi)._CC()) * (nrm * 0.6f + 0.4f);
 		state->mNavi->mTargetVelocity = diff;
 	}
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -105,7 +107,9 @@ void NaviDemoSunsetState::GoState::procAnimMsg(NaviDemoSunsetState* state, MsgAn
 	}
 	case 0:
 	{
-		state->mNavi->mNaviAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Walk, state->mNavi), PaniMotionInfo(PIKIANIM_Walk));
+		PaniMotionInfo anim1(PIKIANIM_Walk, state->mNavi);
+		PaniMotionInfo anim2(PIKIANIM_Walk);
+		state->mNavi->mNaviAnimMgr.startMotion(anim1, anim2);
 		_14 = false;
 		break;
 	}
@@ -124,7 +128,9 @@ void NaviDemoSunsetState::GoState::cleanup(NaviDemoSunsetState*)
  */
 void NaviDemoSunsetState::LookState::init(NaviDemoSunsetState* state)
 {
-	state->mNavi->startMotion(PaniMotionInfo(PIKIANIM_Sagasu2, state->mNavi), PaniMotionInfo(PIKIANIM_Sagasu2));
+	PaniMotionInfo anim1(PIKIANIM_Sagasu2, state->mNavi);
+	PaniMotionInfo anim2(PIKIANIM_Sagasu2);
+	state->mNavi->startMotion(anim1, anim2);
 	cameraMgr->mCamera->finishMotion();
 }
 
@@ -165,7 +171,9 @@ void NaviDemoSunsetState::LookState::procAnimMsg(NaviDemoSunsetState* state, Msg
  */
 void NaviDemoSunsetState::WhistleState::init(NaviDemoSunsetState* state)
 {
-	state->mNavi->startMotion(PaniMotionInfo(PIKIANIM_Fue, state->mNavi), PaniMotionInfo(PIKIANIM_Fue));
+	PaniMotionInfo anim1(PIKIANIM_Fue, state->mNavi);
+	PaniMotionInfo anim2(PIKIANIM_Fue);
+	state->mNavi->startMotion(anim1, anim2);
 	_10                             = 0;
 	flowCont.mIsSunsetWhistleActive = TRUE;
 }
@@ -212,7 +220,6 @@ void NaviDemoSunsetState::WhistleState::enterAllPikis(NaviDemoSunsetState* state
 	Navi* navi = state->mNavi;
 	Iterator it(itemMgr);
 	GoalItem* goals[3];
-	STACK_PAD_VAR(3);
 	char goalBuf[256];
 	CI_LOOP(it)
 	{
@@ -270,7 +277,9 @@ void NaviDemoSunsetState::WhistleState::cleanup(NaviDemoSunsetState*)
  */
 void NaviDemoSunsetState::WaitState::init(NaviDemoSunsetState* state)
 {
-	state->mNavi->startMotion(PaniMotionInfo(PIKIANIM_Wait, state->mNavi), PaniMotionInfo(PIKIANIM_Wait));
+	PaniMotionInfo anim1(PIKIANIM_Wait, state->mNavi);
+	PaniMotionInfo anim2(PIKIANIM_Wait);
+	state->mNavi->startMotion(anim1, anim2);
 }
 
 /**
@@ -292,7 +301,9 @@ void NaviDemoSunsetState::WaitState::cleanup(NaviDemoSunsetState*)
  */
 void NaviDemoSunsetState::SitState::init(NaviDemoSunsetState* state)
 {
-	state->mNavi->startMotion(PaniMotionInfo(PIKIANIM_Suwaru, state->mNavi), PaniMotionInfo(PIKIANIM_Suwaru));
+	PaniMotionInfo anim1(PIKIANIM_Suwaru, state->mNavi);
+	PaniMotionInfo anim2(PIKIANIM_Suwaru);
+	state->mNavi->startMotion(anim1, anim2);
 }
 
 /**

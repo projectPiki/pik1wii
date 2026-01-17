@@ -32,7 +32,8 @@ P2DGrafContext::P2DGrafContext(int x0, int y0, int width, int height)
     : mViewportBounds(x0, y0, x0 + width, y0 + height)
     , mScissorBounds(x0, y0, x0 + width, y0 + height)
 {
-	setColor(COLOUR_WHITE);
+	Colour colour(COLOUR_WHITE);
+	setColor(colour);
 	setLineWidth(6);
 }
 

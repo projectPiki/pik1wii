@@ -313,7 +313,8 @@ void RippleEffect::emit(immut EffectParm& parm)
 	if (mEfxB) {
 		f32 scale = a * mEfxB->getScaleSize();
 		mEfxB->setEmitPosPtr(parm.mPositionRef);
-		mEfxB->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec(0.0f, 1.0f, 0.0f);
+		mEfxB->setOrientedNormalVector(vec);
 		mEfxB->setScaleSize(scale);
 	}
 
@@ -321,7 +322,8 @@ void RippleEffect::emit(immut EffectParm& parm)
 	if (mEfxA) {
 		f32 scale = a * mEfxA->getScaleSize();
 		mEfxA->setEmitPosPtr(parm.mPositionRef);
-		mEfxA->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec(0.0f, 1.0f, 0.0f);
+		mEfxA->setOrientedNormalVector(vec);
 		mEfxA->setScaleSize(scale);
 	}
 }
@@ -403,11 +405,13 @@ void BurnEffect::emit(immut EffectParm& parm)
 	mEfxA = effectMgr->create(EffectMgr::EFF_Piki_Fire, *parm.mPositionRef, this, nullptr);
 	if (mEfxA) {
 		mEfxA->setEmitPosPtr(parm.mPositionRef);
-		mEfxA->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+		Vector3f vec(1.0f, 0.0f, 0.0f);
+		mEfxA->setOrientedNormalVector(vec);
 		Vector3f vel(*_0C);
 		vel.y = 0.0f;
 		vel.multiply(0.01f);
-		mEfxA->setAirField(Vector3f(vel), true);
+		Vector3f velvec(vel);
+		mEfxA->setAirField(velvec, true);
 	}
 
 	mEfxB = effectMgr->create(EffectMgr::EFF_Piki_FireSparkles, *parm.mPositionRef, this, nullptr);
@@ -416,7 +420,8 @@ void BurnEffect::emit(immut EffectParm& parm)
 		Vector3f vel(*_0C);
 		vel.y = 0.0f;
 		vel.multiply(0.01f);
-		mEfxB->setAirField(Vector3f(vel), true);
+		Vector3f velvec(vel);
+		mEfxB->setAirField(velvec, true);
 	}
 }
 

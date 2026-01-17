@@ -78,7 +78,9 @@ void Navi::viewDraw(Graphics& gfx, immut Matrix4f& mtx)
  */
 void Navi::viewStartTrembleMotion(f32)
 {
-	mNaviAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_OCarry), PaniMotionInfo(PIKIANIM_OCarry));
+	PaniMotionInfo anim1(PIKIANIM_OCarry);
+	PaniMotionInfo anim2(PIKIANIM_OCarry);
+	mNaviAnimMgr.startMotion(anim1, anim2);
 }
 
 /**
@@ -381,7 +383,8 @@ void Navi::startDamageEffect()
 	zen::particleGenerator* ptclGenA = effectMgr->create(EffectMgr::EFF_Navi_DamageA, part->mCentre, nullptr, nullptr);
 	zen::particleGenerator* ptclGenB = effectMgr->create(EffectMgr::EFF_Navi_DamageB, part->mCentre, nullptr, nullptr);
 	if (ptclGenB) {
-		ptclGenB->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec(0.0f, 1.0f, 0.0f);
+		ptclGenB->setOrientedNormalVector(vec);
 	}
 
 	zen::particleGenerator* ptclGenC = effectMgr->create(EffectMgr::EFF_Navi_DamageC, part->mCentre, nullptr, nullptr);
@@ -473,7 +476,9 @@ Navi::Navi(CreatureProp* props, int naviID)
 	_818              = 1.0f;
 	_810              = 0;
 	mFormationPriMode = 0;
-	startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk, this);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	startMotion(anim1, anim2);
 
 	f32 s = 1.0f;
 	mSRT.s.set(s, s, s);
@@ -665,7 +670,8 @@ void Navi::startMotion(immut PaniMotionInfo& motion1, immut PaniMotionInfo& moti
 void Navi::enableMotionBlend()
 {
 	mPreBlendLowerMotionID = mNaviAnimMgr.getLowerAnimator().getCurrentMotionIndex();
-	mNaviAnimMgr.getLowerAnimator().startMotion(PaniMotionInfo(PIKIANIM_Nigeru));
+	PaniMotionInfo anim(PIKIANIM_Nigeru);
+	mNaviAnimMgr.getLowerAnimator().startMotion(anim);
 	mNaviAnimMgr.getLowerAnimator().mAnimationCounter = 10.0f;
 }
 
@@ -762,16 +768,22 @@ void Navi::updateWalkAnimation()
 		if (currLowerMotionID == PIKIANIM_Wait || currLowerMotionID == PIKIANIM_Asibumi || desiredLowerMotionID == PIKIANIM_Wait
 		    || desiredLowerMotionID == PIKIANIM_Asibumi) {
 			if (!doMotionBlend()) {
-				startMotion(PaniMotionInfo(desiredLowerMotionID), PaniMotionInfo(desiredLowerMotionID, motionListener));
+				PaniMotionInfo anim1(desiredLowerMotionID);
+				PaniMotionInfo anim2(desiredLowerMotionID, motionListener);
+				startMotion(anim1, anim2);
 			} else {
-				mNaviAnimMgr.getLowerAnimator().startMotion(PaniMotionInfo(desiredLowerMotionID, motionListener));
+				PaniMotionInfo anim(desiredLowerMotionID, motionListener);
+				mNaviAnimMgr.getLowerAnimator().startMotion(anim);
 			}
 		} else if (!doMotionBlend()) {
-
-			swapMotion(PaniMotionInfo(desiredLowerMotionID), PaniMotionInfo(desiredLowerMotionID, motionListener));
+			
+			PaniMotionInfo anim1(desiredLowerMotionID);
+			PaniMotionInfo anim2(desiredLowerMotionID, motionListener);
+			swapMotion(anim1, anim2);
 		} else {
 			f32 savedLowerAnimCounter = mNaviAnimMgr.getLowerAnimator().mAnimationCounter;
-			mNaviAnimMgr.getLowerAnimator().startMotion(PaniMotionInfo(desiredLowerMotionID, motionListener));
+			PaniMotionInfo anim(desiredLowerMotionID, motionListener);
+			mNaviAnimMgr.getLowerAnimator().startMotion(anim);
 			mNaviAnimMgr.getLowerAnimator().mAnimationCounter = savedLowerAnimCounter;
 		}
 	}
@@ -1403,7 +1415,9 @@ bool Navi::procActionButton()
 	if (closestSprout) {
 		if (DelayPikiBirth) {
 			mPressedTimer = 0.0f;
-			startMotion(PaniMotionInfo(PIKIANIM_Asibumi), PaniMotionInfo(PIKIANIM_Asibumi));
+			PaniMotionInfo anim1(PIKIANIM_Asibumi);
+			PaniMotionInfo anim2(PIKIANIM_Asibumi);
+			startMotion(anim1, anim2);
 			PRINT_GLOBAL("nuki d=%.1f rn=%d", minDist, mFastPluckKeyTaps);
 			Vector3f sproutSep = closestSprout->mSRT.t - mSRT.t;
 			_7D0               = angDist(roundAng(atan2f(sproutSep.x, sproutSep.z)), mFaceDirection) / 10.0f;
@@ -1431,7 +1445,9 @@ bool Navi::procActionButton()
 			closestSprout->kill(false);
 
 			mPressedTimer = 0.0f;
-			startMotion(PaniMotionInfo(PIKIANIM_Asibumi), PaniMotionInfo(PIKIANIM_Asibumi));
+			PaniMotionInfo anim1(PIKIANIM_Asibumi);
+			PaniMotionInfo anim2(PIKIANIM_Asibumi);
+			startMotion(anim1, anim2);
 
 			Vector3f pikiSep = piki->mSRT.t - mSRT.t;
 			_7D0             = angDist(roundAng(atan2f(pikiSep.x, pikiSep.z)), mFaceDirection) / 10.0f;
@@ -1509,7 +1525,8 @@ bool Navi::ignoreAtari(Creature* target)
  */
 void Navi::bounceCallback()
 {
-	MsgBounce msg(Vector3f(0.0f, 1.0f, 0.0f));
+	Vector3f vec(0.0f, 1.0f, 0.0f);
+	MsgBounce msg(vec);
 	sendMsg(&msg);
 }
 
@@ -1559,7 +1576,8 @@ void Navi::collisionCallback(immut CollEvent& event)
 			if (bridge->isBridge()) {
 				if (bridge->mDoUseJointSegments && getCollidePlatformCreature() == bridge) {
 					Vector3f normal(getCollidePlatformNormal());
-					if ((normal.DP(bridge->getBridgeZVec()) >= -0.8f)) {
+					Vector3f zVec(bridge->getBridgeZVec());
+					if ((normal.DP(zVec) >= -0.8f)) {
 						return;
 					}
 				} else {
@@ -1713,7 +1731,8 @@ void Navi::makeVelocity(bool isSunset)
 		mMainStick.set(0.0f, 0.0f, 0.0f);
 	}
 	f32 angle                   = NMathF::atan2(mNaviCamera->mViewXAxis.z, mNaviCamera->mViewXAxis.x);
-	NAxisAngle4f NRef axisAngle = NAxisAngle4f(NVector3f(0.0f, 1.0f, 0.0f), angle);
+	NVector3f pos(0.0f, 1.0f, 0.0f);
+	NAxisAngle4f NRef axisAngle = NAxisAngle4f(pos, angle);
 	NTransform3D NRef transform = NTransform3D();
 	transform.inputAxisAngle(axisAngle);
 
@@ -1809,7 +1828,8 @@ void Navi::makeVelocity(bool isSunset)
 void Navi::makeCStick(bool isSunset)
 {
 	f32 cameraYaw               = NMathF::atan2(mNaviCamera->mViewXAxis.z, mNaviCamera->mViewXAxis.x);
-	NAxisAngle4f NRef axisAngle = NAxisAngle4f(NVector3f(0.0f, 1.0f, 0.0f), cameraYaw);
+	NVector3f pos(0.0f, 1.0f, 0.0f);
+	NAxisAngle4f NRef axisAngle = NAxisAngle4f(pos, cameraYaw);
 
 	NTransform3D NRef transform = NTransform3D();
 	transform.inputAxisAngle(axisAngle);
@@ -2303,11 +2323,15 @@ bool InteractAttack::actNavi(Navi* navi) immut
 		GameCoreSection::startPause(COREPAUSE_Unk1 | COREPAUSE_Unk3 | COREPAUSE_Unk16);
 		PRINT("ATTACK DEAD ******\n");
 	} else {
-		navi->startMotion(PaniMotionInfo(PIKIANIM_Damage, navi), PaniMotionInfo(PIKIANIM_Damage));
+		PaniMotionInfo anim1(PIKIANIM_Damage, navi);
+		PaniMotionInfo anim2(PIKIANIM_Damage);
+		navi->startMotion(anim1, anim2);
 	}
 
 	PRINT("navi got attack interaction!\n");
-	navi->startMotion(PaniMotionInfo(PIKIANIM_Damage, navi), PaniMotionInfo(PIKIANIM_Damage));
+	PaniMotionInfo anim1(PIKIANIM_Damage, navi);
+	PaniMotionInfo anim2(PIKIANIM_Damage);
+	navi->startMotion(anim1, anim2);
 	return true;
 }
 
@@ -2360,9 +2384,13 @@ bool InteractSwallow::actNavi(Navi* navi) immut
 		GameCoreSection::startPause(COREPAUSE_Unk1 | COREPAUSE_Unk3 | COREPAUSE_Unk16);
 		PRINT("SWALLOW DEAD ******\n");
 	} else {
-		navi->startMotion(PaniMotionInfo(PIKIANIM_Damage, navi), PaniMotionInfo(PIKIANIM_Damage));
+		PaniMotionInfo anim1(PIKIANIM_Damage, navi);
+		PaniMotionInfo anim2(PIKIANIM_Damage);
+		navi->startMotion(anim1, anim2);
 	}
-	navi->startMotion(PaniMotionInfo(PIKIANIM_Damage, navi), PaniMotionInfo(PIKIANIM_Damage));
+	PaniMotionInfo anim1(PIKIANIM_Damage, navi);
+	PaniMotionInfo anim2(PIKIANIM_Damage);
+	navi->startMotion(anim1, anim2);
 
 	navi->mLifeGauge.updValue(navi->mHealth, C_NAVI_PROP(navi).mHealth());
 	return true;
@@ -2393,7 +2421,6 @@ bool InteractBomb::actNavi(Navi* navi) immut
 	}
 	navi->mStateMachine->transit(navi, NAVISTATE_Flick);
 
-	STACK_PAD_VAR(2);
 	return true;
 }
 
@@ -2437,7 +2464,6 @@ bool InteractFlick::actNavi(Navi* navi) immut
 
 	navi->mStateMachine->transit(navi, NAVISTATE_Flick);
 
-	STACK_PAD_VAR(2);
 	return true;
 }
 
@@ -2490,6 +2516,7 @@ bool InteractFire::actNavi(Navi* navi) immut
  */
 void Navi::dump()
 {
+#if defined(DEVELOP)
 	if (Piki::directDumpMode) {
 		PRINT_GLOBAL("-- navi : mode = %d\n", mStateMachine->getCurrID(this));
 		PRINT_GLOBAL(" onground : %s isFlying %s\n", isCreatureFlag(CF_IsOnGround) ? "true" : "false",
@@ -2505,6 +2532,7 @@ void Navi::dump()
 		      isBuried() ? "true" : "false");
 		// `neutralTime` PRINT is intentionally omitted here.  Well, maybe not by the original devs.
 	}
+#endif
 }
 
 /**
@@ -2588,7 +2616,8 @@ void Navi::renderParabola(Graphics& gfx, f32 height, f32 len)
 	f32 x            = 0.0f;
 	gfx.setLighting(false, nullptr);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(Colour(0, 255, 0, 255), true);
+	Colour colour(0, 255, 0, 255);
+	gfx.setColour(colour, true);
 
 	for (int i = 0; i < segmentCount - 1; i++) {
 		x += inc;

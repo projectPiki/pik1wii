@@ -445,7 +445,8 @@ void WingArranger::arrange(FormationMgr* mgr)
 	for (int i = 0; i < 300; i++) {
 		if (i % 2 == 0) {
 			Vector3f vec(val2 / c * a, 0.0f, val2 - val2 * a / c);
-			mgr->add(vec, Vector3f(1.0f, 0.0f, 1.0f));
+			Vector3f pos(1.0f, 0.0f, 1.0f);
+			mgr->add(vec, pos);
 			a++;
 			if (a == c) {
 				a = 0;
@@ -454,7 +455,8 @@ void WingArranger::arrange(FormationMgr* mgr)
 			}
 		} else {
 			Vector3f vec(-val3 / d * b, 0.0f, val3 - val3 * b / d);
-			mgr->add(vec, Vector3f(1.0f, 1.0f, 0.0f));
+			Vector3f pos(1.0f, 1.0f, 0.0f);
+			mgr->add(vec, pos);
 			b++;
 			if (b == d) {
 				b = 0;
@@ -508,7 +510,9 @@ void Rope::refresh(Graphics& gfx)
 	Vector3f vec;
 	Matrix4f mtx2;
 	f32 scale = 0.15f;
-	mtx1.makeSRT(Vector3f(scale, 2.0f * scale, scale), Vector3f(0.0f, 0.0f, 0.0f), mPosition);
+	Vector3f scalevec(scale, 2.0f * scale, scale);
+	Vector3f rot(0.0f, 0.0f, 0.0f);
+	mtx1.makeSRT(scalevec, rot, mPosition);
 	gfx.calcViewMatrix(mtx1, mtx2);
 	gfx.useMatrix(mtx2, 0);
 	GlobalShape::arrowShape->drawshape(gfx, *gfx.mCamera, nullptr);

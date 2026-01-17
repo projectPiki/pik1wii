@@ -82,9 +82,11 @@ void GmWin::render(Graphics& gfx)
 	gfx.setColour(mColourA, true);
 	gfx.setAuxColour(mAuxColourA);
 	gfx.useTexture(wintex, GX_TEXMAP0);
-	gfx.drawRectangle(area, RectArea(0, 0, 128, 128), nullptr);
+	RectArea area2(0, 0, 128, 128);
+	gfx.drawRectangle(area, area2, nullptr);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	doRender(gfx);
 }
 
@@ -162,7 +164,8 @@ void GmWin::texture(Graphics& gfx, Texture* texture, int minX, int minY, int max
 	minX = minX + mPosX;
 	minY = minY + mPosY;
 	gfx.useTexture(texture, GX_TEXMAP0);
-	gfx.drawRectangle(RectArea(minX, minY, minX + maxX, minY + maxY), area, nullptr);
+	RectArea area2(minX, minY, minX + maxX, minY + maxY);
+	gfx.drawRectangle(area2, area, nullptr);
 }
 
 /**
@@ -173,7 +176,8 @@ void GmWin::texturecentre(Graphics& gfx, Texture* texture, int minY, int width, 
 	const int minX = mPosX + (mWidth >> 1) - (width >> 1);
 	minY           = minY + mPosY;
 	gfx.useTexture(texture, GX_TEXMAP0);
-	gfx.drawRectangle(RectArea(minX, minY, minX + width, minY + height), area, nullptr);
+	RectArea area2(minX, minY, minX + width, minY + height);
+	gfx.drawRectangle(area2, area, nullptr);
 }
 
 /**
@@ -184,7 +188,8 @@ void GmWin::textureleft(Graphics& gfx, Texture* texture, int minY, int width, in
 	const int minX = mPosX + 32;
 	minY           = minY + mPosY;
 	gfx.useTexture(texture, GX_TEXMAP0);
-	gfx.drawRectangle(RectArea(minX, minY, minX + width, minY + height), area, 0);
+	RectArea area2(minX, minY, minX + width, minY + height);
+	gfx.drawRectangle(area2, area, 0);
 }
 
 /**
@@ -195,7 +200,8 @@ void GmWin::textureright(Graphics& gfx, Texture* texture, int minY, int width, i
 	const int minX = mPosX + mWidth - width - 32;
 	minY           = minY + mPosY;
 	gfx.useTexture(texture, GX_TEXMAP0);
-	gfx.drawRectangle(RectArea(minX, minY, minX + width, minY + height), area, nullptr);
+	RectArea area2(minX, minY, minX + width, minY + height);
+	gfx.drawRectangle(area2, area, nullptr);
 }
 
 /**

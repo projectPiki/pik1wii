@@ -101,8 +101,6 @@ struct ClothFader : public AttentionCamera::Fader {
 		mFadeTimer    = mFadeDuration;
 		reset();
 		gsys->mToggleBlur = false;
-
-		STACK_PAD_VAR(2);
 	}
 	virtual void initFadeOut() // _14
 	{
@@ -110,8 +108,6 @@ struct ClothFader : public AttentionCamera::Fader {
 		mFadeTimer    = mFadeDuration;
 		reset();
 		gsys->mToggleBlur = false;
-
-		STACK_PAD_VAR(2);
 	}
 	virtual bool updateFadeIn() // _0C
 	{
@@ -349,10 +345,11 @@ struct SimpleFader : public AttentionCamera::Fader {
 	virtual void drawFadeOut(Graphics& gfx) // _1C
 	{
 		int alpha = (1.0f - mFadeTimer / mFadeDuration) * 255.0f;
-		gfx.setColour(Colour(255, 255, 255, alpha), true);
-		STACK_PAD_VAR(4);
+		Colour colour1(255, 255, 255, alpha);
+		gfx.setColour(colour1, true);
 
-		gfx.setAuxColour(Colour(255, 255, 255, alpha));
+		Colour colour2(255, 255, 255, alpha);
+		gfx.setAuxColour(colour2);
 		gfx.useTexture(mapMgr->mBlurResultTexture, GX_TEXMAP0);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
@@ -360,15 +357,17 @@ struct SimpleFader : public AttentionCamera::Fader {
 		GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_RASA);
 
 		RectArea area1(0, 0, 640, 480);
-		gfx.drawRectangle(area1, RectArea(0, 0, 320, 240), nullptr);
+		RectArea area2(0, 0, 320, 240);
+		gfx.drawRectangle(area1, area2, nullptr);
 	}
 	virtual void drawFadeIn(Graphics& gfx) // _10
 	{
 		int alpha = (mFadeTimer / mFadeDuration) * 255.0f;
-		gfx.setColour(Colour(255, 255, 255, alpha), true);
-		STACK_PAD_VAR(4);
+		Colour colour1(255, 255, 255, alpha);
+		gfx.setColour(colour1, true);
 
-		gfx.setAuxColour(Colour(255, 255, 255, alpha));
+		Colour colour2(255, 255, 255, alpha);
+		gfx.setAuxColour(colour2);
 		gfx.useTexture(mapMgr->mBlurResultTexture, GX_TEXMAP0);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
@@ -376,7 +375,8 @@ struct SimpleFader : public AttentionCamera::Fader {
 		GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_RASA);
 
 		RectArea area1(0, 0, 640, 480);
-		gfx.drawRectangle(area1, RectArea(0, 0, 320, 240), nullptr);
+		RectArea area2(0, 0, 320, 240);
+		gfx.drawRectangle(area1, area2, nullptr);
 	}
 
 	// _04     = VTBL
@@ -417,17 +417,22 @@ struct DefaultFader : public AttentionCamera::Fader {
 		int x = t * 320.0f;
 		int y = t * 240.0f;
 		RectArea area1(0, 0, 640, 480);
-		gfx.setColour(COLOUR_BLACK, true);
-		gfx.setAuxColour(COLOUR_BLACK);
+		Colour colour1(COLOUR_BLACK);
+		gfx.setColour(colour1, true);
+		Colour colour2(COLOUR_BLACK);
+		gfx.setAuxColour(colour2);
 		gfx.useTexture(nullptr, GX_TEXMAP0);
 		gfx.fillRectangle(area1);
 
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(COLOUR_WHITE);
+		Colour colour3(COLOUR_WHITE);
+		gfx.setColour(colour3, true);
+		Colour colour4(COLOUR_WHITE);
+		gfx.setAuxColour(colour4);
 		gfx.useTexture(mapMgr->mBlurResultTexture, GX_TEXMAP0);
 
 		RectArea area2(x, y, 640 - x, 480 - y);
-		gfx.drawRectangle(area2, RectArea(0, 0, 320, 240), nullptr);
+		RectArea area3(0, 0, 320, 240);
+		gfx.drawRectangle(area2, area3, nullptr);
 	}
 	virtual void initFadeOut() // _14
 	{
@@ -450,17 +455,22 @@ struct DefaultFader : public AttentionCamera::Fader {
 		int x = t * 320.0f;
 		int y = t * 240.0f;
 		RectArea area1(0, 0, 640, 480);
-		gfx.setColour(COLOUR_BLACK, true);
-		gfx.setAuxColour(COLOUR_BLACK);
+		Colour colour1(COLOUR_BLACK);
+		gfx.setColour(colour1, true);
+		Colour colour2(COLOUR_BLACK);
+		gfx.setAuxColour(colour2);
 		gfx.useTexture(nullptr, GX_TEXMAP0);
 		gfx.fillRectangle(area1);
 
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(COLOUR_WHITE);
+		Colour colour3(COLOUR_WHITE);
+		gfx.setColour(colour3, true);
+		Colour colour4(COLOUR_WHITE);
+		gfx.setAuxColour(colour4);
 		gfx.useTexture(mapMgr->mBlurResultTexture, GX_TEXMAP0);
 
 		RectArea area2(x, y, 640 - x, 480 - y);
-		gfx.drawRectangle(area2, RectArea(0, 0, 320, 240), nullptr);
+		RectArea area3(0, 0, 320, 240);
+		gfx.drawRectangle(area2, area3, nullptr);
 	}
 
 	// _04     = VTBL

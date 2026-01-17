@@ -39,7 +39,8 @@ void SlimeAi::init(Slime* slime)
 	mSlime = slime;
 	mSlime->setCurrentState(SLIMEAI_Stay);
 	mSlime->setNextState(SLIMEAI_Stay);
-	mSlime->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Dead));
+	PaniMotionInfo anim(TekiMotion::Dead);
+	mSlime->mAnimator.startMotion(anim);
 	mIsContractFinished        = false;
 	mCanPlayExpandSound        = true;
 	mPrevNucleusStickPikiCount = 0;

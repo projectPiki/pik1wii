@@ -138,7 +138,9 @@ void ActPutBomb::init(Creature* target)
 		}
 
 		if (mPiki->mPikiAnimMgr.getUpperAnimator().getCurrentMotionIndex() != PIKIANIM_Pick) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+			PaniMotionInfo anim1(PIKIANIM_Pick, this);
+			PaniMotionInfo anim2(PIKIANIM_Pick);
+			mPiki->startMotion(anim1, anim2);
 			mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 18.0f;
 			mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 18.0f;
 			mPiki->enableMotionBlend();
@@ -156,7 +158,9 @@ void ActPutBomb::init(Creature* target)
 		return;
 	}
 
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+	PaniMotionInfo anim1(PIKIANIM_Pick, this);
+	PaniMotionInfo anim2(PIKIANIM_Pick);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 18.0f;
 	mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 18.0f;
 	initPut();
@@ -213,7 +217,8 @@ void ActPutBomb::warnPikis()
 		if (piki != mPiki) {
 			f32 dist = qdist2(piki, mPiki);
 			if (dist <= C_PIKI_PROP(mPiki).mBombWarnPikiRange()) {
-				piki->stimulate(InteractWarn(mPiki));
+				InteractWarn warn(mPiki);
+				piki->stimulate(warn);
 			}
 		}
 	}
@@ -314,7 +319,9 @@ int ActPutBomb::exeWait()
 void ActPutBomb::initThrow()
 {
 	mAnimationFinished = false;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Tanemaki, this), PaniMotionInfo(PIKIANIM_Tanemaki));
+	PaniMotionInfo anim1(PIKIANIM_Tanemaki, this);
+	PaniMotionInfo anim2(PIKIANIM_Tanemaki);
+	mPiki->startMotion(anim1, anim2);
 	mState = STATE_Throw;
 }
 
@@ -323,7 +330,9 @@ void ActPutBomb::initThrow()
  */
 void ActPutBomb::initPut()
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Tanemaki, this), PaniMotionInfo(PIKIANIM_Tanemaki));
+	PaniMotionInfo anim1(PIKIANIM_Tanemaki, this);
+	PaniMotionInfo anim2(PIKIANIM_Tanemaki);
+	mPiki->startMotion(anim1, anim2);
 	InteractRelease release(mPiki, 1.0f);
 	Creature* held = mPiki->getHoldCreature();
 	held->stimulate(release);
@@ -415,7 +424,9 @@ int ActPutBomb::exec()
 	}
 
 	if (mState != STATE_Throw && mPiki->mPikiAnimMgr.getUpperAnimator().getCurrentMotionIndex() != PIKIANIM_Pick) {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+		PaniMotionInfo anim1(PIKIANIM_Pick, this);
+		PaniMotionInfo anim2(PIKIANIM_Pick);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 18.0f;
 		mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 18.0f;
 		mPiki->enableMotionBlend();

@@ -16,10 +16,8 @@ zen::DrawUfoParts::DrawUfoParts()
 	mReturnState = RETSTATE_Unk0;
 	mMode        = MODE_Sleep;
 
-	mAlphaWipe.setColour(COLOUR_TRANSPARENT, COLOUR_TRANSPARENT);
-
-	// just for stack
-	STACK_PAD_TERNARY(mScreen, 1);
+	Colour colour(COLOUR_TRANSPARENT);
+	mAlphaWipe.setColour(colour, colour);
 }
 
 /**
@@ -102,10 +100,14 @@ void zen::DrawUfoParts::draw(Graphics& gfx)
 
 		if (check) {
 			Matrix4f mtx;
-			gfx.setOrthogonal(mtx.mMtx, AREA_FULL_SCREEN(gfx));
-			gfx.setColour(COLOUR_BLACK, true);
-			gfx.setAuxColour(COLOUR_BLACK);
-			gfx.fillRectangle(AREA_FULL_SCREEN(gfx));
+			RectArea area1(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(mtx.mMtx, area1);
+			Colour colour1(COLOUR_BLACK);
+			gfx.setColour(colour1, true);
+			Colour colour2(COLOUR_BLACK);
+			gfx.setAuxColour(colour2);
+			RectArea area2(AREA_FULL_SCREEN(gfx));
+			gfx.fillRectangle(area2);
 			mScreen->draw();
 		}
 

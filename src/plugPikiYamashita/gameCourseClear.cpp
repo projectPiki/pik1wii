@@ -164,15 +164,21 @@ protected:
 	void drawSelect(Graphics& gfx, Font* font)
 	{
 		Matrix4f mtx;
-		gfx.setOrthogonal(mtx.mMtx, AREA_FULL_SCREEN(gfx));
+		
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(mtx.mMtx, area);
 
 		for (int i = 0; i < mModeCount; i++) {
 			if (mCurrentSelect == i) {
-				gfx.setColour(Colour(192, 64, 255, 255), true);
-				gfx.setAuxColour(Colour(64, 64, 192, 255));
+				Colour colour1(192, 64, 255, 255);
+				Colour colour2(64, 64, 192, 255);
+				gfx.setColour(colour1, true);
+				gfx.setAuxColour(colour2);
 			} else {
-				gfx.setColour(Colour(192, 255, 255, 255), true);
-				gfx.setAuxColour(Colour(200, 215, 192, 255));
+				Colour colour3(192, 255, 255, 255);
+				Colour colour4(200, 215, 192, 255);
+				gfx.setColour(colour3, true);
+				gfx.setAuxColour(colour4);
 			}
 
 			immut char* name = mModes[i]->getModeName();
@@ -809,15 +815,22 @@ struct GameCourseClearScreen : public Node {
 	}
 	virtual void draw(Graphics& gfx) // _14
 	{
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_BLACK);
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area1);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setScissor(area2);
+		Colour colour1(COLOUR_BLACK);
+		gfx.setClearColour(colour1);
 		gfx.clearBuffer(3, false);
 		Matrix4f mtx;
-		gfx.setOrthogonal(mtx.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setColour(Colour(64, 64, 192, 255), true);
-		gfx.setAuxColour(Colour(192, 64, 255, 255));
-		gfx.fillRectangle(AREA_FULL_SCREEN(gfx));
+		RectArea area3(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(mtx.mMtx, area3);
+		Colour colour2(64, 64, 192, 255);
+		gfx.setColour(colour2, true);
+		Colour colour3(192, 64, 255, 255);
+		gfx.setAuxColour(colour3);
+		RectArea area4(AREA_FULL_SCREEN(gfx));
+		gfx.fillRectangle(area4);
 
 		Camera camera;
 		Matrix4f mtx2;
@@ -883,9 +896,10 @@ GameCourseClearSection::GameCourseClearSection()
 
 	GameCourseClearScreen* screen = new GameCourseClearScreen();
 	screen->mPtclManager.init(10, 4081, 4081, 60.0f);
+	Vector3f pos(0.0f, 0.0f, 0.0f);
 	screen->mPtclManager.createGenerator(screen->mPtclLoader.load("effects/pcr/pk_dead.pcr", true),
 	                                     gsys->loadTexture("effects/tex/soulf3.bti", true),
-	                                     gsys->loadTexture("effects/tex/soulf3.bti", true), Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	                                     gsys->loadTexture("effects/tex/soulf3.bti", true), pos, nullptr, nullptr);
 	screen->mScreen.set("screen/blo/progre.blo", true, true, true);
 	add(screen);
 }

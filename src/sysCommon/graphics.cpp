@@ -117,21 +117,23 @@ void PVWColourAnimInfo::extract(f32 value, Colour& target)
 		}
 	}
 
-	f32 red   = subExtract(value,
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mRedData.mTime,
-	                                mAnimInfo.mKeyframes[idx].mRedData.mValue, mAnimInfo.mKeyframes[idx].mRedData.mTangent),
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mRedData.mTime,
-	                                mAnimInfo.mKeyframes[idx + 1].mRedData.mValue, mAnimInfo.mKeyframes[idx + 1].mRedData.mTangent));
-	f32 green = subExtract(value,
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mGreenData.mTime,
-	                                mAnimInfo.mKeyframes[idx].mGreenData.mValue, mAnimInfo.mKeyframes[idx].mGreenData.mTangent),
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mGreenData.mTime,
-	                                mAnimInfo.mKeyframes[idx + 1].mGreenData.mValue, mAnimInfo.mKeyframes[idx + 1].mGreenData.mTangent));
-	f32 blue  = subExtract(value,
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mBlueData.mTime,
-	                                mAnimInfo.mKeyframes[idx].mBlueData.mValue, mAnimInfo.mKeyframes[idx].mBlueData.mTangent),
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mBlueData.mTime,
-	                                mAnimInfo.mKeyframes[idx + 1].mBlueData.mValue, mAnimInfo.mKeyframes[idx + 1].mBlueData.mTangent));
+	AKeyInfo rkey1(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mRedData.mTime,
+	                                mAnimInfo.mKeyframes[idx].mRedData.mValue, mAnimInfo.mKeyframes[idx].mRedData.mTangent);
+	AKeyInfo rkey2(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mRedData.mTime,
+	                                mAnimInfo.mKeyframes[idx + 1].mRedData.mValue, mAnimInfo.mKeyframes[idx + 1].mRedData.mTangent);
+	f32 red   = subExtract(value, rkey1, rkey2);
+	
+	AKeyInfo gkey1(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mGreenData.mTime,
+	                                mAnimInfo.mKeyframes[idx].mGreenData.mValue, mAnimInfo.mKeyframes[idx].mGreenData.mTangent);
+	AKeyInfo gkey2(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mGreenData.mTime,
+	                                mAnimInfo.mKeyframes[idx + 1].mGreenData.mValue, mAnimInfo.mKeyframes[idx + 1].mGreenData.mTangent);
+	f32 green = subExtract(value, gkey1, gkey2);
+	
+	AKeyInfo bkey1(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mBlueData.mTime,
+	                                mAnimInfo.mKeyframes[idx].mBlueData.mValue, mAnimInfo.mKeyframes[idx].mBlueData.mTangent);
+	AKeyInfo bkey2(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mBlueData.mTime,
+	                                mAnimInfo.mKeyframes[idx + 1].mBlueData.mValue, mAnimInfo.mKeyframes[idx + 1].mBlueData.mTangent);
+	f32 blue  = subExtract(value, bkey1, bkey2);
 
 	int r;
 	if (red < 0.0f) {
@@ -190,11 +192,11 @@ void PVWAlphaAnimInfo::extract(f32 value, Colour& target)
 		}
 	}
 
-	f32 alpha = subExtract(value,
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mData.mTime,
-	                                mAnimInfo.mKeyframes[idx].mData.mValue, mAnimInfo.mKeyframes[idx].mData.mTangent),
-	                       AKeyInfo(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mData.mTime,
-	                                mAnimInfo.mKeyframes[idx + 1].mData.mValue, mAnimInfo.mKeyframes[idx + 1].mData.mTangent));
+	AKeyInfo akey1(mAnimInfo.mKeyframes[idx].mTime, mAnimInfo.mKeyframes[idx].mData.mTime,
+	                                mAnimInfo.mKeyframes[idx].mData.mValue, mAnimInfo.mKeyframes[idx].mData.mTangent);
+	AKeyInfo akey2(mAnimInfo.mKeyframes[idx + 1].mTime, mAnimInfo.mKeyframes[idx + 1].mData.mTime,
+	                                mAnimInfo.mKeyframes[idx + 1].mData.mValue, mAnimInfo.mKeyframes[idx + 1].mData.mTangent);
+	f32 alpha = subExtract(value, akey1, akey2);
 
 	int a;
 	if (alpha < 0.0f) {
@@ -233,21 +235,23 @@ void PVWColourShortAnimInfo::extract(f32 value, ShortColour& target)
 		}
 	}
 
-	f32 red   = subExtract(value,
-	                       AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mRedData.mTime, mInfo.mKeyframes[idx].mRedData.mValue,
-	                                mInfo.mKeyframes[idx].mRedData.mTangent),
-	                       AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mRedData.mTime,
-	                                mInfo.mKeyframes[idx + 1].mRedData.mValue, mInfo.mKeyframes[idx + 1].mRedData.mTangent));
-	f32 green = subExtract(value,
-	                       AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mGreenData.mTime,
-	                                mInfo.mKeyframes[idx].mGreenData.mValue, mInfo.mKeyframes[idx].mGreenData.mTangent),
-	                       AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mGreenData.mTime,
-	                                mInfo.mKeyframes[idx + 1].mGreenData.mValue, mInfo.mKeyframes[idx + 1].mGreenData.mTangent));
-	f32 blue  = subExtract(value,
-	                       AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mBlueData.mTime,
-	                                mInfo.mKeyframes[idx].mBlueData.mValue, mInfo.mKeyframes[idx].mBlueData.mTangent),
-	                       AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mBlueData.mTime,
-	                                mInfo.mKeyframes[idx + 1].mBlueData.mValue, mInfo.mKeyframes[idx + 1].mBlueData.mTangent));
+	AKeyInfo rkey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mRedData.mTime, mInfo.mKeyframes[idx].mRedData.mValue,
+	                                mInfo.mKeyframes[idx].mRedData.mTangent);
+	AKeyInfo rkey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mRedData.mTime,
+	                                mInfo.mKeyframes[idx + 1].mRedData.mValue, mInfo.mKeyframes[idx + 1].mRedData.mTangent);
+	f32 red   = subExtract(value, rkey1, rkey2);
+	
+	AKeyInfo gkey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mGreenData.mTime,
+	                                mInfo.mKeyframes[idx].mGreenData.mValue, mInfo.mKeyframes[idx].mGreenData.mTangent);
+	AKeyInfo gkey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mGreenData.mTime,
+	                                mInfo.mKeyframes[idx + 1].mGreenData.mValue, mInfo.mKeyframes[idx + 1].mGreenData.mTangent);
+	f32 green = subExtract(value, gkey1, gkey2);
+	
+	AKeyInfo bkey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mBlueData.mTime,
+	                                mInfo.mKeyframes[idx].mBlueData.mValue, mInfo.mKeyframes[idx].mBlueData.mTangent);
+	AKeyInfo bkey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mBlueData.mTime,
+	                                mInfo.mKeyframes[idx + 1].mBlueData.mValue, mInfo.mKeyframes[idx + 1].mBlueData.mTangent);
+	f32 blue  = subExtract(value, bkey1, bkey2);
 
 	int r;
 	if (red < -1023.0f) {
@@ -306,11 +310,11 @@ void PVWAlphaShortAnimInfo::extract(f32 value, ShortColour& target)
 		}
 	}
 
-	f32 alpha = subExtract(value,
-	                       AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mData.mTime, mInfo.mKeyframes[idx].mData.mValue,
-	                                mInfo.mKeyframes[idx].mData.mTangent),
-	                       AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mData.mTime,
-	                                mInfo.mKeyframes[idx + 1].mData.mValue, mInfo.mKeyframes[idx + 1].mData.mTangent));
+	AKeyInfo akey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mData.mTime, mInfo.mKeyframes[idx].mData.mValue,
+	                                mInfo.mKeyframes[idx].mData.mTangent);
+	AKeyInfo akey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mData.mTime,
+	                                mInfo.mKeyframes[idx + 1].mData.mValue, mInfo.mKeyframes[idx + 1].mData.mTangent);
+	f32 alpha = subExtract(value, akey1, akey2);
 
 	int a;
 	if (alpha < 0.0f) {
@@ -355,21 +359,23 @@ void PVWTexAnimInfo::extract(f32 value, Vector3f& target)
 		}
 	}
 
-	target.x = subExtract(value,
-	                      AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mRedData.mTime, mInfo.mKeyframes[idx].mRedData.mValue,
-	                               mInfo.mKeyframes[idx].mRedData.mTangent),
-	                      AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mRedData.mTime,
-	                               mInfo.mKeyframes[idx + 1].mRedData.mValue, mInfo.mKeyframes[idx + 1].mRedData.mTangent));
-	target.y = subExtract(value,
-	                      AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mGreenData.mTime,
-	                               mInfo.mKeyframes[idx].mGreenData.mValue, mInfo.mKeyframes[idx].mGreenData.mTangent),
-	                      AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mGreenData.mTime,
-	                               mInfo.mKeyframes[idx + 1].mGreenData.mValue, mInfo.mKeyframes[idx + 1].mGreenData.mTangent));
-	target.z = subExtract(value,
-	                      AKeyInfo(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mBlueData.mTime,
-	                               mInfo.mKeyframes[idx].mBlueData.mValue, mInfo.mKeyframes[idx].mBlueData.mTangent),
-	                      AKeyInfo(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mBlueData.mTime,
-	                               mInfo.mKeyframes[idx + 1].mBlueData.mValue, mInfo.mKeyframes[idx + 1].mBlueData.mTangent));
+	AKeyInfo rkey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mRedData.mTime, mInfo.mKeyframes[idx].mRedData.mValue,
+	                               mInfo.mKeyframes[idx].mRedData.mTangent);
+	AKeyInfo rkey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mRedData.mTime,
+	                               mInfo.mKeyframes[idx + 1].mRedData.mValue, mInfo.mKeyframes[idx + 1].mRedData.mTangent);
+	target.x = subExtract(value, rkey1, rkey2);
+	
+	AKeyInfo gkey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mGreenData.mTime,
+	                               mInfo.mKeyframes[idx].mGreenData.mValue, mInfo.mKeyframes[idx].mGreenData.mTangent);
+	AKeyInfo gkey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mGreenData.mTime,
+	                               mInfo.mKeyframes[idx + 1].mGreenData.mValue, mInfo.mKeyframes[idx + 1].mGreenData.mTangent);
+	target.y = subExtract(value, gkey1, gkey2);
+	
+	AKeyInfo bkey1(mInfo.mKeyframes[idx].mTime, mInfo.mKeyframes[idx].mBlueData.mTime,
+	                               mInfo.mKeyframes[idx].mBlueData.mValue, mInfo.mKeyframes[idx].mBlueData.mTangent);
+	AKeyInfo bkey2(mInfo.mKeyframes[idx + 1].mTime, mInfo.mKeyframes[idx + 1].mBlueData.mTime,
+	                               mInfo.mKeyframes[idx + 1].mBlueData.mValue, mInfo.mKeyframes[idx + 1].mBlueData.mTangent);
+	target.z = subExtract(value, bkey1, bkey2);
 }
 
 /**
@@ -1275,7 +1281,9 @@ void Graphics::drawCylinder(immut Vector3f& start, immut Vector3f& end, f32 radi
 		Matrix4f a;
 		Matrix4f b;
 
-		a.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, f32(i) * (PI / 8.0f), 0.0f), vec1);
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, f32(i) * (PI / 8.0f), 0.0f);
+		a.makeSRT(scale, rot, vec1);
 		transformMtx.multiplyTo(a, b);
 		useMatrix(b, 0);
 
@@ -1284,8 +1292,9 @@ void Graphics::drawCylinder(immut Vector3f& start, immut Vector3f& end, f32 radi
 			f32 currentAngle = f32(j) * (PI / 8.0f);
 			f32 nextAngle    = f32((j + 1) % 32) * (PI / 8.0f);
 
-			drawLine(Vector3f(sinf(currentAngle) * radius, 0.0f, cosf(currentAngle) * radius),
-			         Vector3f(sinf(nextAngle) * radius, 0.0f, cosf(nextAngle) * radius));
+			Vector3f point1(sinf(currentAngle) * radius, 0.0f, cosf(currentAngle) * radius);
+			Vector3f point2(sinf(nextAngle) * radius, 0.0f, cosf(nextAngle) * radius);
+			drawLine(point1, point2);
 		}
 
 		vec1 = vec1 + vec2;
@@ -1312,7 +1321,9 @@ void Graphics::drawSphere(immut Vector3f& center, f32 radius, immut Matrix4f& tr
 		Matrix4f mtx1;
 		Matrix4f mtx2;
 
-		mtx1.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, f32(i) * (PI / 8.0f), 0.0f), center);
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, f32(i) * (PI / 8.0f), 0.0f);
+		mtx1.makeSRT(scale, rot, center);
 		transformMtx.multiplyTo(mtx1, mtx2);
 		useMatrix(mtx2, 0);
 
@@ -1320,8 +1331,9 @@ void Graphics::drawSphere(immut Vector3f& center, f32 radius, immut Matrix4f& tr
 			f32 theta0 = f32(j) * (PI / 8.0f);
 			f32 theta1 = f32((j + 1) % 32) * (PI / 8.0f);
 
-			drawLine(Vector3f(sinf(theta0) * radius, cosf(theta0) * radius, 0.0f),
-			         Vector3f(sinf(theta1) * radius, cosf(theta1) * radius, 0.0f));
+			Vector3f point1(sinf(theta0) * radius, cosf(theta0) * radius, 0.0f);
+			Vector3f point2(sinf(theta1) * radius, cosf(theta1) * radius, 0.0f);
+			drawLine(point1, point2);
 		}
 	}
 }

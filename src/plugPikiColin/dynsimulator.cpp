@@ -124,13 +124,15 @@ void RigidBody::render(Graphics& gfx)
 
 	// transform world space object into view space for rendering
 	Matrix4f modelMtx;
-	modelMtx.makeVQS(mRenderPosition, mRenderOrientation, Vector3f(1.0f, 1.0f, 1.0f));
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	modelMtx.makeVQS(mRenderPosition, mRenderOrientation, scale);
 	Matrix4f viewMtx;
 	gfx.calcViewMatrix(modelMtx, viewMtx);
 
 	// set graphics unit settings
 	gfx.useMatrix(viewMtx, 0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 	bool lighting = gfx.setLighting(false, nullptr);
 

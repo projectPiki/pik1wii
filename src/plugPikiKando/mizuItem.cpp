@@ -53,11 +53,11 @@ bool MizuItem::needFlick(Creature*)
  */
 void MizuItem::startAI(int)
 {
-	STACK_PAD_VAR(1);
 	mSRT.s.x = 1.0f;
 	mSRT.s.y = 1.0f;
 	mSRT.s.z = 1.0f;
-	mItemAnimator.startMotion(PaniMotionInfo(0));
+	PaniMotionInfo anim(0);
+	mItemAnimator.startMotion(anim);
 
 	switch (mObjType) {
 	case OBJTYPE_Water:

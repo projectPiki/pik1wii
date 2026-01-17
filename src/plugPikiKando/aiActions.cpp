@@ -47,7 +47,8 @@ void ActPick::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 	{
 		Creature* obj = mObject.getPtr();
 		if (obj && obj->isVisible() && qdist2(obj, mPiki) < 20.0f) {
-			obj->stimulate(InteractGrab(mPiki));
+			InteractGrab grab(mPiki);
+			obj->stimulate(grab);
 		}
 		break;
 	}
@@ -67,7 +68,9 @@ void ActPick::init(Creature* object)
 	mIsAnimationFinished = false;
 	mObject.set(object);
 
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+	PaniMotionInfo anim1(PIKIANIM_Pick, this);
+	PaniMotionInfo anim2(PIKIANIM_Pick);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 }
 
@@ -88,7 +91,9 @@ int ActPick::exec()
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	if (mIsAnimationFinished) {
 		if (!mPiki->isHolding()) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+			PaniMotionInfo anim1(PIKIANIM_Walk);
+			PaniMotionInfo anim2(PIKIANIM_Walk);
+			mPiki->startMotion(anim1, anim2);
 			mPiki->mEmotion = PikiEmotion::Sad;
 			return ACTOUT_Fail;
 		}
@@ -143,7 +148,8 @@ int ActPut::exec()
 		return ACTOUT_Fail;
 	}
 
-	if (obj->stimulate(InteractRelease(mPiki, 1.0f))) {
+	InteractRelease release(mPiki, 1.0f);
+	if (obj->stimulate(release)) {
 		PRINT("release ?\n");
 		return ACTOUT_Success;
 	}
@@ -201,7 +207,9 @@ void ActAdjust::init(Creature* target)
 
 		PRINT(" deltaVec(%.1f,%.1f,%.1f) : deltaF(%.1f)\n", mVelocity.x, mVelocity.y, mVelocity.z, mTurnSpeed);
 		mAdjustTimer = 0.0f;
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Asibumi), PaniMotionInfo(PIKIANIM_Asibumi));
+		PaniMotionInfo anim1(PIKIANIM_Asibumi);
+		PaniMotionInfo anim2(PIKIANIM_Asibumi);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->setCreatureFlag(CF_UsePriorityFaceDir);
 	} else {
 		mForceFail = true;

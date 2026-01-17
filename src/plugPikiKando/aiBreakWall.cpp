@@ -49,10 +49,11 @@ void ActBreakWall::init(Creature* creature)
 	mIsAttackReady      = false;
 	mPiki->mWantToStick = false;
 	mWorkTimer          = (4.0f * gsys->getRand(1.0f));
-#if defined(VERSION_PIKIDEMO)
-#else
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
-#endif
+
+	PaniMotionInfo anim1(PIKIANIM_Walk, this);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
+
 }
 
 /**
@@ -172,12 +173,16 @@ void ActBreakWall::startWorkMotion()
 		if (mPiki->getCollidePlatformCreature()) {
 			Vector3f normal = mPiki->getCollidePlatformNormal();
 			if (normal.y > 0.7f) {
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Job2, this), PaniMotionInfo(PIKIANIM_Job2));
+				PaniMotionInfo anim1(PIKIANIM_Job2, this);
+				PaniMotionInfo anim2(PIKIANIM_Job2);
+				mPiki->startMotion(anim1, anim2);
 				return;
 			}
 		}
 
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+		PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+		PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+		mPiki->startMotion(anim1, anim2);
 	}
 }
 

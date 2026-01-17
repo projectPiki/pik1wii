@@ -677,10 +677,12 @@ TaiOtimotiStrategy::TaiOtimotiStrategy(TekiParameters* params)
  */
 void TaiOtimotiStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Frog_Water2, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos1(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Frog_Water2, pos1, nullptr, nullptr);
 	teki.stopParticleGenerator(0);
 
-	teki.mParticleGenerators[1] = effectMgr->create(EffectMgr::EFF_Frog_Water1, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos2(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[1] = effectMgr->create(EffectMgr::EFF_Frog_Water1,pos2, nullptr, nullptr);
 	teki.stopParticleGenerator(1);
 
 	TaiStrategy::start(teki);
@@ -716,10 +718,14 @@ void TaiOtimotiStrategy::draw(Teki& teki, Graphics& gfx)
  */
 void TaiOtimotiStrategy::drawDebugInfo(Teki& teki, Graphics& gfx)
 {
-	teki.drawRange(gfx, teki.getPosition(), teki.getParameterF(TPF_VisibleRange), Colour(0, 0, 255, 255));
-	teki.drawRange(gfx, teki.getPosition(), teki.getAttackableRange(), Colour(255, 255, 0, 255));
-	teki.drawRange(gfx, teki.getPosition(), teki.getAttackRange(), Colour(255, 0, 0, 255));
-	teki.drawRange(gfx, teki.getPosition(), teki.getLowerRange(), Colour(255, 0, 255, 255));
+	Colour colour1(0, 0, 255, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getParameterF(TPF_VisibleRange), colour1);
+	Colour colour2(255, 255, 0, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getAttackableRange(), colour2);
+	Colour colour3(255, 0, 0, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getAttackRange(), colour3);
+	Colour colour4(255, 0, 255, 255);
+	teki.drawRange(gfx, teki.getPosition(), teki.getLowerRange(), colour4);
 }
 
 /**
@@ -741,7 +747,8 @@ void TaiOtimotiStartDroppingWaterAction::start(Teki& teki)
  */
 bool TaiOtimotiFlickAction::act(Teki& teki)
 {
-	int pikiNum    = teki.countPikis(TekiAndCondition(&TekiRecognitionCondition(&teki), &TekiLowerRangeCondition(&teki)));
+	TekiAndCondition cond(&TekiRecognitionCondition(&teki), &TekiLowerRangeCondition(&teki));
+	int pikiNum    = teki.countPikis(cond);
 	int flickCount = teki.getFlickDamageCount(pikiNum);
 
 	if (teki.mDamageCount >= f32(flickCount)) {
@@ -762,7 +769,8 @@ bool TaiOtimotiFlickAction::act(Teki& teki)
  */
 bool TaiOtimotiFailToJumpAction::act(Teki& teki)
 {
-	int pikiNum = teki.countPikis(TekiAndCondition(&TekiRecognitionCondition(&teki), &TekiLowerCondition(&teki)));
+	TekiAndCondition cond(&TekiRecognitionCondition(&teki), &TekiLowerCondition(&teki));
+	int pikiNum = teki.countPikis(cond);
 	f32 linValues[2];
 	NClampLinearFunction linFunc(linValues);
 	linFunc.makeClampLinearFunction(teki.getParameterF(OTIMOTIPF_MissFuncMinCount), teki.getParameterF(OTIMOTIPF_MissFuncMinChance),
@@ -818,7 +826,8 @@ void TaiOtimotiJumpingAction::start(Teki& teki)
 	vec1.scale(val3);
 	vec1.y = val;
 
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f posio(teki.getPosition());
+	teki.mPositionIO.input(posio);
 	teki.mParabolaEvent->makeParabolaEvent(nullptr, &teki.mPositionIO, vec1, 1000.0f, gravity);
 	teki.mParabolaEvent->reset();
 
@@ -850,8 +859,10 @@ bool TaiOtimotiJumpingAction::act(Teki& teki)
  */
 void TaiOtimotiAirWaitingAction::start(Teki& teki)
 {
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
-	teki.mVelocityIO.input(NVector3f(teki.mActionVelocity));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
+	NVector3f vel(teki.mActionVelocity);
+	teki.mVelocityIO.input(vel);
 	NVector3f accel(teki.mActionVelocity);
 	accel.normalizeCheck();
 	accel.negate();
@@ -877,7 +888,6 @@ bool TaiOtimotiAirWaitingAction::act(Teki& teki)
 			}
 		}
 	}
-	STACK_PAD_VAR(1);
 
 	if (check) {
 		teki.stopMove();
@@ -893,8 +903,6 @@ bool TaiOtimotiAirWaitingAction::act(Teki& teki)
 		return true;
 	}
 	return false;
-
-	STACK_PAD_TERNARY(check, 2);
 }
 
 /**

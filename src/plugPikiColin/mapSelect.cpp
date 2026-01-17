@@ -323,15 +323,22 @@ struct MapSelectSetupSection : public Node {
 	virtual void draw(Graphics& gfx) // _14 (weak)
 	{
 		// full-screen
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area1);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setScissor(area2);
+		Colour colour1(COLOUR_TRANSPARENT);
+		gfx.setClearColour(colour1);
 		gfx.clearBuffer(3, false);
 		Matrix4f orthoMtx;
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setColour(COLOUR_BLACK, true);
-		gfx.setAuxColour(Colour(0, 0, 64, 255));
-		gfx.fillRectangle(AREA_FULL_SCREEN(gfx));
+		RectArea area3(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area3);
+		Colour colour2(COLOUR_BLACK);
+		gfx.setColour(colour2, true);
+		Colour colour3(0, 0, 64, 255);
+		gfx.setAuxColour(colour3);
+		RectArea area4(AREA_FULL_SCREEN(gfx));
+		gfx.fillRectangle(area4);
 
 		// draw challenge mode select
 		if (selectWindow) {
@@ -345,7 +352,8 @@ struct MapSelectSetupSection : public Node {
 
 		// draw debug menu over the top
 		Matrix4f orthoMtxDebug;
-		gfx.setOrthogonal(orthoMtxDebug.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area5(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtxDebug.mMtx, area5);
 
 		if (mActiveOverlayMenu) {
 			mActiveOverlayMenu->draw(gfx, 1.0f);

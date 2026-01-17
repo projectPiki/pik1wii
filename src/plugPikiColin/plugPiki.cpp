@@ -109,12 +109,14 @@ void PlugPikiApp::draw(Graphics& gfx)
 
 	// draw any whole-game overlays
 	Matrix4f orthoMtx;
-	gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(orthoMtx.mMtx, area);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 
 	// if timer is active, print a bunch of graphics trackables to the screen
 	if (gsys->mTimerState != TS_Off) {
-		gfx.setColour(COLOUR_WHITE, true);
+		Colour colour1(COLOUR_WHITE);
+		gfx.setColour(colour1, true);
 		gfx.texturePrintf(gsys->mConsFont, TIMER_STATE_X, TIMER_STATE_Y + 0 * TIMER_STATE_LINE_HEIGHT, "%d polys = %d pps",
 		                  gsys->mPolygonCount, int(gsys->mPolygonCount * gsys->getFrameRate()));
 		gfx.texturePrintf(gsys->mConsFont, TIMER_STATE_X, TIMER_STATE_Y + 1 * TIMER_STATE_LINE_HEIGHT, "%d anims", gsys->mAnimatedPolygons);
@@ -140,8 +142,10 @@ void PlugPikiApp::draw(Graphics& gfx)
 			gameflow.mCurrLoadTextAlpha = gameflow.mTargetLoadTextAlpha;
 		}
 
-		gfx.setColour(Colour(192, 255, 255, gameflow.mCurrLoadTextAlpha), true);
-		gfx.setAuxColour(Colour(192, 192, 255, gameflow.mCurrLoadTextAlpha));
+		Colour colour2(Colour(192, 255, 255, gameflow.mCurrLoadTextAlpha));
+		gfx.setColour(colour2, true);
+		Colour colour3(Colour(192, 192, 255, gameflow.mCurrLoadTextAlpha));
+		gfx.setAuxColour(colour3);
 		char loadText[PATH_MAX];
 		sprintf(loadText, "load took %.1f secs", gameflow.mLoadTimeSeconds);
 #if defined(DEVELOP)

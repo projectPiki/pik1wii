@@ -134,7 +134,8 @@ struct NMatrix4f : public Matrix4f {
 
 	void makeIdentity()
 	{
-		input(NMatrix4f(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f));
+		NMatrix4f mtx(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		input(mtx);
 	}
 
 	// _00-_40 = Matrix4f

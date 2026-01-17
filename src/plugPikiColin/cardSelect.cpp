@@ -170,13 +170,15 @@ struct CardSelectSetupSection : public Node {
 	 */
 	virtual void draw(Graphics& gfx) // _14 (weak)
 	{
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area);
+		gfx.setScissor(area);
+		Colour clear(COLOUR_TRANSPARENT);
+		gfx.setClearColour(clear);
 		gfx.clearBuffer(3, false);
 
 		Matrix4f mtx;
-		gfx.setOrthogonal(mtx.mMtx, AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(mtx.mMtx, area);
 
 		if (!memcardWindow) {
 			// nothing to draw

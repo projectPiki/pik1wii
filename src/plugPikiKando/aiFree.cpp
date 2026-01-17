@@ -42,10 +42,14 @@ void ActFree::initBoid(immut Vector3f& targetPosition, f32 radius)
 	mTargetPosition = targetPosition;
 	mArrivalRadius  = radius;
 	if (mPiki->isHolding()) {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick), PaniMotionInfo(PIKIANIM_Pick));
+		PaniMotionInfo anim1(PIKIANIM_Pick);
+		PaniMotionInfo anim2(PIKIANIM_Pick);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->enableMotionBlend();
 	} else {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+		PaniMotionInfo anim1(PIKIANIM_Walk);
+		PaniMotionInfo anim2(PIKIANIM_Walk);
+		mPiki->startMotion(anim1, anim2);
 	}
 
 	mBoidTimer = 3.0f;
@@ -66,7 +70,9 @@ void ActFree::exeBoid()
 		mIsBoidActive       = false;
 		mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 		if (mPiki->isHolding() && mPiki->mPikiAnimMgr.getUpperAnimator().getCurrentMotionIndex() != PIKIANIM_Pick) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+			PaniMotionInfo anim1(PIKIANIM_Pick, this);
+			PaniMotionInfo anim2(PIKIANIM_Pick);
+			mPiki->startMotion(anim1, anim2);
 			mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 18.0f;
 			mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 18.0f;
 			mPiki->enableMotionBlend();
@@ -90,14 +96,18 @@ void ActFree::init(Creature*)
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	if (mPiki->isHolding()) {
 		PRINT("### piki is holding !\n");
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait, this), PaniMotionInfo(PIKIANIM_Wait));
+		PaniMotionInfo anim1(PIKIANIM_Wait, this);
+		PaniMotionInfo anim2(PIKIANIM_Wait);
+		mPiki->startMotion(anim1, anim2);
 	} else {
 		f32 r         = gsys->getRand(1.0f);
 		int motionIdx = f32(numMotions) * r;
 		if (motionIdx >= numMotions) {
 			motionIdx = 0;
 		}
-		mPiki->startMotion(PaniMotionInfo(motions[motionIdx], this), PaniMotionInfo(motions[motionIdx]));
+		PaniMotionInfo anim1(motions[motionIdx], this);
+		PaniMotionInfo anim2(motions[motionIdx]);
+		mPiki->startMotion(anim1, anim2);
 	}
 
 	mPiki->setPastel();

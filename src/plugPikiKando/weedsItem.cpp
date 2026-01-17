@@ -252,7 +252,9 @@ void RockGen::refresh(Graphics& gfx)
 
 		Matrix4f mtx;
 		f32 yRotation = (pebble.mRotationDegrees / 255.0f) * PI * 2;
-		mtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, yRotation, 0.0f), pebble.mPosition);
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, yRotation, 0.0f);
+		mtx.makeSRT(scale, rot, pebble.mPosition);
 		Matrix4f mtx2;
 		gfx.calcViewMatrix(mtx, mtx2);
 		gfx.mHasTexGen = TRUE;
@@ -373,7 +375,9 @@ void GrassGen::refresh(Graphics& gfx)
 			if (blade.mHealth) {
 				Matrix4f mtx;
 				f32 yRotation = (blade.mRotationDegrees / 255.0f) * PI * 2.0f;
-				mtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, yRotation, 0.0f), blade.mPosition);
+				Vector3f scale(1.0f, 1.0f, 1.0f);
+				Vector3f rot(0.0f, yRotation, 0.0f);
+				mtx.makeSRT(scale, rot, blade.mPosition);
 				Matrix4f mtx2;
 				gfx.calcViewMatrix(mtx, mtx2);
 				gfx.mHasTexGen = TRUE;

@@ -115,7 +115,8 @@ struct RigidBody : public Node {
 		// apply gravity and nothing else.
 		mLinearAccel.set(0.0f, 0.0f, 0.0f);
 		mAngularAccel.set(0.0f, 0.0f, 0.0f);
-		applyCMForce(Vector3f(0.0f, -9.81f, 0.0f));
+		Vector3f force(0.0f, -9.81f, 0.0f);
+		applyCMForce(force);
 	}
 	virtual void integrate(int prevConfigIdx, int currConfigIdx, f32 timeStep); // _38
 	virtual bool resolveCollisions(int configIdx, Collision& coll);             // _3C
@@ -136,7 +137,8 @@ struct RigidBody : public Node {
 		Vector3f frictionForce(vel);
 		frictionForce.project(contactNormal);           // keep only tangential component
 		frictionForce.multiply(-vel.length() * 0.125f); // scale friction by velocity + oppose motion
-		applyForce(configIdx, Vector3f(frictionForce), contactPoint);
+		Vector3f frictionVec(frictionForce);
+		applyForce(configIdx, frictionVec, contactPoint);
 	}
 	virtual void makeBodyQuat(immut Quat&) { }                           // _58
 	virtual void initRender(int);                                        // _5C

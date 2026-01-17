@@ -73,10 +73,13 @@ void ComplexCreature::doAI()
  * @todo: Documentation
  * @note UNUSED Size: 00009C
  */
+ 
 void ComplexCreature::postUpdate(int unused, f32 deltaTime)
 {
 	// this is just here for the weak function generation
 	mCreatures[0].mPtr->bounceCallback();
-	mCreatures[0].mPtr->collisionCallback(CollEvent(nullptr, nullptr, nullptr));
+	CollEvent event(nullptr, nullptr, nullptr);
+	mCreatures[0].mPtr->collisionCallback(event);
+	//mCreatures[0].mPtr->collisionCallback(CollEvent(nullptr, nullptr, nullptr)); //you knew the secrets of the devil yet indulged in them
 	// UNUSED FUNCTION
 }

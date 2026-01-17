@@ -35,26 +35,29 @@ void KoganeAi::createWaterEffect()
 	effectMgr->create(EffectMgr::EFF_P_Bubbles, mKogane->mSRT.t, nullptr, nullptr);
 	mRippleCallBack->set(mKogane);
 
-	zen::particleGenerator* ptcl14 = effectMgr->create(EffectMgr::EFF_RippleWhite, Vector3f(0.0f, 0.0f, 0.0f), mRippleCallBack, nullptr);
+	Vector3f pos1(0.0f, 0.0f, 0.0f);
+	zen::particleGenerator* ptcl14 = effectMgr->create(EffectMgr::EFF_RippleWhite, pos1, mRippleCallBack, nullptr);
 	if (ptcl14) {
 		ptcl14->setEmitPosPtr(&mKogane->mSRT.t);
-		ptcl14->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f pos2(0.0f, 1.0f, 0.0f);
+		ptcl14->setOrientedNormalVector(pos2);
 	}
 
-	zen::particleGenerator* ptcl12 = effectMgr->create(EffectMgr::EFF_RippleSurface, Vector3f(0.0f, 0.0f, 0.0f), mRippleCallBack, nullptr);
+	Vector3f pos3(0.0f, 0.0f, 0.0f);
+	zen::particleGenerator* ptcl12 = effectMgr->create(EffectMgr::EFF_RippleSurface, pos3, mRippleCallBack, nullptr);
 	if (ptcl12) {
 		ptcl12->setEmitPosPtr(&mKogane->mSRT.t);
-		ptcl12->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f pos4(0.0f, 1.0f, 0.0f);
+		ptcl12->setOrientedNormalVector(pos4);
 	}
 
-	zen::particleGenerator* ptcl13 = effectMgr->create(EffectMgr::EFF_RippleBlack, Vector3f(0.0f, 0.0f, 0.0f), mRippleCallBack, nullptr);
+	Vector3f pos5(0.0f, 0.0f, 0.0f);
+	zen::particleGenerator* ptcl13 = effectMgr->create(EffectMgr::EFF_RippleBlack, pos5, mRippleCallBack, nullptr);
 	if (ptcl13) {
 		ptcl13->setEmitPosPtr(&mKogane->mSRT.t);
-		ptcl13->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f pos6(0.0f, 1.0f, 0.0f);
+		ptcl13->setOrientedNormalVector(pos6);
 	}
-
-	// sigh.
-	FORCE_DONT_INLINE;
 }
 
 /**
@@ -83,7 +86,8 @@ void KoganeAi::initAI(Kogane* kogane)
 	mKogane->mSRT.s.set(0.0f, 0.0f, 0.0f);
 	mKogane->setCurrentState(1);
 	mKogane->setNextState(1);
-	mKogane->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Move1, this));
+	PaniMotionInfo anim(TekiMotion::Move1, this);
+	mKogane->mAnimator.startMotion(anim);
 	mInWater     = false;
 	mDropCount   = 0;
 	mEffectType  = EffectMgr::EFF_NULL;
@@ -605,7 +609,8 @@ void KoganeAi::initAppear(int nextState)
 	mKogane->setMotionFinish(false);
 	mKogane->setAnimTimer(30.0f);
 	mKogane->setWalkTimer(0.0f);
-	mKogane->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Move1, this));
+	PaniMotionInfo anim(TekiMotion::Move1, this);
+	mKogane->mAnimator.startMotion(anim);
 
 	mKogane->mSRT.t.x += 5.0f * sinf(mKogane->mSRT.r.y);
 	mKogane->mSRT.t.z += 5.0f * cosf(mKogane->mSRT.r.y);
@@ -627,7 +632,8 @@ void KoganeAi::initWalkRandom(int nextState, bool isRandomPos)
 	mKogane->setWalkTimer(0.0f);
 
 	if (isRandomPos) {
-		mKogane->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Move1, this));
+		PaniMotionInfo anim(TekiMotion::Move1, this);
+		mKogane->mAnimator.startMotion(anim);
 		setNewTargetPosition();
 	} else {
 		setRouteTargetPosition();
@@ -649,7 +655,8 @@ void KoganeAi::initStopWalk(int nextState)
 	mKogane->setNextState(nextState);
 	mKogane->setMotionFinish(false);
 	mKogane->setWalkTimer(0.0f);
-	mKogane->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Wait1, this));
+	PaniMotionInfo anim(TekiMotion::Wait1, this);
+	mKogane->mAnimator.startMotion(anim);
 	makeStopMoving();
 	_1C = C_KOGANE_PROP(mKogane).mIdleTimeMin()
 	    + NsMathF::getRand(NsLibMath<f32>::abs(C_KOGANE_PROP(mKogane).mIdleTimeMax() - C_KOGANE_PROP(mKogane).mIdleTimeMin()));
@@ -668,7 +675,8 @@ void KoganeAi::initCreate(int nextState)
 {
 	mKogane->setNextState(nextState);
 	mKogane->setMotionFinish(false);
-	mKogane->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Damage, this));
+	PaniMotionInfo anim(TekiMotion::Damage, this);
+	mKogane->mAnimator.startMotion(anim);
 
 	f32 perpDir = mKogane->mFaceDirection + HALF_PI;
 	Vector3f vec1(sinf(mKogane->mFaceDirection), 0.0f, cosf(mKogane->mFaceDirection));

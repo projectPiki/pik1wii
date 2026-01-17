@@ -111,7 +111,8 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 		Navi* navi             = naviMgr->getNavi();
 
 		if (andCond3.satisfy(navi)) {
-			navi->stimulate(InteractSwallow(&teki, nullptr, 0));
+			InteractSwallow swallow(&teki, nullptr, 0);
+			navi->stimulate(swallow);
 			check1 = true;
 		}
 
@@ -135,7 +136,8 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 
 			if (mouth && swallowPikiNum < numSlots) {
 				PRINT_NAKATA("TaiAnimationSwallowingAction::act:ACTION_0:swallow:%08x:%08x,%d\n", &teki, piki, swallowPikiNum);
-				piki->stimulate(InteractSwallow(&teki, mouth->getChildAt(swallowPikiNum++), 0));
+				InteractSwallow swallow(&teki, mouth->getChildAt(swallowPikiNum++), 0);
+				piki->stimulate(swallow);
 			} else {
 				piki->stimulate(kill);
 				swallowPikiNum++;
@@ -173,7 +175,8 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 
 			if (stuck->isStickToMouth()) {
 				PRINT_NAKATA("TaiAnimationSwallowingAction::act:ACTION_1:kill:%08x:%08x\n", &teki, stuck);
-				stuck->stimulate(InteractKill(&teki, 0));
+				InteractKill kill(&teki, 0);
+				stuck->stimulate(kill);
 				iter.dec();
 			}
 		}
@@ -220,7 +223,8 @@ void TaiAnimationSwallowingAction::finish(Teki& teki)
 bool TaiBangingAction::actByEvent(immut TekiEvent& event)
 {
 	if (event.mEventType == TekiEventType::Entity) {
-		event.mOther->stimulate(InteractPress(event.mTeki, event.mTeki->getParameterF(TPF_AttackPower)));
+		InteractPress press(event.mTeki, event.mTeki->getParameterF(TPF_AttackPower));
+		event.mOther->stimulate(press);
 		return true;
 	}
 
@@ -232,7 +236,8 @@ bool TaiBangingAction::actByEvent(immut TekiEvent& event)
  */
 bool TaiFlickAction::act(Teki& teki)
 {
-	int pikiCount = teki.countPikis(TekiAndCondition(&TekiRecognitionCondition(&teki), &TekiLowerRangeCondition(&teki)));
+	TekiAndCondition cond(&TekiRecognitionCondition(&teki), &TekiLowerRangeCondition(&teki));
+	int pikiCount = teki.countPikis(cond);
 	return teki.mDamageCount >= f32(teki.getFlickDamageCount(pikiCount));
 
 	TekiAndCondition(nullptr, nullptr);
@@ -294,6 +299,5 @@ bool TaiFlickingUpperAction::act(Teki& teki)
 	if (teki.getAnimationKeyOption(BTeki::ANIMATION_KEY_OPTION_ACTION_0)) {
 		teki.flickUpper();
 	}
-	STACK_PAD_VAR(1);
 	return TaiMotionAction::act(teki);
 }

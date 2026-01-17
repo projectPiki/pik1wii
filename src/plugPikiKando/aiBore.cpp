@@ -43,7 +43,9 @@ ActFreeSelect::ActFreeSelect(Piki* piki)
  */
 void ActFreeSelect::init(Creature* creature)
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait, mPiki), PaniMotionInfo(PIKIANIM_Wait));
+	PaniMotionInfo anim1(PIKIANIM_Wait, mPiki);
+	PaniMotionInfo anim2(PIKIANIM_Wait);
+	mPiki->startMotion(anim1, anim2);
 	mActionTimer   = 2.0f + gsys->getFrameTime();
 	mIsTimerActive = true;
 	mCurrActionIdx = CHILD_NULL;
@@ -232,7 +234,9 @@ ActBoreSelect::ActBoreSelect(Piki* piki)
  */
 void ActBoreSelect::init(Creature* creature)
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait, mPiki), PaniMotionInfo(PIKIANIM_Wait));
+	PaniMotionInfo anim1(PIKIANIM_Wait, mPiki);
+	PaniMotionInfo anim2(PIKIANIM_Wait);
+	mPiki->startMotion(anim1, anim2);
 	mActionTimer   = 2.0f + gsys->getFrameTime();
 	mIsTimerActive = true;
 	mCurrActionIdx = CHILD_NULL;
@@ -332,7 +336,9 @@ void ActBoreSelect::procAnimMsg(Piki* piki, MsgAnim* msg)
 	switch (msg->mKeyEvent->mEventType) {
 	case KEY_Finished:
 	{
-		piki->startMotion(PaniMotionInfo(PIKIANIM_Wait, piki), PaniMotionInfo(PIKIANIM_Wait));
+		PaniMotionInfo anim1(PIKIANIM_Wait, piki);
+		PaniMotionInfo anim2(PIKIANIM_Wait);
+		piki->startMotion(anim1, anim2);
 		break;
 	}
 	}
@@ -409,8 +415,6 @@ void ActBoreSelect::determine()
 	}
 
 	mChildActions[mCurrActionIdx].initialise(target);
-
-	STACK_PAD_VAR(2);
 }
 
 /**
@@ -431,10 +435,10 @@ void ActBoreTalk::init(Creature* creature)
 	Iterator iter(&mPiki->mSearchBuffer);
 	iter.first();
 	mTarget = *iter;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Asibumi, this), PaniMotionInfo(PIKIANIM_Asibumi));
+	PaniMotionInfo anim1(PIKIANIM_Asibumi, mPiki);
+	PaniMotionInfo anim2(PIKIANIM_Asibumi);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
-
-	STACK_PAD_VAR(2);
 }
 
 /**
@@ -448,10 +452,13 @@ void ActBoreTalk::startTalk()
 	CI_LOOP(iter)
 	{
 		Creature* c = *iter;
-		c->stimulate(InteractTalk(mPiki));
+		InteractTalk talk(mPiki);
+		c->stimulate(talk);
 	}
 
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Chatting, this), PaniMotionInfo(PIKIANIM_Chatting));
+	PaniMotionInfo anim1(PIKIANIM_Chatting, this);
+	PaniMotionInfo anim2(PIKIANIM_Chatting);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 	f32 r      = gsys->getRand(1.0f);
 	mTalkTimer = 2.0f * r + 5.0f;
@@ -589,7 +596,9 @@ void ActBoreOneshot::init(Creature* creature)
 
 	int randAnim = selectRandomly(choices, 4);
 
-	mPiki->startMotion(PaniMotionInfo(randAnim, this), PaniMotionInfo(randAnim));
+	PaniMotionInfo anim1(randAnim, this);
+	PaniMotionInfo anim2(randAnim);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -650,13 +659,17 @@ void ActBoreRest::sitDown()
 	switch (mRestState) {
 	case 0:
 	{
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Suwaru, this), PaniMotionInfo(PIKIANIM_Suwaru));
+		PaniMotionInfo anim1(PIKIANIM_Suwaru, this);
+		PaniMotionInfo anim2(PIKIANIM_Suwaru);
+		mPiki->startMotion(anim1, anim2);
 		mRestState = 1;
 		break;
 	}
 	case 1:
 	{
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Neru, this), PaniMotionInfo(PIKIANIM_Neru));
+		PaniMotionInfo anim1(PIKIANIM_Neru, this);
+		PaniMotionInfo anim2(PIKIANIM_Neru);
+		mPiki->startMotion(anim1, anim2);
 		mRestState = 3;
 		break;
 	}
@@ -747,7 +760,9 @@ void ActBoreRest::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 			{
 				mIsAnimFinished = false;
 				mRestState      = 1;
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Suwaru, this), PaniMotionInfo(PIKIANIM_Suwaru));
+				PaniMotionInfo anim1(PIKIANIM_Suwaru, this);
+				PaniMotionInfo anim2(PIKIANIM_Suwaru);
+				mPiki->startMotion(anim1, anim2);
 				mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 30.0f;
 				mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 30.0f;
 				break;

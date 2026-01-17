@@ -48,7 +48,8 @@ f32 Cylinder::get2dDist(immut Vector3f& point) immut
 
 	// Project point onto cylinder axis
 	f32 length          = normalised.normalise();
-	f32 projectionRatio = normalised.DP(point - mStartPoint) / length;
+	Vector3f subpoint   = point - mStartPoint;
+	f32 projectionRatio = normalised.DP(subpoint) / length;
 
 	if (projectionRatio < 0.0f) {
 		// Before cylinder start - get 2D distance to start point
@@ -84,7 +85,8 @@ bool Cylinder::collide(const Sphere& sphere, Vector3f& pushVector, f32& depth) i
 	f32 length           = normalised.normalise();
 
 	// Project sphere center onto cylinder axis
-	f32 projectionRatio = normalised.dot(sphere.mCentre - mStartPoint) / length;
+	Vector3f subcenterpoint = sphere.mCentre - mStartPoint;
+	f32 projectionRatio = normalised.dot(subcenterpoint) / length;
 
 	// Calculate distance from center projection to cylinder ends (0.5 = center)
 	f32 distToEnds = absF(projectionRatio - 0.5f) * length;
@@ -145,15 +147,14 @@ bool Tube::collide(const Sphere& sphere, Vector3f& pushVector, f32& depth) immut
 	Vector3f axisVec = mEndPoint - mStartPoint;
 	Vector3f dir     = axisVec;
 	f32 len          = dir.normalise();
-	f32 tmpDepth     = dir.DP(sphere.mCentre - mStartPoint) / len;
+	Vector3f subcenterpoint = sphere.mCentre - mStartPoint;
+	f32 tmpDepth     = dir.DP(subcenterpoint) / len;
 
 	// this is completely unused lol
 	f32 unused = 0.5f * len - (absF(tmpDepth - 0.5f) * len - sphere.mRadius);
 
 	Vector3f pushDir;
 	pushDir = tmpDepth * axisVec + mStartPoint - sphere.mCentre;
-
-	STACK_PAD_VAR(2);
 
 	f32 pushStrength = (1.0f - tmpDepth) * mStartRadius + mEndRadius * tmpDepth + sphere.mRadius - pushDir.length();
 
@@ -176,7 +177,8 @@ f32 Cylinder::getPosRatio(const Vector3f& vec) immut
 	Vector3f axisVec = mEndPoint - mStartPoint;
 	Vector3f dir     = axisVec;
 	f32 len          = dir.normalise();
-	return dir.DP(vec - mStartPoint) / len;
+	Vector3f subvecpoint = vec - mStartPoint;
+	return dir.DP(subvecpoint) / len;
 }
 
 /**
@@ -187,8 +189,9 @@ f32 Tube::getPosRatio(const Vector3f& pos) immut
 	Vector3f axisVec = mEndPoint - mStartPoint;
 	Vector3f dir     = axisVec;
 	f32 len          = dir.normalise();
+	Vector3f subpospoint = pos - mStartPoint;
 
-	return dir.DP(pos - mStartPoint) / len;
+	return dir.DP(subpospoint) / len;
 }
 
 /**
@@ -437,28 +440,33 @@ void CollPart::update(Graphics& gfx, bool drawDebug)
 		switch (mPartType) {
 		case PART_BoundSphere:
 		{
-			gfx.setColour(Colour(255, 180, 180, 255), true); // pink
+			Colour colour1(255, 180, 180, 255);
+			gfx.setColour(colour1, true); // pink
 			break;
 		}
 		case PART_Collision:
 		{
-			gfx.setColour(Colour(255, 0, 0, 255), true); // red
+			Colour colour2(255, 0, 0, 255);
+			gfx.setColour(colour2, true); // red
 			break;
 		}
 		case PART_Tube:
 		case PART_TubeChild:
 		{
-			gfx.setColour(Colour(255, 0, 255, 255), true); // purple
+			Colour colour3(255, 0, 255, 255);
+			gfx.setColour(colour3, true); // purple
 			break;
 		}
 		case PART_Reference:
 		{
-			gfx.setColour(Colour(255, 215, 20, 255), true); // yellow
+			Colour colour4(255, 215, 20, 255);
+			gfx.setColour(colour4, true); // yellow
 			break;
 		}
 		case PART_Platform: // this is never called
 		{
-			gfx.setColour(Colour(50, 150, 255, 255), true); // blue
+			Colour colour5(50, 150, 255, 255);
+			gfx.setColour(colour5, true); // blue
 			break;
 		}
 		}

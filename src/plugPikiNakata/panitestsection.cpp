@@ -151,8 +151,10 @@ PaniTestNode::PaniTestNode()
 		if (tekiMgr->hasType(i)) {
 			mTestTekiList[i]             = tekiMgr->newTeki(i);
 			TekiPersonality* personality = mTestTekiList[i]->mPersonality;
-			personality->mPosition.input(Vector3f(0.0f, 0.0f, 0.0f));
-			personality->mNestPosition.input(Vector3f(0.0f, 0.0f, 0.0f));
+			Vector3f pos1(0.0f, 0.0f, 0.0f);
+			personality->mPosition.input(pos1);
+			Vector3f pos2(0.0f, 0.0f, 0.0f);
+			personality->mNestPosition.input(pos2);
 			personality->mFaceDirection = 0.0f;
 			mTestTekiList[i]->reset();
 		} else {
@@ -386,11 +388,13 @@ void PaniTestNode::updateTekis()
 	mTestTekiList[mFocusTekiType]->mTekiAnimator->animate(mAnimationSpeed);
 
 	if (mController->keyUnClick(KBBTN_A)) {
-		mTestTekiList[mFocusTekiType]->mTekiAnimator->startMotion(PaniMotionInfo(mMotionId, this));
+		PaniMotionInfo anim1(mMotionId, this);
+		mTestTekiList[mFocusTekiType]->mTekiAnimator->startMotion(anim1);
 	}
 
 	if (mController->keyUnClick(KBBTN_X)) {
-		mTestTekiList[mFocusTekiType]->mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, this));
+		PaniMotionInfo anim2(PANI_NO_MOTION, this);
+		mTestTekiList[mFocusTekiType]->mTekiAnimator->finishMotion(anim2);
 	}
 }
 
@@ -415,13 +419,17 @@ void PaniTestNode::draw(Graphics& gfx)
 {
 	mapMgr->preRender(gfx);
 
-	gfx.setViewport(AREA_FULL_SCREEN(gfx));
-	gfx.setScissor(AREA_FULL_SCREEN(gfx));
-	gfx.setClearColour(Colour(96, 128, 255, 0));
+	RectArea area1(AREA_FULL_SCREEN(gfx));
+	gfx.setViewport(area1);
+	RectArea area2(AREA_FULL_SCREEN(gfx));
+	gfx.setScissor(area2);
+	Colour colour1(96, 128, 255, 0);
+	gfx.setClearColour(colour1);
 	gfx.clearBuffer(3, false);
 
 	Matrix4f mtx1;
-	gfx.setOrthogonal(mtx1.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area3(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(mtx1.mMtx, area3);
 	mActiveCamera.update(f32(gfx.mScreenWidth) / f32(gfx.mScreenHeight), mActiveCamera.mFov, 1.0f, 1000.0f);
 	gfx.setCamera(&mActiveCamera);
 	gfx.addLight(&mMainLight);
@@ -462,12 +470,14 @@ void PaniTestNode::draw(Graphics& gfx)
 	gfx.setDepth(0);
 	gfx.setLighting(false, nullptr);
 	gfx.useTexture(mShadowTexture, GX_TEXMAP0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour2(COLOUR_WHITE);
+	gfx.setColour(colour2, true);
 	gfx.setCBlending(blend);
 	gfx.setDepth(1);
 
 	Matrix4f mtx4;
-	gfx.setOrthogonal(mtx4.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area4(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(mtx4.mMtx, area4);
 	Node::draw(gfx);
 
 	gfx.texturePrintf(gsys->mConsFont, 0, 440, "VerticalDegree:%d", int(NMathF::r2d(mCamMgr->mCamera->getPolar().mInclination)));

@@ -472,7 +472,8 @@ TaiMizinkoStrategy::TaiMizinkoStrategy(TekiParameters* params)
  */
 void TaiMizinkoStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Mizinko_Spawn, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Mizinko_Spawn, pos, nullptr, nullptr);
 	TaiStrategy::start(teki);
 	teki.startFlying();
 	teki.clearTekiOption(BTeki::TEKI_OPTION_LIFE_GAUGE_VISIBLE);
@@ -617,7 +618,8 @@ void TaiMizinkoComingAction::start(Teki& teki)
 	dir.sub2(nestPos, targetPos);
 
 	NVector3f ortho;
-	ortho.cross(NVector3f(0.0f, 1.0f, 0.0f), dir);
+	NVector3f vec(0.0f, 1.0f, 0.0f);
+	ortho.cross(vec, dir);
 
 	if (!ortho.normalizeCheck()) {
 		PRINT("!TaiMizinkoComingAction::start:%08x\n", &teki);
@@ -697,7 +699,8 @@ void TaiMizinkoFlyingAwayAction::start(Teki& teki)
 	teki.stopMove();
 	teki.clearTekiOption(BTeki::TEKI_OPTION_VISIBLE | BTeki::TEKI_OPTION_ATARI);
 
-	teki.mPositionIO.input(NVector3f(teki.getPosition()));
+	NVector3f pos(teki.getPosition());
+	teki.mPositionIO.input(pos);
 	NVector3f vel(0.0f, teki.getParameterF(MIZINKOPF_FlyingAwayVelocity), 0.0f);
 	teki.mVelocityIO.input(vel);
 	NVector3f accel(0.0f, teki.getParameterF(MIZINKOPF_FlyingAwayAccel), 0.0f);

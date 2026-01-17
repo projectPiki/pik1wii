@@ -30,17 +30,21 @@ void KingBody::setSalivaEffect()
 {
 	mSalivaCallBacks[0].set(&mSalivaJointPositions[1], &mSalivaJointPositions[2], mKing);
 	mSalivaParticleCallBack->set(mKing);
-	effectMgr->create(EffectMgr::EFF_King_Saliva1A, Vector3f(0.0f, 0.0f, 0.0f), &mSalivaCallBacks[0], mSalivaParticleCallBack);
+	Vector3f pos1(0.0f, 0.0f, 0.0f);
+	effectMgr->create(EffectMgr::EFF_King_Saliva1A, pos1, &mSalivaCallBacks[0], mSalivaParticleCallBack);
 
 	mSalivaCallBacks[1].set(&mSalivaJointPositions[0], &mSalivaJointPositions[3], mKing);
-	effectMgr->create(EffectMgr::EFF_King_Saliva1A, Vector3f(0.0f, 0.0f, 0.0f), &mSalivaCallBacks[1], mSalivaParticleCallBack);
+	Vector3f pos2(0.0f, 0.0f, 0.0f);
+	effectMgr->create(EffectMgr::EFF_King_Saliva1A, pos2, &mSalivaCallBacks[1], mSalivaParticleCallBack);
 
 	mSalivaCallBacks[2].set(&mSalivaJointPositions[0], &mSalivaJointPositions[1], mKing);
-	effectMgr->create(EffectMgr::EFF_King_Saliva1B, Vector3f(0.0f, 0.0f, 0.0f), &mSalivaCallBacks[2], mSalivaParticleCallBack);
+	Vector3f pos3(0.0f, 0.0f, 0.0f);
+	effectMgr->create(EffectMgr::EFF_King_Saliva1B, pos3, &mSalivaCallBacks[2], mSalivaParticleCallBack);
 
 	mSpreadSalivaCallBack->set(mKing);
+	Vector3f pos4(0.0f, 0.0f, 0.0f);
 	zen::particleGenerator* ptcl
-	    = effectMgr->create(EffectMgr::EFF_King_Saliva2, Vector3f(0.0f, 0.0f, 0.0f), mSpreadSalivaCallBack, mSalivaParticleCallBack);
+	    = effectMgr->create(EffectMgr::EFF_King_Saliva2, pos4, mSpreadSalivaCallBack, mSalivaParticleCallBack);
 	if (ptcl) {
 		ptcl->setEmitPosPtr(&mSalivaEffectPos);
 	}
@@ -56,8 +60,9 @@ void KingBody::setSeedFlashEffect()
 	for (int i = 0; i < 2; i++) {
 		effectMgr->create(EffectMgr::EFF_Piki_HitA, mEyePositions[i], nullptr, nullptr);
 		effectMgr->create(EffectMgr::EFF_Piki_HitB, mEyePositions[i], nullptr, nullptr);
+		Vector3f pos(0.0f, 0.0f, 0.0f);
 		zen::particleGenerator* ptcl
-		    = effectMgr->create(EffectMgr::EFF_King_SeedFlash, Vector3f(0.0f, 0.0f, 0.0f), mDamageStarCallBack, nullptr);
+		    = effectMgr->create(EffectMgr::EFF_King_SeedFlash, pos, mDamageStarCallBack, nullptr);
 		if (ptcl) {
 			ptcl->setEmitPosPtr(&mEyePositions[i]);
 		}
@@ -100,24 +105,30 @@ void KingBody::createWaterEffect(int idx)
 	if (!mIsFootGeneratingRipples[idx]) {
 		mIsFootGeneratingRipples[idx] = true;
 		mRippleCallBacks[idx].set(mKing, &mFootPosList[idx], &mIsFootGeneratingRipples[idx]);
+		Vector3f pos1(0.0f, 0.0f, 0.0f);
 		zen::particleGenerator* ptcl1
-		    = effectMgr->create(EffectMgr::EFF_RippleWhite, Vector3f(0.0f, 0.0f, 0.0f), &mRippleCallBacks[idx], nullptr);
+		    = effectMgr->create(EffectMgr::EFF_RippleWhite, pos1, &mRippleCallBacks[idx], nullptr);
 		if (ptcl1) {
-			ptcl1->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f pos2(0.0f, 1.0f, 0.0f);
+			ptcl1->setOrientedNormalVector(pos2);
 			f32 f0 = ptcl1->getScaleSize();
 			ptcl1->setScaleSize(2.0f * f0);
 		}
+		Vector3f pos3(0.0f, 0.0f, 0.0f);
 		zen::particleGenerator* ptcl2
-		    = effectMgr->create(EffectMgr::EFF_RippleSurface, Vector3f(0.0f, 0.0f, 0.0f), &mRippleCallBacks[idx], nullptr);
+		    = effectMgr->create(EffectMgr::EFF_RippleSurface, pos3, &mRippleCallBacks[idx], nullptr);
 		if (ptcl2) {
-			ptcl2->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f pos4(0.0f, 1.0f, 0.0f);
+			ptcl2->setOrientedNormalVector(pos4);
 			f32 f0 = ptcl2->getScaleSize();
 			ptcl2->setScaleSize(2.0f * f0);
 		}
+		Vector3f pos5(0.0f, 0.0f, 0.0f);
 		zen::particleGenerator* ptcl3
-		    = effectMgr->create(EffectMgr::EFF_RippleBlack, Vector3f(0.0f, 0.0f, 0.0f), &mRippleCallBacks[idx], nullptr);
+		    = effectMgr->create(EffectMgr::EFF_RippleBlack, pos5, &mRippleCallBacks[idx], nullptr);
 		if (ptcl3) {
-			ptcl3->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f pos6(0.0f, 1.0f, 0.0f);
+			ptcl3->setOrientedNormalVector(pos6);
 			f32 f0 = ptcl3->getScaleSize();
 			ptcl3->setScaleSize(2.0f * f0);
 		}

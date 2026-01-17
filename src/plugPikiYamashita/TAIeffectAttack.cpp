@@ -99,7 +99,8 @@ bool CylinderTypeCallBack::invoke(zen::particleGenerator* ptclGen)
 		Vector3f vec1;
 
 		if (mParam->mState.mIsMoving) {
-			mParam->mPosition.add(Vector3f(mParam->mVelocity * gsys->getFrameTime()));
+			Vector3f pos(mParam->mVelocity * gsys->getFrameTime());
+			mParam->mPosition.add(pos);
 			vec1 = mParam->mPosition - ptclGen->getEmitPos();
 			if (vec1.length() > mParam->mMaxRange) {
 				mParam->mState.mIsMoving = 0;
@@ -229,7 +230,8 @@ bool ConeTypeCallBack::invoke(zen::particleGenerator* ptclGen)
 	if (nextTime < mParam->mDuration && mParam->mTeki->mHealth > 0.0f) {
 		Vector3f vec1;
 
-		mParam->mPosition.add(Vector3f(mParam->mVelocity * gsys->getFrameTime()));
+		Vector3f pos(mParam->mVelocity * gsys->getFrameTime());
+		mParam->mPosition.add(pos);
 		vec1 = mParam->mPosition - ptclGen->getEmitPos();
 		if (vec1.length() > mParam->mMaxRange) {
 			mParam->mVelocity.set(0.0f, 0.0f, 0.0f);

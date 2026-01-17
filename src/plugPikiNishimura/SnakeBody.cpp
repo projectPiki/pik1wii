@@ -45,21 +45,24 @@ void SnakeBody::setBodyOnGroundEffect()
 		zen::particleGenerator* waterPtclGen1 = effectMgr->create(EffectMgr::EFF_RippleWhite, mSnake->mSRT.t, mOnGroundCallBack, nullptr);
 		if (waterPtclGen1) {
 			waterPtclGen1->setEmitPosPtr(&mSnake->mSRT.t);
-			waterPtclGen1->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f pos1(0.0f, 1.0f, 0.0f);
+			waterPtclGen1->setOrientedNormalVector(pos1);
 			f32 f0 = waterPtclGen1->getScaleSize();
 			waterPtclGen1->setScaleSize(3.0f * f0);
 		}
 		zen::particleGenerator* waterPtclGen2 = effectMgr->create(EffectMgr::EFF_RippleSurface, mSnake->mSRT.t, mOnGroundCallBack, nullptr);
 		if (waterPtclGen2) {
 			waterPtclGen2->setEmitPosPtr(&mSnake->mSRT.t);
-			waterPtclGen2->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f pos2(0.0f, 1.0f, 0.0f);
+			waterPtclGen2->setOrientedNormalVector(pos2);
 			f32 f0 = waterPtclGen2->getScaleSize();
 			waterPtclGen2->setScaleSize(3.0f * f0);
 		}
 		zen::particleGenerator* waterPtclGen3 = effectMgr->create(EffectMgr::EFF_RippleBlack, mSnake->mSRT.t, mOnGroundCallBack, nullptr);
 		if (waterPtclGen3) {
 			waterPtclGen3->setEmitPosPtr(&mSnake->mSRT.t);
-			waterPtclGen3->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+			Vector3f pos3(0.0f, 1.0f, 0.0f);
+			waterPtclGen3->setOrientedNormalVector(pos3);
 			f32 f0 = waterPtclGen3->getScaleSize();
 			waterPtclGen3->setScaleSize(3.0f * f0);
 		}

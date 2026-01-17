@@ -123,8 +123,9 @@ f32 KeyItem::getiMass()
 void KeyItem::refresh(Graphics& gfx)
 {
 	Matrix4f transform, viewTransform;
-
-	mWorldMtx.makeSRT(mSRT.s, mSRT.r, Vector3f(mSRT.t.x, mSRT.t.y + 20.0f, mSRT.t.z));
+	
+	Vector3f trans(mSRT.t.x, mSRT.t.y + 20.0f, mSRT.t.z);
+	mWorldMtx.makeSRT(mSRT.s, mSRT.r, trans);
 	gfx.calcViewMatrix(mWorldMtx, viewTransform);
 	gfx.useMatrix(viewTransform, 0);
 
@@ -271,7 +272,8 @@ void DoorItem::refresh(Graphics& gfx)
 
 	char str[256];
 
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	gfx.useTexture(gsys->mConsFont->mTexture, GX_TEXMAP0);
 	int blend = gfx.setCBlending(BLEND_Alpha);
 

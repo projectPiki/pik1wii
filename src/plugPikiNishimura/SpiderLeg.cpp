@@ -1232,8 +1232,8 @@ void SpiderLeg::stepShakeOffPiki(int legNum)
 				if (legNum == Kumo::legId[i] && piki->getStickPart() && boundPart && boundPart->getChildAt(i)
 				    && boundPart->getChildAt(i)->getID().mId == piki->getStickPart()->getID().mId) {
 					if (NsMathF::getRand(1.0f) < C_SPIDER_PROP(mSpider)._354()) {
-						piki->stimulate(
-						    InteractFlick(mSpider, C_SPIDER_PROP(mSpider)._364(), C_SPIDER_PROP(mSpider)._374(), FLICK_BACKWARDS_ANGLE));
+						InteractFlick flick(mSpider, C_SPIDER_PROP(mSpider)._364(), C_SPIDER_PROP(mSpider)._374(), FLICK_BACKWARDS_ANGLE);
+						piki->stimulate(flick);
 						iter.dec();
 					}
 				}
@@ -1381,7 +1381,9 @@ void SpiderLeg::calcQuatToMatrix(int legNum)
 		NsCalculation::calcMat4toMat3(mtx2, mtx33);
 		q1.fromMat3f(mtx33);
 		q1.slerp(mJointRotation, mJointBlendFactor[legNum], 0);
-		mtx2.makeVQS(Vector3f(0.0f, 0.0f, 0.0f), q1, Vector3f(1.0f, 1.0f, 1.0f));
+		Vector3f v(0.0f, 0.0f, 0.0f);
+		Vector3f s(1.0f, 1.0f, 1.0f);
+		mtx2.makeVQS(v, q1, s);
 		mJointMatrices[legNum][1].multiplyTo(mtx2, mJointMatrices[legNum][0]);
 	}
 }

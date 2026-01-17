@@ -39,14 +39,16 @@ void RoutePoint::refresh(Graphics& gfx)
 {
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
 	if (gfx.initParticle(true)) {
-		gfx.drawParticle(*gfx.mCamera, Vector3f(mPosition.x, mPosition.y + 12.0f, mPosition.z), _20);
+		Vector3f ptclpos(mPosition.x, mPosition.y + 12.0f, mPosition.z);
+		gfx.drawParticle(*gfx.mCamera, ptclpos, _20);
 	}
 	Vector3f pos(mPosition.x, mPosition.y + 12.0f, mPosition.z);
 	mScreenDepth = gfx.mCamera->projectWorldPoint(gfx, pos);
 	mScreenX     = pos.x;
 	mScreenY     = pos.y;
 	gfx.useMatrix(Matrix4f::ident, 0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	Vector3f pos2(mPosition.x, mPosition.y + 12.0f, mPosition.z);
 	pos2.multMatrix(gfx.mCamera->mLookAtMtx);
 	char buf[PATH_MAX];
@@ -110,10 +112,14 @@ void RouteGroup::refresh(Graphics& gfx, EditNode* node)
 			Vector3f vec3(0.0f, 4.0f, 0.0f);
 
 			gfx.useTexture(nullptr, GX_TEXMAP0);
-			gfx.setColour(Colour(255, 255, 255, alpha), true);
-			gfx.drawLine(vec1 + vec3, vec2 + vec3);
+			Colour colour1(255, 255, 255, alpha);
+			gfx.setColour(colour1, true);
+			Vector3f vec1and3(vec1 + vec3);
+			Vector3f vec2and3(vec2 + vec3);
+			gfx.drawLine(vec1and3, vec2and3);
 			f32 ratio = (!point->mIsOpen || !link->mPoint) ? 0.2f : 1.0f;
-			gfx.setColour(Colour(int(mColour.r * ratio), int(mColour.g * ratio), int(mColour.b * ratio), alpha), true);
+			Colour colour2(int(mColour.r * ratio), int(mColour.g * ratio), int(mColour.b * ratio), alpha);
+			gfx.setColour(colour2, true);
 
 			Vector3f vec4 = (vec1 + vec2) * 0.5f + vec3;
 
@@ -143,21 +149,30 @@ void RouteGroup::refresh(Graphics& gfx, EditNode* node)
 
 			gfx.drawOneTri(vecs3D, nullptr, vecs2D, 4);
 			vec6.multiply(4.0f);
-			gfx.setColour(COLOUR_WHITE, true);
+			Colour colour3(COLOUR_WHITE);
+			gfx.setColour(colour3, true);
 
-			gfx.drawLine(vec4 - vec5 - vec5 - vec6, vec4 - vec5);
-			gfx.drawLine(vec4 - vec5, vec4 - vec5 - vec5 + vec6);
+			Vector3f vecsub1(vec4 - vec5 - vec5 - vec6);
+			Vector3f vecsub2(vec4 - vec5);
+			gfx.drawLine(vecsub1, vecsub2);
+			Vector3f vecsub3(vec4 - vec5);
+			Vector3f vecsub4(vec4 - vec5 - vec5 + vec6);
+			gfx.drawLine(vecsub3, vecsub4);
 		}
 	}
 
-	gfx.setColour(Colour(mColour.r, mColour.g, mColour.b, alpha), true);
+	Colour colour4(mColour.r, mColour.g, mColour.b, alpha);
+	gfx.setColour(colour4, true);
 
 	FOREACH_NODE(RoutePoint, mPointListRoot.mChild, point)
 	{
 		gfx.useTexture(nullptr, GX_TEXMAP0);
-		gfx.setColour(Colour(255, 255, 0, 64), true);
-		gfx.drawLine(point->mPosition, Vector3f(point->mPosition.x, point->mPosition.y + 8.0f, point->mPosition.z));
-		gfx.setColour(Colour(255, 255, 255, alpha), true);
+		Colour colour5(255, 255, 0, 64);
+		gfx.setColour(colour5, true);
+		Vector3f pointvec(point->mPosition.x, point->mPosition.y + 8.0f, point->mPosition.z);
+		gfx.drawLine(point->mPosition, pointvec);
+		Colour colour6(255, 255, 255, alpha);
+		gfx.setColour(colour6, true);
 		gfx.useTexture(mDebugWaypointTexture, GX_TEXMAP0);
 
 		point->refresh(gfx);

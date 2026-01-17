@@ -416,8 +416,10 @@ TaiKinokoStrategy::TaiKinokoStrategy(TekiParameters* params)
  */
 void TaiKinokoStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Kinoko_EyeGlow, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
-	teki.mParticleGenerators[1] = effectMgr->create(EffectMgr::EFF_Kinoko_EyeGlow, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos1(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Kinoko_EyeGlow, pos1, nullptr, nullptr);
+	Vector3f pos2(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[1] = effectMgr->create(EffectMgr::EFF_Kinoko_EyeGlow, pos2, nullptr, nullptr);
 	TaiStrategy::start(teki);
 }
 

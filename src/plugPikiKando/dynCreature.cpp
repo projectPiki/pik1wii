@@ -46,9 +46,6 @@ DynParticle::DynParticle()
 	mLocalPosition.set(0.0f, 0.0f, 0.0f);
 	mNextParticle    = nullptr;
 	mCollisionRadius = 0.01f;
-
-	// this is so this doesn't inline in DynParticleHeap
-	FORCE_DONT_INLINE;
 }
 
 /**
@@ -247,7 +244,9 @@ void DynCreature::simulate(f32 timeStep)
 	Matrix4f rotTransMtx;
 
 	// Build rotation matrix from current orientation quaternion
-	rotMtx.makeVQS(Vector3f(0.0f, 0.0f, 0.0f), mRotationQuat, Vector3f(1.0f, 1.0f, 1.0f));
+	Vector3f v(0.0f, 0.0f, 0.0f);
+	Vector3f s(1.0f, 1.0f, 1.0f);
+	rotMtx.makeVQS(v, mRotationQuat, s);
 	rotMtx.transposeTo(rotTransMtx);
 
 	printMatrix("rotate", rotMtx);
@@ -266,7 +265,6 @@ void DynCreature::simulate(f32 timeStep)
 	}
 
 	f32 maxPenetration = 0.0f;
-	STACK_PAD_VAR(1);
 	Vector3f maxNormal(0.0f, 1.0f, 0.0f);
 
 	DynParticle* ptcl      = mParticleList;
@@ -312,7 +310,6 @@ void DynCreature::simulate(f32 timeStep)
 
 			// Calculate collision normal from terrain or cylinder collision
 			Vector3f collisionNormal;
-			STACK_PAD_VAR(1);
 			CollTriInfo* groundTriangle = mapMgr->getCurrTri(ptcl->mWorldPosition.x, ptcl->mWorldPosition.z, true);
 			if (groundTriangle) {
 				collisionNormal = groundTriangle->mTriangle.mNormal;
@@ -401,8 +398,6 @@ void DynCreature::simulate(f32 timeStep)
 	}
 
 	mAngularMomentum = mAngularMomentum - dampingFactor * mAngularMomentum;
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -501,17 +496,21 @@ void DynCreature::refresh(Graphics& gfx)
 	gfx.useMatrix(mtx2, 0);
 
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(Colour(0, 255, 0, 255), true);
+	Colour colour1(0, 255, 0, 255);
+	gfx.setColour(colour1, true);
 
 	for (DynParticle* ptcl = mParticleList; ptcl; ptcl = ptcl->mNextParticle) {
 		bool isLight = gfx.setLighting(false, nullptr);
-		gfx.setColour(Colour(0, 255, 100, 255), true);
+		Colour colour(0, 255, 100, 255);
+		gfx.setColour(colour, true);
 		drawCube(gfx, ptcl->mWorldPosition, 2.0f);
 		gfx.setLighting(isLight, nullptr);
 	}
 
-	gfx.setColour(Colour(255, 100, 0, 255), true);
-	gfx.drawSphere(Vector3f(0.0f, 0.0f, 0.0f), 4.0f, mtx2);
+	Colour colour2(255, 100, 0, 255);
+	gfx.setColour(colour2, true);
+	Vector3f vec(0.0f, 0.0f, 0.0f);
+	gfx.drawSphere(vec, 4.0f, mtx2);
 
 	gfx.useMatrix(Matrix4f::ident, 0);
 }
@@ -521,10 +520,7 @@ void DynCreature::refresh(Graphics& gfx)
  */
 void DynCreature::doKill()
 {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 	releaseAllParticles();
-#endif
 }
 
 /**

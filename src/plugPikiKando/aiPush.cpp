@@ -102,7 +102,9 @@ int ActPush::exec()
 void ActPush::initApproach()
 {
 	mState = STATE_Approach;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
+	PaniMotionInfo anim1(PIKIANIM_Run, this);
+	PaniMotionInfo anim2(PIKIANIM_Run);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -162,7 +164,9 @@ void ActPush::initGo()
 {
 	mState       = STATE_Go;
 	mIsPushReady = false;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 	mPushAnimationState = 2;
 	if (mHinderRock) {
 		_38 = gsys->getRand(1.0f);
@@ -214,7 +218,9 @@ int ActPush::exeGo()
 		InteractPush push(mPiki, 1);
 		mHinderRock->stimulate(push);
 		if (mIsPushReady) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Osu, this), PaniMotionInfo(PIKIANIM_Osu));
+			PaniMotionInfo anim1(PIKIANIM_Osu, this);
+			PaniMotionInfo anim2(PIKIANIM_Osu);
+			mPiki->startMotion(anim1, anim2);
 			mPushAnimationState = 0;
 			mIsPushReady        = false;
 		}
@@ -237,7 +243,9 @@ void ActPush::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 	case KEY_Action1:
 	{
 		if (mPushAnimationState == 0 && mHinderRock && mHinderRock->isMoving()) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Osu_Walk, this), PaniMotionInfo(PIKIANIM_Osu_Walk));
+			PaniMotionInfo anim1(PIKIANIM_Osu_Walk, this);
+			PaniMotionInfo anim2(PIKIANIM_Osu_Walk);
+			mPiki->startMotion(anim1, anim2);
 			f32 frame = 11.0f;
 			if (event.mEventType == KEY_Action0) {
 				frame = 10.0f;
@@ -252,7 +260,9 @@ void ActPush::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 	case KEY_LoopEnd:
 	{
 		if (mPushAnimationState == 1 && mHinderRock && !mHinderRock->isMoving()) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Osu, this), PaniMotionInfo(PIKIANIM_Osu));
+			PaniMotionInfo anim1(PIKIANIM_Osu, this);
+			PaniMotionInfo anim2(PIKIANIM_Osu);
+			mPiki->startMotion(anim1, anim2);
 			mPushCount                                               = int(5.0f * gsys->getRand(1.0f)) + 5;
 			mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 30.0f;
 			mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 30.0f;
@@ -280,7 +290,9 @@ void ActPush::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 
 		if (mState == STATE_Go) {
 			PRINT_KANDO("restart motion !\n");
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Osu, this), PaniMotionInfo(PIKIANIM_Osu));
+			PaniMotionInfo anim1(PIKIANIM_Osu, this);
+			PaniMotionInfo anim2(PIKIANIM_Osu);
+			mPiki->startMotion(anim1, anim2);
 			mPushCount = int(5.0f * gsys->getRand(1.0f)) + 5;
 		}
 		break;

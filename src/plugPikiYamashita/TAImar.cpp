@@ -87,14 +87,16 @@ struct TAIeffectAttackEventCallBackMar : public TAIeffectAttackEventCallBack {
 				if (param->mSubEmitter1) {
 					vec3.set(vec3.x + vec2.x * 30.0f, vec3.y, vec3.z + vec2.z * 30.0f);
 					param->mSubEmitter1->setNewtonField(vec3, -0.032f, true);
-					param->mSubEmitter1->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+					Vector3f normvec1(0.0f, 1.0f, 0.0f);
+					param->mSubEmitter1->setOrientedNormalVector(normvec1);
 				}
 
 				param->mSubEmitter2 = effectMgr->create(EffectMgr::EFF_Mar_WindDust, vec3, nullptr, nullptr);
 				if (param->mSubEmitter2) {
 					vec3.set(vec3.x + vec2.x * 120.0f, vec3.y, vec3.z + vec2.z * 120.0f);
 					param->mSubEmitter2->setNewtonField(vec3, -0.005f, true);
-					param->mSubEmitter2->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+					Vector3f normvec2(0.0f, 1.0f, 0.0f);
+					param->mSubEmitter2->setOrientedNormalVector(normvec2);
 				}
 
 				res = true;
@@ -197,7 +199,8 @@ public:
 			              NMathF::cos(teki.mFaceDirection) * dist);
 			teki.playEventSound(&teki, SE_MAR_WIND);
 
-			teki.initConeTypePtclCallBack(&teki, mouth->mCentre, Vector3f(dir2 * 750.0f), 1.0f,
+			Vector3f pos(dir2 * 750.0f);
+			teki.initConeTypePtclCallBack(&teki, mouth->mCentre, pos, 1.0f,
 			                              teki.getParameterF(TAImarFloatParams::Unk51) * PI / 180.0f, 300.0f,
 			                              teki.getParameterF(TPF_AttackPower), &BreathEffect::eventCallBack);
 
@@ -207,7 +210,8 @@ public:
 			if (ptclGen) {
 				ptclGen->setEmitPos(mouth->mCentre);
 				ptclGen->setEmitDir(dir1);
-				ptclGen->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+				Vector3f vec(0.0f, 1.0f, 0.0f);
+				ptclGen->setOrientedNormalVector(vec);
 			}
 
 			rumbleMgr->start(RUMBLE_Unk11, 0, teki.getPosition());
@@ -480,7 +484,8 @@ public:
 protected:
 	void setTimerStartFlag(Teki& teki)
 	{
-		int pikis = teki.countPikis(TekiStickerCondition(&teki));
+		TekiStickerCondition cond(&teki);
+		int pikis = teki.countPikis(cond);
 		if (pikis > 0) {
 			teki.setTimerStart(true);
 		} else {

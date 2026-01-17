@@ -50,7 +50,8 @@ void NTeki::sendMessage(int msg)
 		if (target != this) {
 			f32 dist = calcSphereDistance(*target);
 			if (dist <= getParameterF(TPF_MessageRange)) {
-				target->receiveMessage(TekiMessage(msg, this));
+				TekiMessage message(msg, this);
+				target->receiveMessage(message);
 			}
 		}
 	}
@@ -61,5 +62,6 @@ void NTeki::sendMessage(int msg)
  */
 void NTeki::receiveMessage(immut TekiMessage& msg)
 {
-	eventPerformed(TekiEvent(TekiEventType::WakeUpCall, static_cast<Teki*>(this), msg.mTeki));
+	TekiEvent event(TekiEventType::WakeUpCall, static_cast<Teki*>(this), msg.mTeki);
+	eventPerformed(event);
 }
