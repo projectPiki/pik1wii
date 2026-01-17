@@ -638,7 +638,8 @@ immut char* ItemCreature::getCurrentMotionName()
  */
 void ItemCreature::startMotion(int motionID)
 {
-	mItemAnimator.startMotion(PaniMotionInfo(motionID, this));
+	PaniMotionInfo anim(motionID, this);
+	mItemAnimator.startMotion(anim);
 }
 
 /**
@@ -646,7 +647,8 @@ void ItemCreature::startMotion(int motionID)
  */
 void ItemCreature::finishMotion()
 {
-	mItemAnimator.finishMotion(PaniMotionInfo(PANI_NO_MOTION, this));
+	PaniMotionInfo anim(PANI_NO_MOTION, this);
+	mItemAnimator.finishMotion(anim);
 }
 
 /**
@@ -654,7 +656,8 @@ void ItemCreature::finishMotion()
  */
 void ItemCreature::startMotion(int motionID, f32 frame)
 {
-	mItemAnimator.startMotion(PaniMotionInfo(motionID, this));
+	PaniMotionInfo anim(motionID, this);
+	mItemAnimator.startMotion(anim);
 	mItemAnimator.mAnimationCounter = frame;
 }
 
@@ -663,7 +666,8 @@ void ItemCreature::startMotion(int motionID, f32 frame)
  */
 void ItemCreature::finishMotion(f32 frame)
 {
-	mItemAnimator.finishMotion(PaniMotionInfo(PANI_NO_MOTION, this));
+	PaniMotionInfo anim(PANI_NO_MOTION, this);
+	mItemAnimator.finishMotion(anim);
 	mItemAnimator.mAnimationCounter = frame;
 }
 
@@ -735,7 +739,9 @@ void ItemCreature::refresh(Graphics& gfx)
 	}
 
 	if (mItemShape && !isOffCamera) {
+#if defined (DEVELOP)
 		PRINT("refreshing : %s\n", ObjType::getName(mObjType));
+#endif
 		mWorldMtx.makeSRT(mSRT.s, mSRT.r, mSRT.t);
 		Matrix4f mtx;
 		gfx.calcViewMatrix(mWorldMtx, mtx);
@@ -994,7 +1000,8 @@ void BuildingItem::startAI(int)
 	mSeContext->setContext(this, JACEVENT_Build);
 	PRINT("*** \n");
 	enableFaceDirAdjust();
-	mItemAnimator.startMotion(PaniMotionInfo(0));
+	PaniMotionInfo anim(0);
+	mItemAnimator.startMotion(anim);
 	mHealth    = mMaxHealth;
 	mCurrStage = 0;
 	stopMotion();

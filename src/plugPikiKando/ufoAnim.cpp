@@ -93,7 +93,8 @@ void UfoAnimator::init(UfoShapeObject* shape, PaniMotionTable* table)
 	for (int i = 0; i < 8; i++) {
 		mAnims[i].init(shape->mAnimContexts + i, shape->mAnimMgr, table);
 		mAnimSpeeds[i] = 0.0f;
-		mAnims[i].startMotion(PaniMotionInfo(UfoMotion::WaitTutorial));
+		PaniMotionInfo info(UfoMotion::WaitTutorial);
+		mAnims[i].startMotion(info);
 	}
 }
 

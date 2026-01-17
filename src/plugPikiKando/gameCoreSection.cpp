@@ -255,17 +255,7 @@ void GameCoreSection::startMovie(u32 flags, bool useMovieBackCamera)
 	}
 }
 
-#if defined(VERSION_PIKIDEMO)
-/**
- * @todo: Documentation
- */
-void GameCoreSection::endMovie()
-#else
-/**
- * @todo: Documentation
- */
 void GameCoreSection::endMovie(int movieIdx)
-#endif
 {
 	GoalItem::demoHideFlag = GoalItem::ShowAll;
 	if (tekiMgr) {
@@ -303,8 +293,6 @@ void GameCoreSection::endMovie(int movieIdx)
 			PRINT("using previous camera" TERNARY_BUGFIX("\n", "\\n"));
 		}
 		angle = cameraMgr->mCamera->mPolarDir.mAzimuth;
-#if defined(VERSION_PIKIDEMO)
-#else
 		if (movieIdx == DEMOID_FindRedOnyon || movieIdx == DEMOID_FindYellowOnyon || movieIdx == DEMOID_FindBlueOnyon
 		    || movieIdx == DEMOID_DiscoverMainEngine) {
 			Vector3f diff = gameflow.mMoviePlayer->mTargetViewpoint - gameflow.mMoviePlayer->mLookAtPos;
@@ -312,12 +300,9 @@ void GameCoreSection::endMovie(int movieIdx)
 			diff.normalise();
 			angle = atan2f(diff.x, diff.z);
 		}
-#endif
 		cameraMgr->mCamera->makeCurrentPosition(angle);
 		cameraMgr->update();
 	}
-
-	STACK_PAD_VAR(6);
 }
 
 /**
@@ -687,8 +672,10 @@ void GameCoreSection::cleanupDayEnd()
 	for (i = 0; i < PikiColorCount; i++) {
 		GoalItem* goal = itemMgr->getContainer(i);
 		if (goal && playerState->hasContainer(goal->mOnionColour)) {
+			Vector3f vec1(1.0f, 1.0f, 1.0f);
+			Vector3f vec2(0.0f, 0.0f, 0.0f);
 			goal->mSpotModelEff
-			    = effectMgr->create((EffectMgr::modelTypeTable)i, goal->mSRT.t, Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f));
+			    = effectMgr->create((EffectMgr::modelTypeTable)i, goal->mSRT.t, vec1, vec2);
 		}
 	}
 
@@ -1771,7 +1758,8 @@ void GameCoreSection::draw(Graphics& gfx)
 	gfx.setDepth(false);
 	gfx.setLighting(false, nullptr);
 	gfx.useTexture(mShadowTexture, GX_TEXMAP0);
-	gfx.setColour(Colour(255, 255, 255, 128), true);
+	Colour colour(255, 255, 255, 128);
+	gfx.setColour(colour, true);
 	if (AIPerf::optLevel <= 1) {
 		pikiMgr->drawShadow(gfx, mShadowTexture);
 	}
@@ -1816,7 +1804,8 @@ void GameCoreSection::draw1D(Graphics& gfx)
 	}
 
 	Matrix4f orthoMtx;
-	gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(orthoMtx.mMtx, area);
 
 	if (!AIPerf::generatorMode) {
 		if (bossMgr && !hideTeki()) {
@@ -1829,8 +1818,10 @@ void GameCoreSection::draw1D(Graphics& gfx)
 	naviMgr->refresh2d(gfx);
 
 	if (gsys->mToggleDebugExtra) {
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(COLOUR_WHITE);
+		Colour colour1(COLOUR_WHITE);
+		gfx.setColour(colour1, true);
+		Colour colour2(COLOUR_WHITE);
+		gfx.setAuxColour(colour2);
 		gfx.useTexture(nullptr, GX_TEXMAP0);
 		char str[PATH_MAX];
 		sprintf(str, "culled:ai %d view %d/%d shape %d (%d tekis)", AIPerf::aiCullCnt, AIPerf::viewCullCnt, AIPerf::outsideViewCnt,
@@ -1852,11 +1843,16 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		"", "HIDE PIKI", "HIDE TEKI", "HIDE ITEM", "HIDE BOSS", "HIDE PELLET", "HIDE WORK", "HIDE PLANTS", "HIDE MAP", "HIDE 2D",
 	};
 	Matrix4f orthoMtx;
-	gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
-	gfx.setColour(COLOUR_WHITE, true);
-	gfx.setAuxColour(COLOUR_WHITE);
+	RectArea area1(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(orthoMtx.mMtx, area1);
+#if defined (DEVELOP)
+	Colour colour1(COLOUR_WHITE);
+	gfx.setColour(colour1, true);
+	Colour colour2(COLOUR_WHITE);
+	gfx.setAuxColour(colour2);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 	gfx.texturePrintf(gsys->mConsFont, 60, 120, triNames[mDrawHideType]);
+#endif
 
 	if (AIPerf::soundDebug) {
 		seSystem->draw2d(gfx);
@@ -1904,8 +1900,9 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		GXSetTevColorOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
 		f32 scale = 1.0f;
-		gfx.drawRectangle(RectArea(0, 0, (f32)gfx.mScreenWidth * scale, (f32)gfx.mScreenHeight * scale),
-		                  RectArea(0, 0, 0.5f * (f32)gfx.mScreenWidth, 0.5f * (f32)gfx.mScreenHeight), nullptr);
+		RectArea area2(0, 0, (f32)gfx.mScreenWidth * scale, (f32)gfx.mScreenHeight * scale);
+		RectArea area3(0, 0, 0.5f * (f32)gfx.mScreenWidth, 0.5f * (f32)gfx.mScreenHeight);
+		gfx.drawRectangle(area2, area3, nullptr);
 
 		GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
 		GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -1918,28 +1915,13 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		if (state != NAVISTATE_DemoSunset) {
 			mDrawGameInfo->draw(gfx);
 		}
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
-		containerWindow->draw(gfx);
+		RectArea area4(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area4);
+		
 		if (!gameflow.mMoviePlayer->mIsActive && !gameflow.mIsUIOverlayActive) {
 			hurryupWindow->draw(gfx);
 		}
+		containerWindow->draw(gfx);
 		accountWindow->draw(gfx);
 	}
-
-	// this function requires an UNGODLY amount of stack from inlines, plus some
-	// from temps. ternaries in the stripped out PRINT function generate inline
-	// stack. forgive my sins please, this combo lets it match.
-	STACK_PAD_VAR(48);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 10);
-	STACK_PAD_TERNARY(triNames, 9);
 }

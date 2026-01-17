@@ -169,7 +169,8 @@ void MapSlider::refresh(Graphics& gfx)
 	textPos.multMatrix(mViewMtx);
 	bool light = gfx.setLighting(false, nullptr);
 	gfx.useMatrix(Matrix4f::ident, 0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	gfx.useTexture(gsys->mConsFont->mTexture, GX_TEXMAP0);
 	int blend = gfx.setCBlending(BLEND_Alpha);
 

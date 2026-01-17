@@ -678,8 +678,9 @@ void Generator::render(Graphics& gfx)
 		f32 s = 0.5f;
 		scale.set(s, s, s);
 
-		immut Vector3f& pos = getPos();
-		mtx1.makeSRT(scale, Vector3f(0.0f, 0.0f, 0.0f), pos);
+		immut Vector3f pos = getPos();
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		mtx1.makeSRT(scale, rot, pos);
 
 		gfx.calcViewMatrix(mtx1, mtx2);
 		gfx.useMatrix(mtx2, 0);
@@ -1140,7 +1141,7 @@ void GenTypeOne::setBirthInfo(BirthInfo& info, Generator* gen)
 	Vector3f rot;
 	rot.set(deg2rad(_38()), deg2rad(_48()), deg2rad(_58()));
 
-	immut Vector3f& p = gen->getPos();
+	immut Vector3f p = gen->getPos();
 	info.set(pos, rot, p, gen);
 }
 
@@ -1158,7 +1159,7 @@ void GenTypeOne::render(Graphics& gfx, Generator* gen)
 	f32 s = 2.0f;
 	scale.set(s, s, s);
 
-	immut Vector3f& pos = gen->getPos();
+	immut Vector3f pos = gen->getPos();
 	mtx1.makeSRT(scale, rot, pos);
 	gfx.calcViewMatrix(mtx1, mtx2);
 
@@ -1206,8 +1207,9 @@ void GenTypeAtOnce::setBirthInfo(BirthInfo& info, Generator* gen)
 		vec = gen->getPos();
 	}
 
-	immut Vector3f& pos = gen->getPos();
-	info.set(vec, Vector3f(0.0f, 0.0f, 0.0f), pos, gen);
+	immut Vector3f pos = gen->getPos();
+	Vector3f vec2(0.0f, 0.0f, 0.0f);
+	info.set(vec, vec2, pos, gen);
 }
 
 /**
@@ -1250,8 +1252,9 @@ void GenTypeInitRand::setBirthInfo(BirthInfo& info, Generator* gen)
 		vec = gen->getPos();
 	}
 
-	immut Vector3f& pos = gen->getPos();
-	info.set(vec, Vector3f(0.0f, 0.0f, 0.0f), pos, gen);
+	immut Vector3f pos = gen->getPos();
+	Vector3f vec2(0.0f, 0.0f, 0.0f);
+	info.set(vec, vec2, pos, gen);
 }
 
 /**
@@ -1300,8 +1303,9 @@ void GenAreaCircle::render(Graphics& gfx, Generator* gen)
 	Vector3f scale;
 	f32 radius = mRadius() / 100.0f;
 	scale.set(radius, 1.0f, radius);
-	immut Vector3f& v = gen->getPos();
-	mtx1.makeSRT(scale, Vector3f(0.0f, 0.0f, 0.0f), v);
+	immut Vector3f v = gen->getPos();
+	Vector3f rot(0.0f, 0.0f, 0.0f);
+	mtx1.makeSRT(scale, rot, v);
 	gfx.calcViewMatrix(mtx1, mtx2);
 	gfx.useMatrix(mtx2, 0);
 
@@ -1309,9 +1313,6 @@ void GenAreaCircle::render(Graphics& gfx, Generator* gen)
 	colour.set(255, 255, 0, 255);
 	GlobalShape::enShape->mMaterialList->mColourInfo.mColour = colour;
 	GlobalShape::enShape->drawshape(gfx, *gfx.mCamera, nullptr);
-
-	STACK_PAD_STRUCT(1);
-	STACK_PAD_TERNARY(gen, 2);
 }
 
 /**

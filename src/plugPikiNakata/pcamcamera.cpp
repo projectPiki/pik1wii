@@ -360,16 +360,13 @@ void PcamCamera::makePosture()
 	polar.add2(getViewpoint(), moveDir);
 	makeWatchObjectViewpoint(target, polar);
 
-	NPosture3D NRef posture = NPosture3D(polar, target);
+	NPosture3D posture(polar, target);
 	inputPosture(posture);
 
 	f32 fov = getFov();
 	fov += (getCurrentFov() - fov) * getParameterF(PCAMF_FovHomingSpeed);
 	setFov(fov);
 	setBlur(getCurrentBlur());
-
-	STACK_PAD_VAR(1);
-	STACK_PAD_TERNARY(fov > 0.0f, 1);
 }
 
 /**
@@ -408,7 +405,6 @@ void PcamCamera::makeWatchObjectViewpoint(NVector3f& watchPt, NVector3f& viewPt)
 
 			f32 alongViewDir = 0.0f;
 			f32 planeDist    = viewLine.calcDistance(upPlanePos, &alongViewDir);
-			STACK_PAD_VAR(1);
 			f32 horizOffset = alongViewDir - (planeDist * aspectRatio);
 			NVector3f leftPlanePos;
 			leftPlane.outputVerticalPosition(creaturePos, leftPlanePos);
@@ -425,8 +421,6 @@ void PcamCamera::makeWatchObjectViewpoint(NVector3f& watchPt, NVector3f& viewPt)
 			viewLine.outputPosition(minOffset, viewPt);
 		}
 	}
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -472,7 +466,8 @@ void PcamCamera::startMotion(immut PcamMotionInfo& info)
 void PcamCamera::finishMotion()
 {
 	PRINT_NAKATA("finishMotion\n");
-	startMotion(PcamMotionInfo(mPrevMotionInfo));
+	PcamMotionInfo info(mPrevMotionInfo);
+	startMotion(info);
 }
 
 /**
@@ -558,7 +553,7 @@ f32 PcamCamera::calcCurrentDistance()
  */
 f32 PcamCamera::calcCurrentDirection()
 {
-	NPosture3D NRef posture = NPosture3D();
+	NPosture3D posture;
 	outputPosture(posture);
 	return posture.calcDirection() + NMathF::pi;
 }
@@ -691,7 +686,8 @@ void PcamCamera::printInfo(Graphics& gfx, Font* font)
 	vec2.normalizeCheck();
 	// Maybe they wanted a second `atan2` angle here and that explains the missing printf argument below?
 
-	gfx.setColour(Colour(255, 255, 255, 255), true);
+	Colour colour(255, 255, 255, 255);
+	gfx.setColour(colour, true);
 	// Why are there only 7 arguments for a format string with 8 conversion specifiers?  Ugh.
 	gfx.texturePrintf(font, x, y, "%2d,%3d,%4.0f,%4.0f,%4.0f,%3.2f,%3.2f,%3.2f", 90 - int(NMathF::r2d(mPolarDir.mInclination)),
 	                  int(getFov()), mCurrDistance, mPolarDir.mRadius, mStoredRadius, angle1,

@@ -61,7 +61,8 @@ void TaiContinuousMotionAction::start(Teki& teki)
 			return;
 		}
 
-		teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+		PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+		teki.mTekiAnimator->finishMotion(anim);
 	}
 }
 
@@ -98,7 +99,8 @@ bool TaiContinuousMotionAction::motionStarted(Teki& teki)
  */
 void TaiFinishMotionAction::start(Teki& teki)
 {
-	teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+	PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+	teki.mTekiAnimator->finishMotion(anim);
 }
 
 /**

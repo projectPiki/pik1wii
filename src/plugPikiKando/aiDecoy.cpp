@@ -60,7 +60,9 @@ Creature* ActDecoy::update()
 	} else {
 		if (mState != 3) {
 			mDecoyTimer = 5.0f;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait), PaniMotionInfo(PIKIANIM_Wait));
+			PaniMotionInfo anim1(PIKIANIM_Wait);
+			PaniMotionInfo anim2(PIKIANIM_Wait);
+			mPiki->startMotion(anim1, anim2);
 		}
 
 		mState = 3;
@@ -74,7 +76,9 @@ Creature* ActDecoy::update()
  */
 void ActDecoy::init(Creature* target)
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+	PaniMotionInfo anim1(PIKIANIM_Run);
+	PaniMotionInfo anim2(PIKIANIM_Run);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**

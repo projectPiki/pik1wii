@@ -39,7 +39,9 @@ void ActEscape::init(Creature* target)
 	mState = STATE_Normal;
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	PRINT(" escape start\n");
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Nigeru), PaniMotionInfo(PIKIANIM_Nigeru));
+	PaniMotionInfo anim1(PIKIANIM_Nigeru);
+	PaniMotionInfo anim2(PIKIANIM_Nigeru);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**

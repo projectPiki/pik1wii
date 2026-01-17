@@ -28,7 +28,9 @@ ActRope::ActRope(Piki* piki)
  */
 void ActRope::init(Creature*)
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_HNoboru), PaniMotionInfo(PIKIANIM_HNoboru));
+	PaniMotionInfo anim1(PIKIANIM_HNoboru);
+	PaniMotionInfo anim2(PIKIANIM_HNoboru);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->setCreatureFlag(CF_IgnoreGravity);
 	mSpeed = (gsys->getRand(1.0f) - 0.5f) * 4.0f + 22.0f;
 	if (mPiki->isHolding()) {

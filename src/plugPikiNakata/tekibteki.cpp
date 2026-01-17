@@ -89,7 +89,8 @@ void BTeki::viewDoAnimation()
  */
 void BTeki::viewFinishMotion()
 {
-	mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, this));
+	PaniMotionInfo anim(PANI_NO_MOTION, this);
+	mTekiAnimator->finishMotion(anim);
 }
 
 /**
@@ -215,7 +216,10 @@ bool BTeki::moveTowardStatic(immut Vector3f& currentPosition, immut Vector3f& ta
 	}
 	output.scale(speed);
 	f32 dist2 = vec1.distance(vec2);
-	return (BTeki::arrivedAt(dist2, speed)) ? true : false;
+	if (BTeki::arrivedAt(dist2, speed)){
+		return true;
+	}
+	return false;
 }
 
 /**
@@ -365,14 +369,16 @@ void BTeki::prepareEffects()
 	}
 
 	for (int i = 0; i < 3; i++) {
+		Vector3f pos(0.0f, 0.0f, 0.0f);
 		zen::particleGenerator* ptcl
-		    = effectMgr->create((EffectMgr::effTypeTable)(i + EffectMgr::EFF_RippleWhite2), Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+		    = effectMgr->create((EffectMgr::effTypeTable)(i + EffectMgr::EFF_RippleWhite2), pos, nullptr, nullptr);
 		if (!ptcl) {
 			PRINT("!!!prepareEffects:generator==null:%08x:%d,%d:%08x\n", this, i, mTekiType, nullptr);
 			break;
 		}
 
-		ptcl->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec(0.0f, 1.0f, 0.0f);
+		ptcl->setOrientedNormalVector(vec);
 		f32 val = ptcl->getScaleSize();
 		ptcl->setScaleSize(val * getParameterF(TPF_RippleScale));
 		ptcl->stopGen();
@@ -380,9 +386,6 @@ void BTeki::prepareEffects()
 	}
 
 	mParticleGenPack->setEmitPosPtr(&getPosition());
-
-	// fake just to inflate stack.
-	STACK_PAD_TERNARY(mParticleGenPack, 4);
 }
 
 /**
@@ -443,7 +446,6 @@ void BTeki::update()
  */
 void BTeki::doAnimation()
 {
-	STACK_PAD_VAR(1);
 	if (!mTekiShape) {
 		return;
 	}
@@ -466,7 +468,8 @@ void BTeki::doAnimation()
  */
 void BTeki::startMotion(int motionID)
 {
-	mTekiAnimator->startMotion(PaniMotionInfo(motionID, this));
+	PaniMotionInfo anim(motionID, this);
+	mTekiAnimator->startMotion(anim);
 	mCurrentAnimEvent = KEY_NULL;
 	clearAnimationKeyOptions();
 }
@@ -530,7 +533,6 @@ void BTeki::animationKeyUpdated(immut PaniAnimKeyEvent& event)
  */
 void BTeki::doAI()
 {
-	STACK_PAD_VAR(2);
 	if (!mDeadState && (AIPerf::optLevel < 3 || mOptUpdateContext.updatable())) {
 		TekiStrategy* strat = getStrategy();
 		strat->act(*static_cast<Teki*>(this));
@@ -790,7 +792,7 @@ void BTeki::releasePlatCollisions()
  */
 void BTeki::createDeadEffect()
 {
-	immut Vector3f& effectPos = getBoundingSphereCentre();
+	immut Vector3f effectPos = getBoundingSphereCentre();
 	int carcassSize           = getParameterI(TPI_CarcassSize);
 	if (carcassSize == 2) {
 		effectMgr->create(EffectMgr::EFF_Teki_DeathWaveS, effectPos, nullptr, nullptr);
@@ -815,7 +817,7 @@ void BTeki::createDeadEffect()
  */
 void BTeki::createSoulEffect()
 {
-	immut Vector3f& effectPos = getBoundingSphereCentre();
+	immut Vector3f effectPos = getBoundingSphereCentre();
 	int carcassSize           = getParameterI(TPI_CarcassSize);
 	if (carcassSize == 2) {
 		effectMgr->create(EffectMgr::EFF_Teki_SoulS, effectPos, nullptr, nullptr);
@@ -913,7 +915,8 @@ void BTeki::spawnPellets(int kind, int color, int count)
 		pellet->mVelocity.set(spawnSpeedHoriz * NMathF::sin(angle), spawnSpeedVert, spawnSpeedHoriz * NMathF::cos(angle));
 
 		pellet->mFaceDirection = getDirection();
-		pellet->mRotationQuat.fromEuler(Vector3f(0.0f, pellet->mFaceDirection, 0.0f));
+		Vector3f rot(0.0f, pellet->mFaceDirection, 0.0f);
+		pellet->mRotationQuat.fromEuler(rot);
 
 		if (getParameterI(TPI_SpawnPelletScaleOff)) {
 			pellet->startAI(TRUE);
@@ -1049,13 +1052,17 @@ void BTeki::dump()
 	PRINT("BTeki:%s:%08x\n", TekiMgr::getTypeName(mTekiType), this);
 	PRINT("MotionName:%s\n", mTekiAnimator->getCurrentMotionName());
 	PRINT("MotionFrame:%f/%d\n", mTekiAnimator->getCounter(), mTekiAnimator->getFrameCount());
-	int battlePikiCount = countPikis(TekiLowerRangeCondition(static_cast<Teki*>(this)));
-	int stickPikiCount  = countPikis(TekiStickerCondition(static_cast<Teki*>(this)));
+	TekiLowerRangeCondition cond1(static_cast<Teki*>(this));
+	int battlePikiCount = countPikis(cond1);
+	TekiStickerCondition cond2(static_cast<Teki*>(this));
+	int stickPikiCount  = countPikis(cond2);
 	PRINT("battlePikiCount:%d,stickPikiCount:%d\n", battlePikiCount, stickPikiCount);
 	int flickCount = getFlickDamageCount(battlePikiCount);
 	PRINT("DamageCount:%f/%f\n", mDamageCount, flickCount);
 	PRINT("damage:%f\n", mStoredDamage);
+#if defined(DEVELOP) 
 	PRINT("tekiState:%d\n", mStateID);
+#endif
 	PRINT("returnState:%d\n", mReturnStateID);
 
 	// nakata did you just forget to take this out for some reason.
@@ -1376,7 +1383,8 @@ bool BTeki::attackTarget(Creature& target, f32 range, f32 damage, immut Conditio
 		return false;
 	}
 
-	target.stimulate(InteractAttack(this, nullptr, damage, false));
+	InteractAttack attack(this, nullptr, damage, false);
+	target.stimulate(attack);
 	return true;
 }
 
@@ -1537,9 +1545,6 @@ void BTeki::flickLower(InteractFlick& flick)
 	flick.mDamage = 0.0f;
 
 	interactPiki(flick, andCond);
-
-	// this is so fake and cursed, but whatever bullshit nakata did with the condition stacking has me stumped.
-	STACK_PAD_TERNARY(flick.mAngle, 9);
 }
 
 /**
@@ -1636,7 +1641,8 @@ void BTeki::collisionCallback(immut CollEvent& event)
 
 	Creature* collider = event.mCollider;
 	if (collider->isAlive()) {
-		eventPerformed(TekiEvent(TekiEventType::Entity, static_cast<Teki*>(this), collider));
+		TekiEvent event(TekiEventType::Entity, static_cast<Teki*>(this), collider);
+		eventPerformed(event);
 	}
 }
 
@@ -1657,7 +1663,8 @@ bool BTeki::ignoreAtari(Creature* target)
  */
 void BTeki::bounceCallback()
 {
-	eventPerformed(TekiEvent(TekiEventType::Ground, static_cast<Teki*>(this)));
+	TekiEvent event(TekiEventType::Ground, static_cast<Teki*>(this));
+	eventPerformed(event);
 }
 
 /**
@@ -1665,7 +1672,8 @@ void BTeki::bounceCallback()
  */
 void BTeki::wallCallback(immut Plane&, DynCollObject*)
 {
-	eventPerformed(TekiEvent(TekiEventType::Wall, static_cast<Teki*>(this)));
+	TekiEvent event(TekiEventType::Wall, static_cast<Teki*>(this));
+	eventPerformed(event);
 }
 
 /**
@@ -1682,7 +1690,6 @@ bool BTeki::interact(immut TekiInteractionKey& key)
  */
 bool BTeki::interactDefault(immut TekiInteractionKey& key)
 {
-	STACK_PAD_VAR(1);
 	if (key.mInteractionType == TekiInteractType::Attack) {
 		InteractAttack* attack = (InteractAttack*)key.mInteraction;
 		if (getTekiOption(TEKIOPT_Invincible)) {
@@ -1851,7 +1858,8 @@ void BTeki::drawDefault(Graphics& gfx)
 	clearTekiOption(TEKIOPT_Drawed);
 
 	f32 rad = getBoundingSphereRadius();
-	if (!gfx.mCamera->isPointVisible(getBoundingSphereCentre(), rad)) {
+	Vector3f point = getBoundingSphereCentre();
+	if (!gfx.mCamera->isPointVisible(point, rad)) {
 		enableAICulling();
 	} else {
 		disableAICulling();
@@ -1870,9 +1878,6 @@ void BTeki::drawDefault(Graphics& gfx)
 	if (gsys->mToggleDebugInfo) {
 		drawTekiDebugInfo(gfx);
 	}
-
-	// genuinely unsure what else would even be here, i assume it's the debug flag setting stuff
-	STACK_PAD_TERNARY(rad, 2);
 }
 
 /**
@@ -1886,8 +1891,9 @@ void BTeki::drawTekiShape(Graphics& gfx)
 
 	clearTekiOption(TEKIOPT_Unk11);
 	Quat q1(0.0f, 0.0f, 0.0f, 1.0f);
+	Vector3f vec(0.0f, 1.0f, 0.0f);
 	f32 dir = getDirection();
-	q1.rotate(Vector3f(0.0f, 1.0f, 0.0f), dir);
+	q1.rotate(vec, dir);
 
 	NVector3f zVec;
 	q1.genVectorZ(zVec);
@@ -1948,13 +1954,17 @@ void BTeki::drawTekiDebugInfoDefault(Graphics& gfx)
 {
 	// don't ask why this works.
 	Teki* teki = static_cast<Teki*>(this);
-	teki->drawRange(gfx, teki->getPosition(), getParameterF(TPF_VisibleRange), Colour(0, 0, 255, 255));
-	teki->drawRange(gfx, teki->getPosition(), getTekiCollisionSize() + getAttackableRange(), Colour(255, 255, 0, 255));
+	Colour colour1(0, 0, 255, 255);
+	teki->drawRange(gfx, teki->getPosition(), getParameterF(TPF_VisibleRange), colour1);
+	Colour colour2(255, 255, 0, 255);
+	teki->drawRange(gfx, teki->getPosition(), getTekiCollisionSize() + getAttackableRange(), colour2);
 
 	NVector3f vec1;
 	outputHitCenter(vec1);
-	teki->drawRange(gfx, vec1, getAttackHitRange(), Colour(255, 0, 0, 255));
-	teki->drawRange(gfx, teki->getPosition(), getLowerRange(), Colour(255, 0, 255, 255));
+	Colour colour3(255, 0, 0, 255);
+	teki->drawRange(gfx, vec1, getAttackHitRange(), colour3);
+	Colour colour4(255, 0, 255, 255);
+	teki->drawRange(gfx, teki->getPosition(), getLowerRange(), colour4);
 }
 
 /**
@@ -1964,7 +1974,10 @@ void BTeki::drawRange(Graphics& gfx, immut Vector3f& centre, f32 range, immut Co
 {
 	Matrix4f mtx1;
 	Matrix4f mtx2;
-	mtx1.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	Vector3f rot(0.0f, 0.0f, 0.0f);
+	Vector3f trans(0.0f, 0.0f, 0.0f);
+	mtx1.makeSRT(scale, rot, trans);
 	gfx.mCamera->mLookAtMtx.multiplyTo(mtx1, mtx2);
 	gfx.setColour(colour, true);
 	gfx.drawSphere(centre, range, mtx2);
@@ -1980,15 +1993,12 @@ void BTeki::refresh2d(Graphics& gfx)
 	}
 
 	if (getTekiOption(TEKIOPT_LifeGaugeVisible)) {
-		immut Vector3f& pos = getCentre();
+		immut Vector3f pos = getCentre();
 		mLifeGauge.mPosition.input(pos);
 		mLifeGauge.mOffset.y = getParameterF(TPF_LifeGaugeOffset);
 		mLifeGauge.mScale    = 5000.0f / gfx.mCamera->mNear;
 		mLifeGauge.refresh(gfx);
 	}
-
-	// w/e man.
-	STACK_PAD_TERNARY(mDeadState, 1);
 }
 
 /**

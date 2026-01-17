@@ -74,7 +74,9 @@ int ActKinoko::exec()
 void ActKinoko::initStick()
 {
 	mState = STATE_Stick;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Kuttuku, this), PaniMotionInfo(PIKIANIM_Kuttuku));
+	PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
+	PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -284,7 +286,8 @@ void ActKinoko::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 			}
 			PRINT_GLOBAL("navi=%x", navi);
 
-			if (navi->stimulate(InteractSuck(mPiki, 0.5f))) {
+			InteractSuck suck(mPiki, 0.5f);
+			if (navi->stimulate(suck)) {
 				SeSystem::playPlayerSe(SE_KINOKOPIKI_ATTACK);
 			}
 		}

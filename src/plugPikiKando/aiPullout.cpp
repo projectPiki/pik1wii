@@ -181,8 +181,11 @@ int ActPulloutCreature::exec()
 		mPiki->mFaceDirection = roundAng(mPiki->mFaceDirection);
 		if (quickABS(angDist(angleSep, mPiki->mFaceDirection)) < 0.1f) {
 			mState = STATE_Unk1;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Nuku, this), PaniMotionInfo(PIKIANIM_Nuku));
-			mTarget.getPtr()->stimulate(InteractPullout(mPiki));
+			PaniMotionInfo anim1(PIKIANIM_Nuku, this);
+			PaniMotionInfo anim2(PIKIANIM_Nuku);
+			mPiki->startMotion(anim1, anim2);
+			InteractPullout pullout(mPiki);
+			mTarget.getPtr()->stimulate(pullout);
 			mPulloutTimer = 0.0f;
 		}
 		break;

@@ -19,7 +19,9 @@ DEFINE_PRINT("nlibgeometry3d");
  */
 NLine::NLine()
 {
-	construct(NVector3f(0.0f, 0.0f, 0.0f), NVector3f(0.0f, 0.0f, 1.0f));
+	NVector3f pos(0.0f, 0.0f, 0.0f);
+	NVector3f dir(0.0f, 0.0f, 1.0f);
+	construct(pos, dir);
 }
 
 /**

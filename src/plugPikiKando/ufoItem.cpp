@@ -284,13 +284,16 @@ void UfoItem::startLevelFlag(int flag)
 	Vector3f pos = mSRT.t;
 	if (playerState->mShipUpgradeLevel == 5) {
 		efx = effectMgr->create(EffectMgr::EFF_Rocket_Complete1, pos, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 0.0f, 1.0f));
+		Vector3f vec1(0.0f, 0.0f, 1.0f);
+		efx->setOrientedNormalVector(vec1);
 		efx = effectMgr->create(EffectMgr::EFF_Rocket_Complete2, pos, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 0.0f, 1.0f));
+		Vector3f vec2(0.0f, 0.0f, 1.0f);
+		efx->setOrientedNormalVector(vec2);
 	} else {
 		pos.y += 60.0f;
 		efx = effectMgr->create(EffectMgr::EFF_Rocket_C, pos, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 0.0f, 1.0f));
+		Vector3f vec(0.0f, 0.0f, 1.0f);
+		efx->setOrientedNormalVector(vec);
 	}
 	mAnimator.startFlagMotions(flag);
 }
@@ -362,7 +365,8 @@ void UfoItem::setJetEffect(int level, bool doSmokeEffects)
 					    = effectMgr->create(effects[stage + engine * offset][1], coll->mCentre, nullptr, nullptr);
 					if (mEngineParticleGenList[engine][2]) {
 						mEngineParticleGenList[engine][2]->setEmitPosPtr(&coll->mCentre);
-						mEngineParticleGenList[engine][2]->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+						Vector3f vec(1.0f, 0.0f, 0.0f);
+						mEngineParticleGenList[engine][2]->setOrientedNormalVector(vec);
 					}
 					break;
 				}
@@ -388,7 +392,8 @@ void UfoItem::setJetEffect(int level, bool doSmokeEffects)
 						    = effectMgr->create(effects[stage + engine * offset][3], coll->mCentre, nullptr, nullptr);
 						if (mEngineParticleGenList[engine][0]) {
 							mEngineParticleGenList[engine][0]->setEmitPosPtr(&coll->mCentre);
-							mEngineParticleGenList[engine][0]->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+							Vector3f vec(1.0f, 0.0f, 0.0f);
+							mEngineParticleGenList[engine][0]->setOrientedNormalVector(vec);
 						}
 					}
 					break;
@@ -935,11 +940,13 @@ void UfoItem::setPca1Effect(bool set)
 		dir.rotate(mWorldMtx);
 
 		zen::particleGenerator* efx = effectMgr->create(EffectMgr::EFF_Rocket_PCA1, mPca1FxPosition, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec1(0.0f, 1.0f, 0.0f);
+		efx->setOrientedNormalVector(vec1);
 		efx->setEmitDir(dir);
 
 		efx = effectMgr->create(EffectMgr::EFF_Rocket_PCA2, mPca1FxPosition, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec2(0.0f, 1.0f, 0.0f);
+		efx->setOrientedNormalVector(vec2);
 		efx->setEmitDir(dir);
 	}
 }
@@ -955,11 +962,13 @@ void UfoItem::setPca2Effect(bool set)
 		dir.rotate(mWorldMtx);
 
 		zen::particleGenerator* efx = effectMgr->create(EffectMgr::EFF_Rocket_PCA1, mPca2FxPosition, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec1(0.0f, 1.0f, 0.0f);
+		efx->setOrientedNormalVector(vec1);
 		efx->setEmitDir(dir);
 
 		efx = effectMgr->create(EffectMgr::EFF_Rocket_PCA2, mPca2FxPosition, nullptr, nullptr);
-		efx->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+		Vector3f vec2(0.0f, 1.0f, 0.0f);
+		efx->setOrientedNormalVector(vec2);
 		efx->setEmitDir(dir);
 	}
 }
@@ -1001,7 +1010,6 @@ void UfoItem::demoDraw(Graphics& gfx, immut Matrix4f* mtx)
 	}
 
 	Vector3f pos;
-	STACK_PAD_VAR(1);
 	pos.set(0.0f, 14.0f, 0.0f);
 	mShipModel->mShape->calcJointWorldPos(gfx, 48, pos);
 	mPca2FxPosition = pos;
@@ -1052,9 +1060,10 @@ void UfoItem::demoDraw(Graphics& gfx, immut Matrix4f* mtx)
 	}
 
 	if (mNeedPathfindRefresh) {
-		mWaypointID   = routeMgr->findNearestWayPoint('test', getGoalPos(), false)->mIndex;
-		Vector3f goal = getGoalPos();
-		PRINT("*** UFO ROUTE INDEX = %d (%.1f %.1f %.1f)\n", mWaypointID, goal.x, goal.y, goal.z);
+		Vector3f goal1 = getGoalPos();
+		mWaypointID   = routeMgr->findNearestWayPoint('test', goal1, false)->mIndex;
+		Vector3f goal2 = getGoalPos();
+		PRINT("*** UFO ROUTE INDEX = %d (%.1f %.1f %.1f)\n", mWaypointID, goal2.x, goal2.y, goal2.z);
 		mNeedPathfindRefresh = false;
 	}
 }

@@ -82,7 +82,9 @@ void ActTransport::initWait()
 	Pellet* pel = mPellet.getPtr();
 	mState      = STATE_Wait;
 	mPiki->startLook(&pel->mSRT.t);
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait), PaniMotionInfo(PIKIANIM_Wait));
+	PaniMotionInfo anim1(PIKIANIM_Wait);
+	PaniMotionInfo anim2(PIKIANIM_Wait);
+	mPiki->startMotion(anim1, anim2);
 	mWaitTimer = 3.0f;
 }
 
@@ -255,7 +257,9 @@ void ActTransport::init(Creature* target)
 	mGoal             = nullptr;
 	setSlotIndex();
 	mCanCarry = false;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -303,7 +307,9 @@ void ActTransport::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 			break;
 		}
 		if (mState == STATE_Lift) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_PickLoop, this), PaniMotionInfo(PIKIANIM_PickLoop));
+			PaniMotionInfo anim1(PIKIANIM_PickLoop, this);
+			PaniMotionInfo anim2(PIKIANIM_PickLoop);
+			mPiki->startMotion(anim1, anim2);
 			mIsLiftActionDone = false;
 			mLiftRetryCount   = int(3.0f * gsys->getRand(1.0f)) + 5;
 		}
@@ -376,7 +382,9 @@ int ActTransport::execJump()
 		mPiki->mSRT.r.y       = mPiki->mFaceDirection;
 		mState                = STATE_Lift;
 
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_PickLoop, this), PaniMotionInfo(PIKIANIM_PickLoop));
+		PaniMotionInfo anim1(PIKIANIM_PickLoop, this);
+		PaniMotionInfo anim2(PIKIANIM_PickLoop);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->enableMotionBlend();
 		PRINT("start try sound \n");
 		pel->setTrySound(true);
@@ -479,7 +487,9 @@ bool ActTransport::gotoLiftPos()
 		mPiki->mFaceDirection = roundAng(atan2f(slotDirection.x, slotDirection.z));
 		mPiki->mSRT.r.y       = mPiki->mFaceDirection;
 		mState                = STATE_Lift;
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_PickLoop, this), PaniMotionInfo(PIKIANIM_PickLoop));
+		PaniMotionInfo anim1(PIKIANIM_PickLoop, this);
+		PaniMotionInfo anim2(PIKIANIM_PickLoop);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->enableMotionBlend();
 		if (pellet->isCreatureFlag(CF_IsPositionFixed)) {
 			PRINT("start try sound \n");
@@ -654,7 +664,9 @@ void ActTransport::doLift()
 			crInit();
 		}
 
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick), PaniMotionInfo(PIKIANIM_Pick));
+		PaniMotionInfo anim1(PIKIANIM_Pick);
+		PaniMotionInfo anim2(PIKIANIM_Pick);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 11.0f;
 		mPiki->mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 11.0f;
 		mPiki->enableMotionBlend();
@@ -806,8 +818,6 @@ int ActTransport::exec()
 						checker.update();
 					}
 
-					STACK_PAD_INLINE(1);
-
 					PRINT("done\n");
 					Pellet* pel2 = pel;
 					pel2->finishPick();
@@ -876,8 +886,6 @@ int ActTransport::exec()
 	}
 	}
 
-	STACK_PAD_INLINE(1);
-
 	return ACTOUT_Continue;
 }
 
@@ -925,7 +933,6 @@ int ActTransport::moveGuruGuru()
 
 		f32 rad          = wp->mRadius;
 		Vector3f pathDir = wpPos - wp->mPosition;
-		STACK_PAD_VAR(1);
 		f32 dist = pathDir.normalise();
 		dist -= 160.0f;
 		if (dist < 0.0f) {
@@ -964,7 +971,6 @@ int ActTransport::moveGuruGuru()
 		}
 
 		Vector3f vel(sinf(mWaitTimer), 0.0f, cosf(mWaitTimer));
-		STACK_PAD_VAR(1);
 		vel.multiply(rad);
 		vel.add(pathDir);
 		vel = vel - pel->getCentre();
@@ -1066,7 +1072,6 @@ void ActTransport::decideGoal(Creature* cargo)
 		PRINT("SORRY *** goal(color%d) is required !!\n", onyonColor);
 		ERROR("zannnen\n"); // 'too bad'
 	}
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -1203,7 +1208,8 @@ void ActTransport::crInit()
 			Vector3f tmpDir  = wpB->mPosition - wpA->mPosition;
 			Vector3f pathDir = tmpDir;
 			f32 pathDist     = pathDir.normalise();
-			f32 proj         = pathDir.DP(pel->mSRT.t - wpA->mPosition) / pathDist;
+			Vector3f peltranspos = pel->mSRT.t - wpA->mPosition;
+			f32 proj         = pathDir.DP(peltranspos) / pathDist;
 			if (proj < 0.0f) {
 				nextPoint = wpA->mPosition;
 			} else if (proj > 1.0f) {
@@ -1228,8 +1234,6 @@ void ActTransport::crInit()
 		PRINT("\tref[%d] = (%.1f,%.1f)\n", i, mSplineControlPts[i].x, mSplineControlPts[i].z);
 	}
 	mOdometer.start(4.0f, 10.0f);
-
-	STACK_PAD_TERNARY(mPiki, 1);
 }
 
 /**
@@ -1258,17 +1262,15 @@ void ActTransport::findObstacle()
 	{
 		Creature* teki = *iter;
 		if (teki->isAlive() && teki->isTerrible()) {
-			f32 proj = pathDir.DP(teki->mSRT.t - point1) / pathDist;
+			Vector3f tekitranspoint = teki->mSRT.t - point1;
+			f32 proj = pathDir.DP(tekitranspoint) / pathDist;
 			Vector3f vec;
-			STACK_PAD_INLINE(1);
 			vec = (proj * pathDist) * pathDir + point1;
 			vec = vec - teki->mSRT.t;
 			vec.normalise();
 			f32 unusedWeightedVal = crGetRadius(mNextPathIndex) * (1.0f - proj) + crGetRadius(mNextPathIndex + 1) * (proj);
 		}
 	}
-
-	STACK_PAD_INLINE(2);
 }
 
 /**
@@ -1340,16 +1342,13 @@ bool ActTransport::crMove()
 #endif
 	}
 
-#if defined(VERSION_PIKIDEMO)
-	f32 factor = pathDir.DP(pel->mSRT.t - currPoint) / pathDist;
-#else
 	f32 factor;
 	if (pathDist > 0.0f) {
-		factor = pathDir.DP(pel->mSRT.t - currPoint) / pathDist;
+		Vector3f peltranspoint = pel->mSRT.t - currPoint;
+		factor = pathDir.DP(peltranspoint) / pathDist;
 	} else {
 		factor = 1.0f;
 	}
-#endif
 
 	if (factor < 0.0f) {
 		factor = 0.0f;
@@ -1461,7 +1460,8 @@ void ActTransport::draw(Graphics& gfx)
 		Vector3f nextPoint = crGetPoint(mNextPathIndex + 1);
 		Vector3f pathDir   = nextPoint - currPoint;
 		f32 pathDist       = pathDir.normalise();
-		f32 proj           = pathDir.DP(pel->mSRT.t - currPoint) / pathDist;
+		Vector3f peltranspoint   = pel->mSRT.t - currPoint;
+		f32 proj           = pathDir.DP(peltranspoint) / pathDist;
 		if (proj < 0.0f) {
 			proj = 0.0f;
 		}
@@ -1491,7 +1491,8 @@ void ActTransport::draw(Graphics& gfx)
 	}
 
 	gfx.useMatrix(Matrix4f::ident, 0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	pikiPos.y += 30.0f;
 
 	Vector3f newVec(pikiPos);
@@ -1603,6 +1604,4 @@ int ActTransport::moveToWayPoint()
 	}
 
 	return ACTOUT_Continue;
-
-	STACK_PAD_VAR(1);
 }

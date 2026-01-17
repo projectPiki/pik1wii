@@ -529,10 +529,12 @@ void BombAI::BombInit::act(AICreature* item)
 			PRINT("checkCollisionSpecial done >\n");
 			if (part) {
 				PRINT("part found \n");
-				obj->stimulate(InteractBomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), part));
+				InteractBomb bomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), part);
+				obj->stimulate(bomb);
 			} else {
 				if (centreDist(item, obj) - maxRange - obj->getCentreSize() < 0.0f) {
-					obj->stimulate(InteractBomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), nullptr));
+					InteractBomb bomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), nullptr);
+					obj->stimulate(bomb);
 				}
 			}
 		}
@@ -553,10 +555,12 @@ void BombAI::BombInit::act(AICreature* item)
 			InteractBomb bomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), part);
 			if (part) {
 				PRINT("part found \n");
-				obj->stimulate(InteractBomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), part));
+				InteractBomb bomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), part);
+				obj->stimulate(bomb);
 			} else {
 				if (centreDist(item, obj) - maxRange - obj->getCentreSize() < 0.0f) {
-					obj->stimulate(InteractBomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), nullptr));
+					InteractBomb bomb(item, pikiMgr->mPikiParms->mPikiParms.mBombDamageEnemy(), nullptr);
+					obj->stimulate(bomb);
 				}
 			}
 		}

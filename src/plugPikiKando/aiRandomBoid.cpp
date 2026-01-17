@@ -27,29 +27,41 @@ void ActRandomBoid::AnimListener::animationKeyUpdated(immut PaniAnimKeyEvent& ev
 		{
 			f32 angle = 2.0f * (PI * gsys->getRand(1.0f));
 			if (gsys->getRand(1.0f) > 0.8f) {
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
-				mPiki->setSpeed(-1.2f, Vector3f(cosf(angle), 0.0f, sinf(angle)));
+				PaniMotionInfo anim1(PIKIANIM_Run, this);
+				PaniMotionInfo anim2(PIKIANIM_Run);
+				mPiki->startMotion(anim1, anim2);
+				Vector3f vec(cosf(angle), 0.0f, sinf(angle));
+				mPiki->setSpeed(-1.2f, vec);
 				return;
 			}
 
 			if (gsys->getRand(1.0f) > 0.8f) {
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
+				PaniMotionInfo anim1(PIKIANIM_Run, this);
+				PaniMotionInfo anim2(PIKIANIM_Run);
+				mPiki->startMotion(anim1, anim2);
 				mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 				return;
 			}
 
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
-			mPiki->setSpeed(0.0f, Vector3f(cosf(angle), 0.0f, sinf(angle)));
+			PaniMotionInfo anim1(PIKIANIM_Run, this);
+			PaniMotionInfo anim2(PIKIANIM_Run);
+			mPiki->startMotion(anim1, anim2);
+			Vector3f vec(cosf(angle), 0.0f, sinf(angle));
+			mPiki->setSpeed(0.0f, vec);
 			break;
 		}
 		case STATE_Stop:
 		{
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
+			PaniMotionInfo anim1(PIKIANIM_Run, this);
+			PaniMotionInfo anim2(PIKIANIM_Run);
+			mPiki->startMotion(anim1, anim2);
 			break;
 		}
 		case STATE_Random:
 		{
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, this), PaniMotionInfo(PIKIANIM_Run));
+			PaniMotionInfo anim1(PIKIANIM_Run, this);
+			PaniMotionInfo anim2(PIKIANIM_Run);
+			mPiki->startMotion(anim1, anim2);
 			f32 angle2 = 2.0f * (PI * gsys->getRand(1.0f));
 			mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 			break;
@@ -89,7 +101,9 @@ void ActRandomBoid::init(Creature*)
 	mStateTimer = int((10.0f * gsys->getRand(1.0f))) + 20;
 	f32 angle   = 2.0f * (PI * gsys->getRand(1.0f));
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run, mListener), PaniMotionInfo(PIKIANIM_Run, mListener));
+	PaniMotionInfo anim1(PIKIANIM_Run, mListener);
+	PaniMotionInfo anim2(PIKIANIM_Run, mListener);
+	mPiki->startMotion(anim1, anim2);
 	mListener->_0C   = false;
 	mIsAnimFinishing = false;
 }
@@ -158,21 +172,12 @@ int ActRandomBoid::exec()
 		mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	}
 
-	STACK_PAD_VAR(15);
 	Vector3f avoidVec;
 	if (mPiki->getAvoid(mPiki->mTargetVelocity, avoidVec)) {
 		mPiki->mTargetVelocity = mPiki->mTargetVelocity + mPiki->getSpeed(0.5f) * avoidVec;
 	}
 
 	return ACTOUT_Continue;
-
-	STACK_PAD_TERNARY(mPiki, 12);
-	STACK_PAD_TERNARY(mPiki, 1);
-	STACK_PAD_INLINE(12);
-	STACK_PAD_INLINE(12);
-	STACK_PAD_INLINE(5);
-	STACK_PAD_STRUCT(3);
-	STACK_PAD_VAR(13);
 }
 
 static const char* stateName[] = {

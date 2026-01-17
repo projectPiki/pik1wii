@@ -164,12 +164,6 @@ void ViewPiki::initBirth()
 	f32 scale = 1.0f;
 	mSRT.s.set(scale, scale, scale);
 	setFlower(0);
-
-#if defined(VERSION_GPIJ01_01)
-	STACK_PAD_VAR(2);
-#else
-	STACK_PAD_VAR(4);
-#endif
 }
 
 /**
@@ -189,7 +183,9 @@ void ViewPiki::init(Shape* shp, MapMgr*, Navi* navi)
 	mSRT.s.set(scale, scale, scale);
 	setLeaves(1);
 
-	mPikiAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_StillJump, this), PaniMotionInfo(PIKIANIM_StillJump));
+	PaniMotionInfo anim1(PIKIANIM_StillJump, this);
+	PaniMotionInfo anim2(PIKIANIM_StillJump);
+	mPikiAnimMgr.startMotion(anim1, anim2);
 
 	mSRT.s.set(1.0f, 1.0f, 1.0f);
 	mSRT.r.set(0.0f, 0.0f, 0.0f);
@@ -433,7 +429,6 @@ void ViewPiki::demoDraw(Graphics& gfx, immut Matrix4f* mtx)
 		mCatchPos = pos;
 	}
 
-	STACK_PAD_VAR(1);
 	if (mHappa == Bud) {
 		pos.set(4.0f, 0.0f, 0.0f);
 	} else if (mHappa == Flower) {
@@ -445,7 +440,8 @@ void ViewPiki::demoDraw(Graphics& gfx, immut Matrix4f* mtx)
 	mEffectPos = pos;
 
 	if (isDamaged() && gsys->getRand(1.0f) > 0.5f) {
-		mPikiShape->mShape->mMaterialList->setColour(COLOUR_WHITE);
+		Colour white(COLOUR_WHITE);
+		mPikiShape->mShape->mMaterialList->setColour(white);
 	} else {
 		mPikiShape->mShape->mMaterialList->setColour(mCurrentColour);
 	}
@@ -473,11 +469,14 @@ void ViewPiki::demoDraw(Graphics& gfx, immut Matrix4f* mtx)
 			bool light = gfx.setLighting(false, nullptr);
 			gfx.useMatrix(Matrix4f::ident, 0);
 			if (act->mState == ActCrowd::STATE_Sort) {
-				gfx.setColour(Colour(255, 10, 50, 255), 1);
+				Colour colour1(255, 10, 50, 255);
+				gfx.setColour(colour1, 1);
 			} else if (act->mState == ActCrowd::STATE_Unk0) {
-				gfx.setColour(Colour(200, 255, 255, 255), 1);
+				Colour colour2(200, 255, 255, 255);
+				gfx.setColour(colour2, 1);
 			} else {
-				gfx.setColour(COLOUR_WHITE, 1);
+				Colour colour3(COLOUR_WHITE);
+				gfx.setColour(colour3, 1);
 			}
 
 			const char* strs[6] = { "A", "B", "C", "D", "E", "F" };
@@ -520,7 +519,6 @@ static void printMatrix(immut char* name, immut Matrix4f& mat)
  */
 void ViewPiki::refresh(Graphics& gfx)
 {
-	STACK_PAD_VAR(2);
 	u32 color = mColor;
 	if (color == Blue && gameflow.mDemoFlags & CinePlayerFlags::HideBluePiki) {
 		return;
@@ -603,7 +601,10 @@ void ViewPiki::refresh(Graphics& gfx)
 		}
 
 		Matrix4f mtx2;
-		mtx2.makeSRT(Vector3f(swallowScale, swallowScale, swallowScale), Vector3f(0.0f, 0.0f, HALF_PI), Vector3f(0.0f, 0.0f, 0.0f));
+		Vector3f scale(swallowScale, swallowScale, swallowScale);
+		Vector3f rot(0.0f, 0.0f, HALF_PI);
+		Vector3f trans(0.0f, 0.0f, 0.0f);
+		mtx2.makeSRT(scale, rot, trans);
 		mouthMtx.multiplyTo(mtx2, mtx);
 		mSRT.t = mSwallowMouthPart->mCentre;
 	}

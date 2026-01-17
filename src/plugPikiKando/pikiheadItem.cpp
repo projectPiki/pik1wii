@@ -124,7 +124,8 @@ void PikiHeadItem::startAI(int)
 {
 	startFix();
 	mParentOnion = nullptr;
-	mItemAnimator.startMotion(PaniMotionInfo(PikiHeadMotion::TaneFall));
+	PaniMotionInfo anim(PikiHeadMotion::TaneFall);
+	mItemAnimator.startMotion(anim);
 
 	f32 scale = 1.0f;
 	mSRT.s.set(scale, scale, scale);

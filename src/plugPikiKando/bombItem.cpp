@@ -99,7 +99,8 @@ void BombItem::startAI(int)
 	mCollInfo = &mBombColl;
 	mCollInfo->initInfo(mItemShapeObject->mShape, mCollParts, mCollPartIdList);
 
-	mItemAnimator.startMotion(PaniMotionInfo(0));
+	PaniMotionInfo anim(0);
+	mItemAnimator.startMotion(anim);
 	mMotionSpeed = 0.0f;
 
 	f32 scale = 1.0f;

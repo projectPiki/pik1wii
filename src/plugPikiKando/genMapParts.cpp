@@ -89,20 +89,26 @@ void GenObjectMapParts::render(Graphics& gfx, Generator* gen)
 	Vector3f globalPos = mStartPosition + gen->getPos();
 	static bool first  = true;
 	if (first) {
+#if defined (DEVELOP)
 		PRINT("render :: start (%.1f %.1f %.1f)\n", globalPos.x, globalPos.y, globalPos.z);
 		PRINT(" start (%.1f %.1f %.1f) gen(%.1f %.1f %.1f)\n", mStartPosition.x, mStartPosition.y, mStartPosition.z, gen->getPos().x,
 		      gen->getPos().y, gen->getPos().z);
+#endif
 		first = false;
 	}
 	Matrix4f mtx2;
-	mtx2.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), globalPos);
+	Vector3f scale1(1.0f, 1.0f, 1.0f);
+	Vector3f rot1(0.0f, 0.0f, 0.0f);
+	mtx2.makeSRT(scale1, rot1, globalPos);
 	gfx.calcViewMatrix(mtx2, mtx);
 	gfx.useMatrix(mtx, 0);
 	gfx.setLighting(true, nullptr);
 	shape->drawshape(gfx, *gfx.mCamera, nullptr);
 
 	globalPos = mEndPosition + gen->getPos();
-	mtx2.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), globalPos);
+	Vector3f scale2(1.0f, 1.0f, 1.0f);
+	Vector3f rot2(0.0f, 0.0f, 0.0f);
+	mtx2.makeSRT(scale2, rot2, globalPos);
 	gfx.calcViewMatrix(mtx2, mtx);
 	gfx.useMatrix(mtx, 0);
 	shape->drawshape(gfx, *gfx.mCamera, nullptr);
@@ -112,7 +118,8 @@ void GenObjectMapParts::render(Graphics& gfx, Generator* gen)
 	}
 
 	Vector3f pos3 = mStartPosition + gen->getPos();
-	mtx0.makeSRT(scale, Vector3f(0.0f, 0.0f, 0.0f), pos3);
+	Vector3f rot3(0.0f, 0.0f, 0.0f);
+	mtx0.makeSRT(scale, rot3, pos3);
 	gfx.calcViewMatrix(mtx0, mtx4);
 	gfx.useMatrix(mtx4, 0);
 
@@ -121,7 +128,8 @@ void GenObjectMapParts::render(Graphics& gfx, Generator* gen)
 	GlobalShape::markerShape->mMaterialList->getColour() = color1;
 	GlobalShape::markerShape->drawshape(gfx, *gfx.mCamera, nullptr);
 	Vector3f globalPos2 = mEndPosition + gen->getPos();
-	mtx0.makeSRT(scale, Vector3f(0.0f, 0.0f, 0.0f), globalPos2);
+	Vector3f rot4(0.0f, 0.0f, 0.0f);
+	mtx0.makeSRT(scale, rot4, globalPos2);
 	gfx.calcViewMatrix(mtx0, mtx4);
 	gfx.useMatrix(mtx4, 0);
 
@@ -132,8 +140,10 @@ void GenObjectMapParts::render(Graphics& gfx, Generator* gen)
 	bool light = gfx.setLighting(false, nullptr);
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(COLOUR_WHITE, true);
-	gfx.setAuxColour(COLOUR_WHITE);
+	Colour colour1(COLOUR_WHITE);
+	gfx.setColour(colour1, true);
+	Colour colour2(COLOUR_WHITE);
+	gfx.setAuxColour(colour2);
 	gfx.drawLine(pos3, globalPos2);
 	gfx.setLighting(light, nullptr);
 }
@@ -151,8 +161,10 @@ Creature* GenObjectMapParts::birth(BirthInfo& info)
 	} else {
 		shape = mapMgr->loadPlatshape(MapParts::getShapeFile(mShapeIndex - numShapes));
 		if (!shape) {
+#if defined (DEVELOP)
 			PRINT("failed to load %s\n", MapParts::getShapeFile(mShapeIndex - numShapes));
 			ERROR("sorry");
+#endif
 		}
 	}
 

@@ -21,7 +21,8 @@ DEFINE_PRINT("nlibgeometry")
  */
 NAxisAngle4f::NAxisAngle4f()
 {
-	mAxis.construct(NVector3f(0.0f, 1.0f, 0.0f));
+	NVector3f vec(0.0f, 1.0f, 0.0f);
+	mAxis.construct(vec);
 	mAngle = 0.0f;
 }
 
@@ -47,7 +48,8 @@ void NAxisAngle4f::construct(immut NVector3f& axis, f32 angle)
  */
 NMatrix4f::NMatrix4f()
 {
-	input(NMatrix4f(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f));
+	NMatrix4f mtx(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	input(mtx);
 }
 
 /**
@@ -205,7 +207,8 @@ void NMatrix4f::inputRows(immut NVector3f& row0, immut NVector3f& row1, immut NV
 	inputRow(0, row0, 0.0f);
 	inputRow(1, row1, 0.0f);
 	inputRow(2, row2, 0.0f);
-	inputRow(0, NVector3f(0.0f, 0.0f, 0.0f), 1.0f);
+	NVector3f vec(0.0f, 0.0f, 0.0f);
+	inputRow(0, vec, 1.0f);
 }
 
 /**
@@ -255,7 +258,8 @@ void NMatrix4f::inputCols(immut NVector3f& col0, immut NVector3f& col1, immut NV
 	inputCol(0, col0, 0.0f);
 	inputCol(1, col1, 0.0f);
 	inputCol(2, col2, 0.0f);
-	inputCol(3, NVector3f(0.0f, 0.0f, 0.0f), 1.0f);
+	NVector3f vec(0.0f, 0.0f, 0.0f);
+	inputCol(3, vec, 1.0f);
 }
 
 /**
@@ -332,7 +336,9 @@ void NMatrix4f::println() immut
  */
 NOrientation::NOrientation()
 {
-	input(NVector3f(0.0f, 0.0f, 1.0f), NVector3f(0.0f, 1.0f, 0.0f));
+	NVector3f direction(0.0f, 0.0f, 1.0f);
+	NVector3f up(0.0f, 1.0f, 0.0f);
+	input(direction, up);
 }
 
 /**
@@ -348,7 +354,8 @@ NOrientation::NOrientation(immut Vector3f& direction)
  */
 void NOrientation::construct(immut Vector3f& direction)
 {
-	input(direction, NVector3f(0.0f, 1.0f, 0.0f));
+	NVector3f up(0.0f, 1.0f, 0.0f);
+	input(direction, up);
 }
 
 /**
@@ -424,11 +431,15 @@ void NOrientation::makeUp()
 {
 	NOrientation NRef orient = NOrientation(mDirection);
 
-	if (!orient.mDirection.isParallel(NVector3f(0.0f, 1.0f, 0.0f))) {
-		orient.inputUp(NVector3f(0.0f, 1.0f, 0.0f));
+	NVector3f vec1(0.0f, 1.0f, 0.0f);
+	if (!orient.mDirection.isParallel(vec1)) {
+		NVector3f vec2(0.0f, 1.0f, 0.0f);
+		orient.inputUp(vec2);
 
-	} else if (!orient.mDirection.isParallel(NVector3f(0.0f, 0.0f, 1.0f))) {
-		orient.inputUp(NVector3f(0.0f, 0.0f, 1.0f));
+	} else if (!orient.mDirection.isParallel(vec1)) {
+	//} else if (!orient.mDirection.isParallel(NVector3f(0.0f, 0.0f, 1.0f))) {
+		NVector3f vec3(0.0f, 0.0f, 1.0f);
+		orient.inputUp(vec3);
 
 	} else {
 		PRINT_NAKATA("?makeUp\n");
@@ -712,7 +723,8 @@ void NPosture2D::outputInverseTransform(NTransform3D& transform)
 	trans1.inputTranslation(pos);
 
 	NAxisAngle4f NRef axisAngle = NAxisAngle4f();
-	axisAngle.inputAxis(NVector3f(0.0f, 1.0f, 0.0f));
+	NVector3f vec(0.0f, 1.0f, 0.0f);
+	axisAngle.inputAxis(vec);
 	axisAngle.setAngle(-mDirection);
 	trans2.inputRotation(axisAngle);
 	transform.mul2(trans1, trans2);
@@ -724,7 +736,8 @@ void NPosture2D::outputInverseTransform(NTransform3D& transform)
  */
 void NPosture2D::outputAxisAngle(NAxisAngle4f& axisAngle)
 {
-	axisAngle.inputAxis(NVector3f(0.0f, 1.0f, 0.0f));
+	NVector3f vec(0.0f, 1.0f, 0.0f);
+	axisAngle.inputAxis(vec);
 	axisAngle.setAngle(mDirection);
 }
 
@@ -753,8 +766,10 @@ void NPosture2D::println() immut
  */
 NPosture3D::NPosture3D()
 {
-	mViewpoint.input(NVector3f(0.0f, 0.0f, 0.0f));
-	mWatchpoint.input(NVector3f(0.0f, 0.0f, 1.0f));
+	NVector3f view(0.0f, 0.0f, 0.0f);
+	NVector3f watch(0.0f, 0.0f, 1.0f);
+	mViewpoint.input(view);
+	mWatchpoint.input(watch);
 }
 
 /**
@@ -801,7 +816,8 @@ void NPosture3D::normalize()
 	outputRelative(dir);
 	if (NMathF::isZero(dir.length())) {
 		PRINT_NAKATA("?normalize:zero:" MISSING_NEWLINE);
-		mWatchpoint.add(NVector3f(0.0f, 0.0f, 1.0f));
+		NVector3f vec(0.0f, 0.0f, 1.0f);
+		mWatchpoint.add(vec);
 	}
 }
 
@@ -859,7 +875,7 @@ void NPosture3D::rotate(immut NVector3f& pivot, immut NPolar3f& rotationDelta)
 void NPosture3D::rotatePoint(NVector3f& point, immut NVector3f& pivot, immut NPolar3f& rotationDelta) immut
 {
 	NVector3f NRef tempVec = NVector3f();
-	NPolar3f NRef tempPol  = NPolar3f();
+	NPolar3f tempPol;
 
 	tempVec.sub2(point, pivot);
 
@@ -1665,7 +1681,8 @@ void NVector3f::makeUnitVector(immut Vector3f& start, immut Vector3f& end)
 	if (NMathF::isPositive(dist)) {
 		normalize();
 	} else {
-		input(NVector3f(0.0f, 0.0f, 1.0f));
+		NVector3f vec(0.0f, 0.0f, 1.0f);
+		input(vec);
 	}
 }
 

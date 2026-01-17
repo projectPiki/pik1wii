@@ -45,7 +45,9 @@ void ActWatch::init(Creature* target)
 	if (target) {
 		mWatchRetryTimer = int(20.0f * gsys->getRand(1.0f)) + 50;
 		mTarget.set(target);
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait), PaniMotionInfo(PIKIANIM_Wait));
+		PaniMotionInfo anim1(PIKIANIM_Wait);
+		PaniMotionInfo anim2(PIKIANIM_Wait);
+		mPiki->startMotion(anim1, anim2);
 		mPiki->enableMotionBlend();
 		mTargetPosition = target->getCentre();
 		mTargetPosition.y += 1.6f * target->getBoundingSphereRadius();

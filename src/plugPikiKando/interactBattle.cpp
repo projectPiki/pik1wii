@@ -306,7 +306,7 @@ bool InteractSlimeAttack::actCommon(Creature*) immut
 int InteractAttack::getDamagePortion() immut
 {
 	if (mCollPart) {
-		immut ID32& id = mCollPart->getCode();
+		immut ID32 id = mCollPart->getCode();
 		if (id.match('***0')) {
 			return 0;
 		}
@@ -397,7 +397,9 @@ bool InteractAttack::actPiki(Piki* piki) immut
 		piki->finishDamage();
 		piki->mFSM->transit(piki, PIKISTATE_Dying);
 	} else {
-		piki->startMotion(PaniMotionInfo(PIKIANIM_Damage, piki), PaniMotionInfo(PIKIANIM_Damage));
+		PaniMotionInfo anim1(PIKIANIM_Damage, piki);
+		PaniMotionInfo anim2(PIKIANIM_Damage);
+		piki->startMotion(anim1, anim2);
 	}
 	return true;
 }
@@ -436,9 +438,13 @@ bool InteractSwallow::actPiki(Piki* piki) immut
 	piki->getState();
 
 	if (_08 == 0) {
-		piki->startMotion(PaniMotionInfo(PIKIANIM_Esa), PaniMotionInfo(PIKIANIM_Esa));
+		PaniMotionInfo anim1(PIKIANIM_Esa);
+		PaniMotionInfo anim2(PIKIANIM_Esa);
+		piki->startMotion(anim1, anim2);
 	} else {
-		piki->startMotion(PaniMotionInfo(PIKIANIM_Fall), PaniMotionInfo(PIKIANIM_Fall));
+		PaniMotionInfo anim1(PIKIANIM_Fall);
+		PaniMotionInfo anim2(PIKIANIM_Fall);
+		piki->startMotion(anim1, anim2);
 	}
 
 	piki->mFSM->transit(piki, PIKISTATE_Swallowed);

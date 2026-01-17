@@ -79,7 +79,9 @@ void ActCrowd::init(Creature* target)
 	}
 
 	if (!mPiki->isHolding()) {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+		PaniMotionInfo anim1(PIKIANIM_Run);
+		PaniMotionInfo anim2(PIKIANIM_Run);
+		mPiki->startMotion(anim1, anim2);
 	}
 	mPiki->unsetPastel();
 	_34              = false;
@@ -196,7 +198,9 @@ void ActCrowd::procAnimMsg(Piki* piki, MsgAnim* msg)
 	{
 		if (mIsTripping) {
 			mIsTripping = false;
-			piki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+			PaniMotionInfo anim1(PIKIANIM_Walk);
+			PaniMotionInfo anim2(PIKIANIM_Walk);
+			piki->startMotion(anim1, anim2);
 		}
 		break;
 	}
@@ -254,7 +258,9 @@ int ActCrowd::exec()
 	if (mIsTripping) {
 		if (mPiki->mPikiAnimMgr.getUpperAnimator().getCurrentMotionIndex() != PIKIANIM_Korobu) {
 			mIsTripping = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+			PaniMotionInfo anim1(PIKIANIM_Walk);
+			PaniMotionInfo anim2(PIKIANIM_Walk);
+			mPiki->startMotion(anim1, anim2);
 		}
 		mPiki->mTargetVelocity = mPiki->mTargetVelocity * 0.955f;
 		return ACTOUT_Continue;
@@ -264,11 +270,15 @@ int ActCrowd::exec()
 		int boreRes = mSelectAction->exec();
 		if (boreRes != ACTOUT_Continue) {
 			mIsWaiting = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+			PaniMotionInfo anim1(PIKIANIM_Walk);
+			PaniMotionInfo anim2(PIKIANIM_Walk);
+			mPiki->startMotion(anim1, anim2);
 		} else {
 			if (mPiki->mPikiAnimMgr.getUpperAnimator().getCurrentMotionIndex() == PIKIANIM_Wait) {
 				mIsWaiting = false;
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+				PaniMotionInfo anim1(PIKIANIM_Walk);
+				PaniMotionInfo anim2(PIKIANIM_Walk);
+				mPiki->startMotion(anim1, anim2);
 			} else {
 				return boreRes;
 			}
@@ -310,7 +320,9 @@ int ActCrowd::exec()
 		if (gsys->getRand(1.0f) >= 0.9999f && gsys->getRand(1.0f) > 0.7f) {
 			mIsTripping      = true;
 			mTripLoopCounter = int((4.0f * gsys->getRand(1.0f))) + 3; // length of trip is a random number of anim loops, between 3 and 7
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Korobu, mPiki), PaniMotionInfo(PIKIANIM_Korobu));
+			PaniMotionInfo anim1(PIKIANIM_Korobu, mPiki);
+			PaniMotionInfo anim2(PIKIANIM_Korobu);
+			mPiki->startMotion(anim1, anim2);
 			return ACTOUT_Continue;
 		}
 
@@ -357,7 +369,6 @@ int ActCrowd::exec()
 				platePos = mPiki->mNavi->mSRT.t;
 			}
 
-			STACK_PAD_VAR(1);
 			mIsWaiting       = false;
 			Vector3f moveDir = platePos - mPiki->mSRT.t;
 			f32 moveDist     = moveDir.normalise();
@@ -371,7 +382,9 @@ int ActCrowd::exec()
 			} else {
 				mPiki->setSpeed(1.0f, moveDir);
 				if (_7E && !mIsWaiting) {
-					mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+					PaniMotionInfo anim1(PIKIANIM_Walk);
+					PaniMotionInfo anim2(PIKIANIM_Walk);
+					mPiki->startMotion(anim1, anim2);
 					finishZawatuki();
 				}
 			}
@@ -522,12 +535,10 @@ int ActCrowd::exec()
 		return ACTOUT_Fail;
 	}
 
-	STACK_PAD_STRUCT(3);
-	STACK_PAD_VAR(4);
-	STACK_PAD_TERNARY(mPiki, 11);
-
 	if (_7E && !mIsWaiting) {
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+		PaniMotionInfo anim1(PIKIANIM_Walk);
+		PaniMotionInfo anim2(PIKIANIM_Walk);
+		mPiki->startMotion(anim1, anim2);
 		finishZawatuki();
 	}
 
@@ -566,12 +577,16 @@ void ActCrowd::startBoredom()
 	}
 	case 2:
 	{
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Akubi), PaniMotionInfo(PIKIANIM_Akubi));
+		PaniMotionInfo anim1(PIKIANIM_Akubi);
+		PaniMotionInfo anim2(PIKIANIM_Akubi);
+		mPiki->startMotion(anim1, anim2);
 		break;
 	}
 	case 3:
 	{
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Rinbow), PaniMotionInfo(PIKIANIM_Rinbow));
+		PaniMotionInfo anim1(PIKIANIM_Rinbow);
+		PaniMotionInfo anim2(PIKIANIM_Rinbow);
+		mPiki->startMotion(anim1, anim2);
 		break;
 	}
 	}
@@ -588,5 +603,7 @@ void ActCrowd::startTalk()
 	Creature* closest     = *iter;
 	Vector3f dir          = closest->mSRT.t - mPiki->mSRT.t;
 	mPiki->mFaceDirection = atan2f(dir.x, dir.z);
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Chatting), PaniMotionInfo(PIKIANIM_Chatting));
+	PaniMotionInfo anim1(PIKIANIM_Chatting);
+	PaniMotionInfo anim2(PIKIANIM_Chatting);
+	mPiki->startMotion(anim1, anim2);
 }

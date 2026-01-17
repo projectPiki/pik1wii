@@ -805,7 +805,8 @@ void SeSystem::draw3d(Graphics& gfx)
 {
 	char str[PATH_MAX];
 
-	gfx.setColour(Colour(255, 0, 0, 255), true);
+	Colour colour(255, 0, 0, 255);
+	gfx.setColour(colour, true);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 	gfx.setLighting(false, nullptr);
 	gfx.useMatrix(Matrix4f::ident, 0);
@@ -829,15 +830,18 @@ void SeSystem::draw2d(Graphics& gfx)
 {
 	char str[PATH_MAX];
 
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour1(COLOUR_WHITE);
+	gfx.setColour(colour1, true);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 
-	gfx.setColour(Colour(55, 55, 55, 128), true);
+	Colour colour2(55, 55, 55, 128);
+	gfx.setColour(colour2, true);
 
 	RectArea rect(20, 60, 550, mMaxEventCount * 16 + 120);
 	gfx.fillRectangle(rect);
 
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour3(COLOUR_WHITE);
+	gfx.setColour(colour3, true);
 
 	sprintf(str, "-- se events -- %d/%d (%.1f %.1f %.1f): clock %d", mCurrentEventCount, mMaxEventCount, mListenerPosition.x,
 	        mListenerPosition.y, mListenerPosition.z, mClock);

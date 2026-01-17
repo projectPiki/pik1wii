@@ -599,7 +599,8 @@ bool TaiHeadOnCollisionAvoidanceAction::actByEvent(immut TekiEvent& event)
 				teki->outputDirectionVector(thisDir);
 
 				NVector3f newVel;
-				newVel.cross(thisDir, NVector3f(0.0f, 1.0f, 0.0f));
+				NVector3f vec(0.0f, 1.0f, 0.0f);
+				newVel.cross(thisDir, vec);
 				newVel.normalizeCheck();
 				newVel.scale(_08);
 				newVel.add(teki->getDrive());

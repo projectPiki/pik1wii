@@ -704,7 +704,9 @@ void PlayerState::initCourse()
 	}
 	mOlimarShapeObj = naviMgr->mNaviShapeObject[0];
 	mOlimarAnimMgr.init(mOlimarShapeObj->mAnimMgr, &mOlimarShapeObj->mAnimatorB, &mOlimarShapeObj->mAnimatorA, naviMgr->mMotionTable);
-	mOlimarAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Noru), PaniMotionInfo(PIKIANIM_Noru));
+	PaniMotionInfo anim1(PIKIANIM_Noru);
+	PaniMotionInfo anim2(PIKIANIM_Noru);
+	mOlimarAnimMgr.startMotion(anim1, anim2);
 	mDemoFlags.initCourse();
 }
 
@@ -742,7 +744,9 @@ void PlayerState::setNavi(bool doSet)
 		mNaviLightEfx->restart();
 		mNaviLightGlowEfx->restart();
 		mIsNaviPilot = true;
-		mOlimarAnimMgr.startMotion(PaniMotionInfo(PIKIANIM_Noru), PaniMotionInfo(PIKIANIM_Noru));
+		PaniMotionInfo anim1(PIKIANIM_Noru);
+		PaniMotionInfo anim2(PIKIANIM_Noru);
+		mOlimarAnimMgr.startMotion(anim1, anim2);
 	}
 }
 
@@ -901,7 +905,8 @@ void PlayerState::UfoParts::initAnim(PelletShapeObject* shape)
 
 	mAnimator.init(&mPelletShape->mAnimatorA, &mPelletShape->mAnimatorB, mPelletShape->mAnimMgr, pelletMgr->mUfoMotionTable);
 	mMotionSpeed = 0.0f;
-	mAnimator.startMotion(PaniMotionInfo(PelletMotion::Carry));
+	PaniMotionInfo anim(PelletMotion::Carry);
+	mAnimator.startMotion(anim);
 }
 
 /**
@@ -911,7 +916,8 @@ void PlayerState::UfoParts::initAnim(PelletShapeObject* shape)
 void PlayerState::UfoParts::startMotion(int id)
 {
 	if (mPelletShape) {
-		mAnimator.startMotion(PaniMotionInfo(id, this));
+		PaniMotionInfo anim(id, this);
+		mAnimator.startMotion(anim);
 	}
 }
 
@@ -922,7 +928,9 @@ void PlayerState::UfoParts::startMotion(int id)
 void PlayerState::UfoParts::startMotion(int id1, int id2)
 {
 	if (mPelletShape) {
-		mAnimator.startMotion(PaniMotionInfo(id1, this), PaniMotionInfo(id2));
+		PaniMotionInfo anim1(id1, this);
+		PaniMotionInfo anim2(id2);
+		mAnimator.startMotion(anim1, anim2);
 	}
 }
 
@@ -1306,11 +1314,9 @@ void PlayerState::renderParts(Graphics& gfx, Shape* shape)
 			if (AIPerf::kandoOnly) {
 				// This is the extent to which I'm willing to document this bug (size is off-by-one but animation "7" is unused).
 				const char* names[PelletMotion::COUNT - 1] = { "carry", "assign", "after", "piston", "special", "6" };
-				STACK_PAD_VAR(1);
 				ID32 id(parts->mModelID);
 				PRINT("* parts(%s) : motion(%s) : (%.1f|%.1f) frame\n", names[parts->mPartVisType], id.mStringID);
 			}
-			STACK_PAD_VAR(1);
 			parts->mAnimator.updateAnimation(parts->mMotionSpeed, 30.0f);
 			parts->mAnimator.updateContext();
 			immut Matrix4f& temp = shape->getAnimMatrix(parts->mRepairAnimJointIndex);
@@ -1328,7 +1334,10 @@ void PlayerState::renderParts(Graphics& gfx, Shape* shape)
 		mOlimarAnimMgr.updateContext();
 		immut Matrix4f& mtx = shape->getAnimMatrix(11);
 		Matrix4f mtx2;
-		mtx2.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, PI, 0.0f), Vector3f(0.0f, -10.0f, 0.0f));
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, PI, 0.0f);
+		Vector3f trans(0.0f, -10.0f, 0.0f);
+		mtx2.makeSRT(scale, rot, trans);
 		Matrix4f mtx3;
 		mtx.multiplyTo(mtx2, mtx3);
 		mOlimarShapeObj->mShape->updateAnim(gfx, mtx3, nullptr);
@@ -1338,6 +1347,4 @@ void PlayerState::renderParts(Graphics& gfx, Shape* shape)
 		mNaviLightEfx->updatePos(mNaviLightEfxPos);
 		mNaviLightGlowEfx->updatePos(mNaviLightEfxPos);
 	}
-
-	STACK_PAD_TERNARY(mIsNaviPilot, 3);
 }

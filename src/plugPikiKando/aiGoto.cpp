@@ -43,7 +43,9 @@ void ActGoto::init(Creature* target)
 {
 	mTimeoutDuration = (2.0f * gsys->getRand(1.0f)) + 4.0f;
 	mTarget.set(target);
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+	PaniMotionInfo anim1(PIKIANIM_Run);
+	PaniMotionInfo anim2(PIKIANIM_Run);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**

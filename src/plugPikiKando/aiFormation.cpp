@@ -34,12 +34,16 @@ void ActFormation::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 				mIdleTimer          = (15.0f * gsys->getRand(1.0f)) + 15.0f;
 				mHasStartedIdleAnim = false;
 			}
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Wait, this), PaniMotionInfo(PIKIANIM_Wait));
+			PaniMotionInfo anim1(PIKIANIM_Wait, this);
+			PaniMotionInfo anim2(PIKIANIM_Wait);
+			mPiki->startMotion(anim1, anim2);
 			break;
 		}
 
 		if (mIsTripping == FALSE) {
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Korobu, this), PaniMotionInfo(PIKIANIM_Korobu));
+			PaniMotionInfo anim1(PIKIANIM_Korobu, this);
+			PaniMotionInfo anim2(PIKIANIM_Korobu);
+			mPiki->startMotion(anim1, anim2);
 			Vector3f dir(sinf(mPiki->mFaceDirection), 0.0f, cosf(mPiki->mFaceDirection));
 			f32 speed              = mPiki->mVelocity.length();
 			mPiki->mVelocity       = speed * dir;
@@ -51,14 +55,18 @@ void ActFormation::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 
 		if (mIsTripping == TRUE) {
 			mIsOnFloorTripped = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+			PaniMotionInfo anim1(PIKIANIM_Run);
+			PaniMotionInfo anim2(PIKIANIM_Run);
+			mPiki->startMotion(anim1, anim2);
 			break;
 		}
 
 		if (mHasStartedRunAnim) {
 			mHasStartedRunAnim = false;
 			if (mDistanceToTarget > 5.0f) {
-				mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+				PaniMotionInfo anim1(PIKIANIM_Run);
+				PaniMotionInfo anim2(PIKIANIM_Run);
+				mPiki->startMotion(anim1, anim2);
 			}
 		}
 
@@ -120,7 +128,9 @@ void ActFormation::init(Creature* target)
 	mFormMgr                  = navi->mFormMgr;
 	mUseLastFormationPosition = true;
 	mIdleTimer                = (2.0f * gsys->getRand(1.0f)) + 4.0f;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+	PaniMotionInfo anim1(PIKIANIM_Run);
+	PaniMotionInfo anim2(PIKIANIM_Run);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->unsetPastel();
 	mIsIdling           = false;
 	mHasStartedIdleAnim = false;
@@ -187,7 +197,9 @@ int ActFormation::exec()
 				if (randOffsetIdx >= 1) {
 					randOffsetIdx = 0;
 				}
-				mPiki->startMotion(PaniMotionInfo(baseIdx[randOffsetIdx], this), PaniMotionInfo(baseIdx[randOffsetIdx]));
+				PaniMotionInfo anim1(baseIdx[randOffsetIdx], this);
+				PaniMotionInfo anim2(baseIdx[randOffsetIdx]);
+				mPiki->startMotion(anim1, anim2);
 				mHasStartedIdleAnim = true;
 			}
 		}
@@ -206,7 +218,9 @@ int ActFormation::exec()
 	if (mIsIdling) {
 		mIsIdling          = false;
 		mHasStartedRunAnim = false;
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Run), PaniMotionInfo(PIKIANIM_Run));
+		PaniMotionInfo anim1(PIKIANIM_Run);
+		PaniMotionInfo anim2(PIKIANIM_Run);
+		mPiki->startMotion(anim1, anim2);
 	}
 
 	Vector3f zeroVector(0.0f, 0.0f, 0.0f);

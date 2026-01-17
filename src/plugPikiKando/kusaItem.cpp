@@ -120,7 +120,10 @@ void KusaItem::refresh(Graphics& gfx)
 {
 	Matrix4f camMat;
 	Matrix4f mat;
-	mat.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, mHealth - mMaxHealth, 0.0f));
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	Vector3f rot(0.0f, 0.0f, 0.0f);
+	Vector3f trans(0.0f, mHealth - mMaxHealth, 0.0f);
+	mat.makeSRT(scale, rot, trans);
 	mWorldMtx.makeSRT(mSRT.s, mSRT.r, mSRT.t);
 	mWorldMtx.multiply(mat);
 

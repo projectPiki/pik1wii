@@ -312,7 +312,8 @@ int Piki::findRoute(int sourceWaypointIndex, int destWaypointIndex, bool isRetry
  */
 bool Piki::initRouteTraceDynamic(Creature* target)
 {
-	if (!initRouteTrace(target->getCentre(), true)) {
+	Vector3f centre = target->getCentre();
+	if (!initRouteTrace(centre, true)) {
 		mRouteTargetCreature = nullptr;
 		return false;
 	}
@@ -325,8 +326,6 @@ bool Piki::initRouteTraceDynamic(Creature* target)
  */
 int Piki::moveRouteTraceDynamic(f32 speedRatio)
 {
-	STACK_PAD_VAR(1); // some other temp, whatever.
-
 	int traceRes = moveRouteTrace(speedRatio);
 	if (traceRes != 2) {
 		return traceRes;
@@ -488,7 +487,8 @@ int Piki::moveRouteTrace(f32 speedRatio)
 	Vector3f crDir = cr1 - cr0;
 	f32 crDist     = crDir.normalise();
 
-	f32 ctrlRatio = crDir.DP(mSRT.t - cr0) / crDist;
+	Vector3f vec(mSRT.t - cr0);
+	f32 ctrlRatio = crDir.DP(vec) / crDist;
 	if (ctrlRatio < 0.0f) {
 		ctrlRatio = 0.0f;
 	}
@@ -1772,7 +1772,8 @@ void Piki::stickToCallback(Creature*)
  */
 void Piki::bounceCallback()
 {
-	MsgBounce msg(Vector3f(0.0f, 1.0f, 0.0f));
+	Vector3f vec(0.0f, 1.0f, 0.0f);
+	MsgBounce msg(vec);
 	sendMsg(&msg);
 
 	int attr = ATTR_NULL;
@@ -1800,7 +1801,9 @@ void Piki::bounceCallback()
 	if (isDrownSurface && isAlive() && state != PIKISTATE_Dead && state != PIKISTATE_Dying && state != PIKISTATE_Pressed
 	    && state != PIKISTATE_WaterHanged) {
 		seSystem->playSoundDirect(5, SEW_PIKI_WATERDROP, mSRT.t);
-		startMotion(PaniMotionInfo(PIKIANIM_TYakusui, this), PaniMotionInfo(PIKIANIM_TYakusui));
+		PaniMotionInfo anim1(PIKIANIM_TYakusui, this);
+		PaniMotionInfo anim2(PIKIANIM_TYakusui);
+		startMotion(anim1, anim2);
 		mFSM->transit(this, PIKISTATE_Drown);
 		EffectParm rippleParm(&mSRT.t);
 		EffectParm parm(mSRT.t);
@@ -1912,8 +1915,6 @@ void Piki::startMotion(immut PaniMotionInfo& motion1, immut PaniMotionInfo& moti
 		return;
 	}
 	}
-
-	STACK_PAD_VAR(2); // idk what this is from
 }
 
 /**
@@ -1922,7 +1923,8 @@ void Piki::startMotion(immut PaniMotionInfo& motion1, immut PaniMotionInfo& moti
 void Piki::enableMotionBlend()
 {
 	mBlendMotionIdx = mPikiAnimMgr.getLowerAnimator().getCurrentMotionIndex();
-	mPikiAnimMgr.getLowerAnimator().startMotion(PaniMotionInfo(PIKIANIM_Asibumi));
+	PaniMotionInfo anim(PIKIANIM_Asibumi);
+	mPikiAnimMgr.getLowerAnimator().startMotion(anim);
 }
 
 /**
@@ -1973,7 +1975,8 @@ void Piki::checkBridgeWall(Creature* object, immut Vector3f& direction)
 				WorkObject* workObj = static_cast<WorkObject*>(object);
 				if (workObj->isBridge()) {
 					Bridge* bridge = static_cast<Bridge*>(workObj);
-					f32 zComp      = direction.DP(bridge->getBridgeZVec());
+					Vector3f zVec  = bridge->getBridgeZVec();
+					f32 zComp      = direction.DP(zVec);
 					if (bridge->mDoUseJointSegments && zComp < -0.8f && !bridge->isFinished()) {
 						PRINT("** BRIDGE AI START\n");
 						seSystem->playPikiSound(SEF_PIKI_FIND, mSRT.t);
@@ -2510,7 +2513,9 @@ void Piki::updateWalkAnimation()
 	    && state != PIKISTATE_GrowUp && state != PIKISTATE_KinokoChange) {
 		if (hasBomb() && state == PIKISTATE_Normal && mMode == PikiMode::FormationMode
 		    && mPikiAnimMgr.getUpperAnimator().getCurrentMotionIndex() != PIKIANIM_Pick) {
-			startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+			PaniMotionInfo anim1(PIKIANIM_Pick, this);
+			PaniMotionInfo anim2(PIKIANIM_Pick);
+			startMotion(anim1, anim2);
 			mPikiAnimMgr.getUpperAnimator().mAnimationCounter = 18.0f;
 			mPikiAnimMgr.getLowerAnimator().mAnimationCounter = 18.0f;
 			enableMotionBlend();
@@ -2590,18 +2595,24 @@ void Piki::updateWalkAnimation()
 			if (lowerMotionID == PIKIANIM_Wait || lowerMotionID == PIKIANIM_Asibumi || newMotionID == PIKIANIM_Wait
 			    || newMotionID == PIKIANIM_Asibumi) {
 				if (!doMotionBlend()) {
-					startMotion(PaniMotionInfo(newMotionID), PaniMotionInfo(newMotionID));
+					PaniMotionInfo anim1(newMotionID);
+					PaniMotionInfo anim2(newMotionID);
+					startMotion(anim1, anim2);
 				} else {
-					mPikiAnimMgr.getLowerAnimator().startMotion(PaniMotionInfo(newMotionID));
+					PaniMotionInfo anim(newMotionID);
+					mPikiAnimMgr.getLowerAnimator().startMotion(anim);
 				}
 			} else if (!doMotionBlend() && upperMotionID != PIKIANIM_Wait && upperMotionID != PIKIANIM_Asibumi) {
 				if (newMotionID == PIKIANIM_Wait || newMotionID == PIKIANIM_Asibumi) {
 					ERROR("SWAP WAIT");
 				}
-				swapMotion(PaniMotionInfo(newMotionID), PaniMotionInfo(newMotionID));
+				PaniMotionInfo anim1(newMotionID);
+				PaniMotionInfo anim2(newMotionID);
+				swapMotion(anim1, anim2);
 			} else {
 				f32 lowerCounter = mPikiAnimMgr.getLowerAnimator().mAnimationCounter;
-				mPikiAnimMgr.getLowerAnimator().startMotion(PaniMotionInfo(newMotionID));
+				PaniMotionInfo anim(newMotionID);
+				mPikiAnimMgr.getLowerAnimator().startMotion(anim);
 				mPikiAnimMgr.getLowerAnimator().mAnimationCounter = lowerCounter;
 			}
 		}
@@ -2615,10 +2626,6 @@ void Piki::updateWalkAnimation()
  */
 void Piki::realAI()
 {
-
-	// Brocoli: This is abhorrently stupid, why this works should be investigated.
-	STACK_PAD_INLINE(4);
-
 	updateLookCreature();
 	if (isLooking() && isStickTo()) {
 		PRINT("********** STICK AND LOOKING !!!!!!!!!!!!!!!\n");
@@ -2705,7 +2712,9 @@ void Piki::realAI()
 		    && state != PIKISTATE_Drown && state != PIKISTATE_Flying && mColor != Blue && isAlive()) {
 			if (mInWaterTimer >= int(gsys->getRand(1.0f) * pikiMgr->mPikiParms->mPikiParms.mRandStartDrownFrames())
 			                         + pikiMgr->mPikiParms->mPikiParms.mMinStartDrownFrames()) {
-				startMotion(PaniMotionInfo(PIKIANIM_TYakusui, this), PaniMotionInfo(PIKIANIM_TYakusui));
+				PaniMotionInfo anim1(PIKIANIM_TYakusui, this);
+				PaniMotionInfo anim2(PIKIANIM_TYakusui);
+				startMotion(anim1, anim2);
 				mFSM->transit(this, PIKISTATE_Drown);
 			}
 		}

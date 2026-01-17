@@ -41,7 +41,8 @@ Plant::Plant()
  */
 void Plant::startMotion(int motionID)
 {
-	mPlantAnimator.startMotion(PaniMotionInfo(motionID, this));
+	PaniMotionInfo anim(motionID, this);
+	mPlantAnimator.startMotion(anim);
 }
 
 /**
@@ -70,7 +71,8 @@ void Plant::startAI(int)
 	mProps    = plantMgr->mPlantProps;
 	startMotion(PlantMotion::Touch);
 	mMotionSpeed = 0.0f;
-	mPlantAnimator.startMotion(PaniMotionInfo(PlantMotion::Touch));
+	PaniMotionInfo anim(PlantMotion::Touch);
+	mPlantAnimator.startMotion(anim);
 	mSRT.t.y = mapMgr->getMinY(mSRT.t.x, mSRT.t.z, true);
 	plantMgr->mAI->start(this, PlantAI::STATE_Wait);
 	if (mPlantType == PLANT_Mizukusa) {
@@ -117,8 +119,9 @@ void Plant::refresh(Graphics& gfx)
 
 		f32 rad = 2.0f * getBoundingSphereRadius();
 		if (rad > 0.0f) {
-			BoundBox box(Vector3f(mSRT.t.x - rad, mSRT.t.y, mSRT.t.z - rad),
-			             Vector3f(mSRT.t.x + rad, mSRT.t.y + 2.0f * rad, mSRT.t.z + rad));
+			Vector3f vec1(mSRT.t.x - rad, mSRT.t.y, mSRT.t.z - rad);
+			Vector3f vec2(mSRT.t.x + rad, mSRT.t.y + 2.0f * rad, mSRT.t.z + rad);
+			BoundBox box(vec1, vec2);
 
 			if (!gfx.mCamera->isBoundVisible(box, 0x8000 | 0x20 | 0x10 | 0x1 | 0x2 | 0x4 | 0x8) && !_394) {
 				C_SAI(this)->start(this, PlantAI::STATE_Wait);

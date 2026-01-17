@@ -124,7 +124,9 @@ void ActRescue::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 void ActRescue::initApproach()
 {
 	mState = STATE_Approach;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -149,7 +151,9 @@ int ActRescue::exeApproach()
 void ActRescue::initRescue()
 {
 	mState = STATE_Rescue;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_ThrowWait, this), PaniMotionInfo(PIKIANIM_ThrowWait));
+	PaniMotionInfo anim1(PIKIANIM_ThrowWait, this);
+	PaniMotionInfo anim2(PIKIANIM_ThrowWait);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 	mGotAnimationAction = false;
 }
@@ -231,7 +235,9 @@ int ActRescue::exeThrow()
 		f32 angle    = angDist(diff, mPiki->mFaceDirection);
 		if (absF(angle) < 0.25132743f) {
 			mThrowReady = false;
-			mPiki->startMotion(PaniMotionInfo(PIKIANIM_Throw, this), PaniMotionInfo(PIKIANIM_Throw));
+			PaniMotionInfo anim1(PIKIANIM_Throw, this);
+			PaniMotionInfo anim2(PIKIANIM_Throw);
+			mPiki->startMotion(anim1, anim2);
 			PRINT("THROW MOTION START\n");
 		}
 

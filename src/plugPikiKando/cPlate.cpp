@@ -326,7 +326,10 @@ void CPlate::refreshSlot()
 	Vector3f centerOffset(mPlateCenter);
 	centerOffset.multiply(-1.0f);
 
-	transformMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, mDirectionAngle, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	Vector3f rot(0.0f, mDirectionAngle, 0.0f);
+	Vector3f trans(0.0f, 0.0f, 0.0f);
+	transformMtx.makeSRT(scale, rot, trans);
 
 	Vector3f devOffsetTest(0.0f, 0.0f, 0.0f);
 	devOffsetTest.multMatrixTo(transformMtx, mDevOffsetTest);
@@ -369,8 +372,6 @@ void CPlate::update()
 	if (mHappaCounts[1]) {
 		val = 0.0f;
 	}
-
-	STACK_PAD_VAR(12);
 }
 
 /**
@@ -396,7 +397,8 @@ void CPlate::render(Graphics& gfx)
 	f32 s = 0.25f;
 	scale.set(s, s, s);
 
-	mtx1.makeSRT(scale, Vector3f(0.0f, 0.0f, 0.0f), mPlateOffset);
+	Vector3f rot1(0.0f, 0.0f, 0.0f);
+	mtx1.makeSRT(scale, rot1, mPlateOffset);
 
 	gfx.calcViewMatrix(mtx1, mtx2);
 	gfx.useMatrix(mtx2, 0);
@@ -406,8 +408,9 @@ void CPlate::render(Graphics& gfx)
 
 	GlobalShape::markerShape->mMaterialList->getColour() = colour;
 	GlobalShape::markerShape->drawshape(gfx, *gfx.mCamera, nullptr);
-
-	mtx1.makeSRT(scale, Vector3f(0.0f, 0.0f, 0.0f), mPlateCenter);
+	
+	Vector3f rot2(0.0f, 0.0f, 0.0f);
+	mtx1.makeSRT(scale, rot2, mPlateCenter);
 
 	gfx.calcViewMatrix(mtx1, mtx2);
 	gfx.useMatrix(mtx2, 0);
@@ -423,7 +426,8 @@ void CPlate::render(Graphics& gfx)
 		s = 0.08f;
 		scale.set(s, s, s);
 
-		mtx1.makeSRT(scale, Vector3f(0.0f, 4.0f, 0.0f), globalPos);
+		Vector3f rot(0.0f, 4.0f, 0.0f);
+		mtx1.makeSRT(scale, rot, globalPos);
 
 		gfx.calcViewMatrix(mtx1, mtx2);
 		gfx.useMatrix(mtx2, 0);

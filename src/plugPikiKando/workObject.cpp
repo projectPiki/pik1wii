@@ -527,7 +527,8 @@ void HinderRock::doLoad(RandomAccessStream& stream)
 	}
 
 	;
-	mWorldMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), mSRT.r, mSRT.t);
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	mWorldMtx.makeSRT(scale, mSRT.r, mSRT.t);
 
 	mBuildShape->mTransformMtx = mWorldMtx;
 }
@@ -794,8 +795,8 @@ void HinderRock::update()
 			mEfxA = effectMgr->create(EffectMgr::EFF_HinderRock_MoveFront, mMoveFrontEfxPos, nullptr, nullptr);
 			if (mEfxA) {
 				mEfxA->setEmitPosPtr(&mMoveFrontEfxPos);
-				mEfxA->setEmitDir(getXVector());
-				STACK_PAD_STRUCT(6);
+				Vector3f xVec = getXVector();
+				mEfxA->setEmitDir(xVec);
 			}
 		} else {
 			mEfxA->startGen();
@@ -856,7 +857,8 @@ void HinderRock::update()
 		mVelocity.normalise();
 		mVelocity.multiply(mPushSpeed * 0.5f);
 		moveNew(gsys->getFrameTime());
-		mWorldMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), mSRT.r, mSRT.t);
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		mWorldMtx.makeSRT(scale, mSRT.r, mSRT.t);
 		mBuildShape->mTransformMtx = mWorldMtx;
 		mPushMoveTimer += gsys->getFrameTime();
 		if (!mIsSoundPlaying) {
@@ -888,9 +890,6 @@ void HinderRock::update()
 		}
 	}
 	mTotalPushStrength = 0;
-
-	STACK_PAD_TERNARY(mState, 5);
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -906,7 +905,8 @@ void HinderRock::startAI(int)
 	f32 y          = atan2f(dist.x, dist.z);
 	mFaceDirection = y;
 	mSRT.r.set(0.0f, y, 0.0f);
-	mWorldMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), mSRT.r, mSRT.t);
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	mWorldMtx.makeSRT(scale, mSRT.r, mSRT.t);
 	mBuildShape->mTransformMtx = mWorldMtx;
 	mapMgr->mCollShapeList->add(mBuildShape);
 	mTotalPushStrength = 0;
@@ -1079,7 +1079,8 @@ void Bridge::startAI(int)
 		mCollInfo->initInfo(mBridgeShape, nullptr, nullptr);
 	}
 	mBridgeShape->makeInstance(mAnimatedMaterials, 0);
-	mWorldMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), mSRT.r, mSRT.t);
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	mWorldMtx.makeSRT(scale, mSRT.r, mSRT.t);
 	mBuildShape->mTransformMtx = mWorldMtx;
 	mapMgr->mCollShapeList->add(mBuildShape);
 
@@ -1353,8 +1354,10 @@ void Bridge::getBridgePos(immut Vector3f& origin, f32& xProjection, f32& zProjec
 	Vector3f diff = origin - getStartPos();
 	diff.y        = 0.0f;
 
-	xProjection = diff.dot(getBridgeXVec());
-	zProjection = diff.dot(getBridgeZVec());
+	Vector3f xVec = getBridgeXVec();
+	xProjection = diff.dot(xVec);
+	Vector3f zVec = getBridgeZVec();
+	zProjection = diff.dot(zVec);
 }
 
 /**
@@ -1451,11 +1454,13 @@ void Bridge::startStageFinished(int stageIndex, bool isFinished)
 		zen::particleGenerator* efx2 = effectMgr->create(EffectMgr::EFF_Bridge_FinishStage, pos2, nullptr, nullptr);
 
 		if (efx1) {
-			efx1->setEmitDir(getBridgeXVec());
+			Vector3f xVec = getBridgeXVec();
+			efx1->setEmitDir(xVec);
 		}
 
 		if (efx2) {
-			efx2->setEmitDir(getBridgeXVec());
+			Vector3f xVec = getBridgeXVec();
+			efx2->setEmitDir(xVec);
 		}
 
 		_3CC = 60;

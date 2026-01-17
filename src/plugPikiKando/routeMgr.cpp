@@ -544,7 +544,8 @@ Vector3f RouteMgr::getSafePosition(u32, Vector3f& pos)
 	Vector3f edge = wp2->mPosition - wp->mPosition;
 	Vector3f dir  = edge;
 	f32 edgeLen   = dir.normalise();
-	f32 t         = dir.DP(pos - wp->mPosition) / edgeLen;
+	Vector3f possub(pos - wp->mPosition);
+	f32 t         = dir.DP(possub) / edgeLen;
 
 	// Interpolate radius at projection point
 	f32 radiusAtT = (1.0f - t) * wp->mRadius + t * wp2->mRadius;
@@ -611,7 +612,8 @@ void RouteMgr::findNearestEdge(WayPoint** outNearestStart, WayPoint** outNearest
 					f32 edgeLength      = direction.normalise();
 
 					// Project the target position onto the edge
-					f32 projection = direction.DP(pos - startWp->mPosition) / edgeLength;
+					Vector3f possub(pos - startWp->mPosition);
+					f32 projection = direction.DP(possub) / edgeLength;
 
 					f32 distanceToEdge;
 					if (projection < 0.0f || projection > 1.0f) {
@@ -726,7 +728,8 @@ void RouteMgr::findNearestEdgeAvoidOff(WayPoint** outNearestStart, WayPoint** ou
 						Vector3f dir     = edgeVec;
 						f32 edgeLength   = dir.normalise();
 
-						f32 projection = dir.DP(pos - startWP->mPosition) / edgeLength;
+						Vector3f possub(pos - startWP->mPosition);
+						f32 projection = dir.DP(possub) / edgeLength;
 						f32 distance;
 
 						if (projection < 0.0f || projection > 1.0f) {
@@ -1727,7 +1730,8 @@ int PathFinder::selectSecondBestWayOnyon(immut Vector3f& curPos, int& secondBest
  */
 void RouteMgr::refresh(Graphics& gfx)
 {
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	gfx.setLighting(false, nullptr);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 	for (int i = 0; i < getNumWayPoints('test'); i++) {
@@ -1749,14 +1753,17 @@ static void drawBattenPoleSpec(Graphics& gfx, immut Vector3f& pos, f32 height, i
 	Vector3f top(bottom);
 	top.y += height;
 
-	gfx.setColour(Colour(255, 0, 0, 255), true);
+	Colour colour1(255, 0, 0, 255);
+	gfx.setColour(colour1, true);
 	drawBatten(gfx, bottom, 8.0f);
 
-	gfx.setColour(Colour(255, 255, 0, 255), true);
+	Colour colour2(255, 255, 0, 255);
+	gfx.setColour(colour2, true);
 	drawBatten(gfx, top, 8.0f);
 
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
-	gfx.setColour(Colour(0, 255, 0, 255), true);
+	Colour colour3(0, 255, 0, 255);
+	gfx.setColour(colour3, true);
 	gfx.drawLine(bottom, top);
 
 	if (labelText) {
@@ -1796,7 +1803,8 @@ void WayPoint::refresh(Graphics& gfx)
 		}
 
 		gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
-		gfx.setColour(Colour(155, 255, 255, 255), true);
+		Colour colour1(155, 255, 255, 255);
+		gfx.setColour(colour1, true);
 		WayPoint* wp     = routeMgr->getWayPoint('test', mLinkIndices[i]);
 		Vector3f linkPos = wp->mPosition;
 		linkPos.y += 30.0f;
@@ -1806,7 +1814,8 @@ void WayPoint::refresh(Graphics& gfx)
 		f32 dist       = dir.normalise();
 		Vector3f shift = pos + dir * (dist * 0.2f);
 		shift.y += 7.0f;
-		gfx.setColour(Colour(100, 230, 140, 255), true);
+		Colour colour2(100, 230, 140, 255);
+		gfx.setColour(colour2, true);
 		gfx.useMatrix(Matrix4f::ident, 0);
 
 		shift.multMatrix(gfx.mCamera->mLookAtMtx);

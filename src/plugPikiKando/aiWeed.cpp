@@ -78,7 +78,9 @@ void ActWeed::initApproach()
 {
 	mState     = STATE_Approach;
 	mCurrGrass = mGrassGen->getRandomGrass();
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -153,7 +155,9 @@ int ActWeed::exeAdjust()
 void ActWeed::initNuking()
 {
 	mState = STATE_Attack;
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Nuku, this), PaniMotionInfo(PIKIANIM_Nuku));
+	PaniMotionInfo anim1(PIKIANIM_Nuku, this);
+	PaniMotionInfo anim2(PIKIANIM_Nuku);
+	mPiki->startMotion(anim1, anim2);
 	_28                = 4;
 	mAnimationFinished = false;
 }
@@ -199,7 +203,8 @@ void ActWeed::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 			effectMgr->create(EffectMgr::EFF_Weed_Rocks, mCurrGrass->mPosition, nullptr, nullptr);
 			zen::particleGenerator* ptclGen = effectMgr->create(EffectMgr::EFF_Weed_Pull, mCurrGrass->mPosition, nullptr, nullptr);
 			if (ptclGen) {
-				ptclGen->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+				Vector3f vec(0.0f, 1.0f, 0.0f);
+				ptclGen->setOrientedNormalVector(vec);
 			}
 			mGrassGen->killGrass();
 

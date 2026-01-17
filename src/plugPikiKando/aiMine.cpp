@@ -30,10 +30,11 @@ ActMine::ActMine(Piki* piki)
 void ActMine::init(Creature* target)
 {
 	mPiki->mActionState = 0;
+#if defined (DEVELOP)
 	if (target->mObjType != OBJTYPE_BombGen) {
 		ERROR("THIS IS NOT BOMB GEN (%s)!\n", ObjType::getName(target->mObjType));
 	}
-
+#endif
 	mBombGen = static_cast<BombGenItem*>(target);
 	initWatch();
 	mState = STATE_Watch;
@@ -44,7 +45,9 @@ void ActMine::init(Creature* target)
  */
 void ActMine::initWatch()
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Sagasu2, this), PaniMotionInfo(PIKIANIM_Sagasu2));
+	PaniMotionInfo anim1(PIKIANIM_Sagasu2, this);
+	PaniMotionInfo anim2(PIKIANIM_Sagasu2);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 }
 
@@ -81,7 +84,9 @@ int ActMine::exeGo()
  */
 void ActMine::initMine()
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Pick, this), PaniMotionInfo(PIKIANIM_Pick));
+	PaniMotionInfo anim1(PIKIANIM_Pick, this);
+	PaniMotionInfo anim2(PIKIANIM_Pick);
+	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 	mIsMineActionReady = false;
 }
@@ -92,7 +97,9 @@ void ActMine::initMine()
  */
 void ActMine::initGo()
 {
-	mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk, this), PaniMotionInfo(PIKIANIM_Walk));
+	PaniMotionInfo anim1(PIKIANIM_Walk, this);
+	PaniMotionInfo anim2(PIKIANIM_Walk);
+	mPiki->startMotion(anim1, anim2);
 }
 
 /**
@@ -115,7 +122,8 @@ int ActMine::exeMine()
 		bomb->init(mPiki->mSRT.t);
 		bomb->startAI(0);
 		bomb->dump();
-		if (!bomb->stimulate(InteractGrab(mPiki))) {
+		InteractGrab grab(mPiki);
+		if (!bomb->stimulate(grab)) {
 			PRINT("piki%x BOMB PICK FAILED\n", mPiki);
 			return ACTOUT_Fail;
 		}

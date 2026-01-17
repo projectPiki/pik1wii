@@ -602,7 +602,8 @@ TaiSwallowStrategy::TaiSwallowStrategy(TekiParameters* params)
  */
 void TaiSwallowStrategy::start(Teki& teki)
 {
-	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Chappy_SnoreBubble, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+	Vector3f pos(0.0f, 0.0f, 0.0f);
+	teki.mParticleGenerators[0] = effectMgr->create(EffectMgr::EFF_Chappy_SnoreBubble, pos, nullptr, nullptr);
 	TaiStrategy::start(teki);
 	teki.stopParticleGenerator(0);
 }
@@ -630,7 +631,6 @@ void TaiSwallowStrategy::draw(Teki& teki, Graphics& gfx)
 		NVector3f ptclPos;
 		teki.outputSpawnPosition(ptclPos);
 		teki.setParticleGeneratorPosition(0, ptclPos);
-		STACK_PAD_VAR(1);
 	}
 }
 
@@ -663,7 +663,6 @@ bool TaiSwallowStrategy::interact(Teki& teki, immut TekiInteractionKey& key)
 	}
 
 	return TekiStrategy::interact(teki, key);
-	STACK_PAD_VAR(2);
 }
 
 /**
@@ -731,9 +730,6 @@ bool TaiSwallowTurningAction::act(Teki& teki)
 	f32 speed         = mTurnSpeed * factor;
 	teki.mTargetAngle = teki.calcTargetDirection(target->getPosition());
 	return teki.turnToward(teki.mTargetAngle, speed);
-
-	// hate it hate it hate it hate it hate it
-	STACK_PAD_TERNARY(speed, 5);
 }
 
 /**
@@ -836,7 +832,8 @@ void TaiSwallowSnoreAction::finish(Teki& teki)
  */
 bool TaiSwallowNoticeAction::act(Teki& teki)
 {
-	Creature* naviPiki = teki.getClosestNaviPiki(TekiDistanceCondition(&teki, teki.getParameterF(SWALLOWPF_NoticeDistance)), nullptr);
+	TekiDistanceCondition cond(&teki, teki.getParameterF(SWALLOWPF_NoticeDistance));
+	Creature* naviPiki = teki.getClosestNaviPiki(cond, nullptr);
 	if (!naviPiki) {
 		return false;
 	}

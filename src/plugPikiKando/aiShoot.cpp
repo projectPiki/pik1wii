@@ -54,8 +54,6 @@ void ActShoot::init(Creature* target)
 		mTarget.set(newTarget);
 		AndAction::init(newTarget);
 	}
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -172,7 +170,9 @@ void ActShootCreature::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 	{
 		mState      = STATE_Chasing;
 		mChaseTimer = 1.8f;
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Walk), PaniMotionInfo(PIKIANIM_Walk));
+		PaniMotionInfo anim1(PIKIANIM_Walk);
+		PaniMotionInfo anim2(PIKIANIM_Walk);
+		mPiki->startMotion(anim1, anim2);
 		break;
 	}
 	}
@@ -203,7 +203,9 @@ int ActShootCreature::exec()
 {
 	if (mState == STATE_Start) {
 		mState = STATE_ReadyToShoot;
-		mPiki->startMotion(PaniMotionInfo(PIKIANIM_Attack, this), PaniMotionInfo(PIKIANIM_Attack));
+		PaniMotionInfo anim1(PIKIANIM_Attack, this);
+		PaniMotionInfo anim2(PIKIANIM_Attack);
+		mPiki->startMotion(anim1, anim2);
 	}
 
 	if (mState == STATE_Chasing) {

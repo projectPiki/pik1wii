@@ -243,7 +243,9 @@ void Creature::moveNew(f32 deltaTime)
 
 			Vector3f heightVector(0.0f, 0.5f * cylinderHeight, 0.0f);
 			Matrix4f rotationMtx;
-			rotationMtx.makeVQS(Vector3f(0.0f, 0.0f, 0.0f), pellet->mRotationQuat, Vector3f(1.0f, 1.0f, 1.0f));
+			Vector3f v(0.0f, 0.0f, 0.0f);
+			Vector3f s(1.0f, 1.0f, 1.0f);
+			rotationMtx.makeVQS(v, pellet->mRotationQuat, s);
 			heightVector.multMatrix(rotationMtx);
 
 			Vector3f tmpHeightVec = heightVector;
@@ -312,10 +314,6 @@ void Creature::moveNew(f32 deltaTime)
 	}
 
 	mPreviousTriangle = mGroundTriangle;
-
-	STACK_PAD_VAR(2);
-	STACK_PAD_INLINE(1);
-	STACK_PAD_TERNARY(mPreviousTriangle, 3);
 }
 
 /**
@@ -383,7 +381,9 @@ void traceMove2(Creature* target, MoveTrace& trace, f32 p3)
 	}
 
 	if (iterationCount > 50) {
+#if defined (DEVELOP)
 		PRINT("Too many iterations [cr %08x : rad = %f : spd = %f]!!\n", target, trace.mRadius, trace.mVelocity.length() * p3);
+#endif
 	}
 
 	mapMgr->mCurrTraceTick++;
@@ -394,8 +394,10 @@ void traceMove2(Creature* target, MoveTrace& trace, f32 p3)
 		BoundBox box;
 		box.expandBound(trace.mPosition);
 
-		box.mMin.sub(Vector3f(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius));
-		box.mMax.add(Vector3f(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius));
+		Vector3f rad1(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius);
+		box.mMin.sub(rad1);
+		Vector3f rad2(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius);
+		box.mMax.add(rad2);
 		trace.mObject = target;
 
 		CollGroup* prevColl = nullptr;
