@@ -3274,10 +3274,10 @@ egg/core/eggDecomp.cpp:
 	.text       start:0x8027DF08 end:0x8027E23C
 
 egg/util/eggSaveBanner.cpp:
-	.text       start:0x8027E23C end:0x8027E670
+	.text       start:0x8027E23C end:0x8027E644
 	.data       start:0x8034FE60 end:0x8034FE70
 	.sdata      start:0x8049DF18 end:0x8049DF20
-	.sbss       start:0x8049F000 end:0x8049F010
+	.sbss       start:0x8049F000 end:0x8049F004
 
 nw4r/ut/ut_list.cpp:
 	.text       start:0x8027E670 end:0x8027E784
@@ -3294,10 +3294,12 @@ nw4r/ut/ut_CharStrmReader.cpp:
 nw4r/ut/ut_TagProcessorBase.cpp:
 	.text       start:0x8027EA30 end:0x8027F100
 	.data       start:0x8034FE70 end:0x8034FE98
+	.sdata2     start:0x804A3A20 end:0x804A3A28
 
 nw4r/ut/ut_LockedCache.cpp:
 	.text       start:0x8027F100 end:0x8027F2AC
 	.ctors      start:0x802F62F8 end:0x802F62FC
+	.bss        start:0x804728A0 end:0x804728C0
 
 nw4r/ut/ut_Font.cpp:
 	.text       start:0x8027F2AC end:0x8027F354
@@ -3306,7 +3308,7 @@ nw4r/ut/ut_Font.cpp:
 nw4r/ut/ut_RomFont.cpp:
 	.text       start:0x8027F354 end:0x8027F9B4
 	.data       start:0x8034FEC8 end:0x8034FF90
-	.sdata      start:0x8049DF20 end:0x8049DF28
+	.sdata      start:0x8049DF20 end:0x8049DF22
 
 nw4r/ut/ut_ResFontBase.cpp:
 	.text       start:0x8027F9B4 end:0x802800B4
@@ -3314,16 +3316,21 @@ nw4r/ut/ut_ResFontBase.cpp:
 
 nw4r/ut/ut_ResFont.cpp:
 	.text       start:0x802800B4 end:0x802803B8
-	.data       start:0x8034FFF8 end:0x803500E0
+	.data       start:0x8034FFF8 end:0x80350054
 
 nw4r/ut/ut_CharWriter.cpp:
 	.text       start:0x802803B8 end:0x80281AE0
+	.bss        start:0x804728C0 end:0x804728E0
+	.sbss       start:0x8049F008 end:0x8049F010
+	.sdata2     start:0x804A3A28 end:0x804A3A48
 
 nw4r/ut/ut_TextWriterBase.cpp:
 	.text       start:0x80281AE0 end:0x80285F58
 	.ctors      start:0x802F62FC end:0x802F6300
+	.bss        start:0x804728E0 end:0x804728F8
 	.sdata      start:0x8049DF28 end:0x8049DF30
 	.sbss       start:0x8049F010 end:0x8049F028
+	.sdata2     start:0x804A3A48 end:0x804A3A60
 
 nw4r/math/math_arithmetic.cpp:
 	.text       start:0x80285F58 end:0x80285F7C

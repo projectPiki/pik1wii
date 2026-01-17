@@ -64,9 +64,20 @@ static inline f32 atan2f(f32 x, f32 x2)
 }
 
 f64 ceil(f64);
+
+static inline f32 ceilf(f32 x) {
+    return ceil(x);
+}
+
 f64 floor(f64);
+
+static inline f32 floorf(f32 x) {
+    return floor(x);
+}
+
 f64 frexp(f64, int*);
 f64 ldexp(f64, int);
+f64 modf(f64, f64*);
 f64 sqrt(f64);
 f64 pow(f64, f64);
 f64 log(f64);
@@ -177,6 +188,17 @@ inline f32 fmod(f32 x, f32 m)
 {
 	return std::fmodf(x, m);
 }
+
+inline f32 modff(f32 x, f32* iptr) {
+    f32 frac;
+    f64 intg;
+
+    frac = modf(x, &intg);
+    *iptr = intg;
+
+    return frac;
+}
+
 #endif
 
 #endif

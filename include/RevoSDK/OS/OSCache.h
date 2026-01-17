@@ -7,6 +7,8 @@
 
 BEGIN_SCOPE_EXTERN_C
 
+#define OS_CACHE_BASE 0xE0000000
+
 ///////// CACHE FUNCTIONS ////////
 // Data cache functions.
 void DCInvalidateRange(void* addr, u32 numBytes);

@@ -26,9 +26,31 @@ typedef struct Quaternion {
 
 ////// PAIRED SINGLE MATRIX FUNCTIONS //////
 void PSMTXIdentity(Mtx mtx);
+void PSMTXCopy(const Mtx src, Mtx dest);
 void PSMTXConcat(const Mtx A, const Mtx B, Mtx concat);
+
 void PSMTXTranspose(const Mtx src, Mtx xPose);
 u32 PSMTXInverse(const Mtx src, Mtx inv);
+u32 PSMTXInvXpose(const Mtx src, Mtx xPose);
+
+void __PSMTXRotAxisRadInternal(Mtx mtx, const Vec* axis, f32 sinA, f32 cosA);
+void PSMTXRotRad(Mtx mtx, char axis, f32 angle);
+void PSMTXRotTrig(Mtx mtx, char axis, f32 sinA, f32 cosA);
+void PSMTXRotAxisRad(Mtx mtx, const Vec* axis, f32 angle);
+
+void PSMTXTrans(Mtx mtx, f32 xT, f32 yT, f32 zT);
+void PSMTXTransApply(const Mtx src, Mtx dest, f32 xT, f32 yT, f32 zT);
+
+void PSMTXScale(Mtx mtx, f32 xS, f32 yS, f32 zS);
+void PSMTXScaleApply(const Mtx src, Mtx dest, f32 xS, f32 yS, f32 zS);
+void PSMTXQuat(Mtx mtx, const PSQuaternion* quat);
+////////////////////////////////////////////
+
+//// PAIRED SINGLE MATRIX VEC FUNCTIONS ////
+void PSMTXMultVec(const Mtx, const Vec*, Vec*);
+void PSMTXMultVecSR(const Mtx, const Vec*, Vec*);
+void PSMTXMultVecArraySR(const Mtx, f32*, f32*, f32*);
+
 ////////////////////////////////////////////
 
 ///////////  MATRIX44 FUNCTIONS ////////////
@@ -39,6 +61,9 @@ void C_MTXOrtho(Mtx44 mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void MTXPerspective(Mtx44 mtx, f32 fovY, f32 aspect, f32 n, f32 f);
 void MTXOrtho(Mtx44 mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 #endif
+void PSMTX44Copy(Mtx44 src, Mtx44 dest);
+void C_MTXFrustum(Mtx44 m, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6);
+void PSMTX44MultVec(const Mtx44 m, const Vec* src, Vec* dst);
 ////////////////////////////////////////////
 
 ///////// CODED C MATRIX FUNCTIONS /////////
@@ -51,6 +76,7 @@ void PSMTXTrans(Mtx m, f32 xS, f32 yS, f32 zS);
 void MTXScale(Mtx m, f32 xS, f32 yS, f32 zS);
 void MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 #endif
+void C_MTXLookAt(Mtx, const Vec*, const Vec*, const Vec*);
 ////////////////////////////////////////////
 
 ////////////// MATRIX INLINES //////////////

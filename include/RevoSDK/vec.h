@@ -18,11 +18,11 @@ typedef struct SVec {
 } SVec;
 
 f32 PSVECSquareMag(Vec*);
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIP01_00)
-f32 PSVECMag(Vec*);
-#else
-f32 VECMag(Vec*);
-#endif
+f32 PSVECMag(const Vec*);
+void PSVECAdd(const Vec*, const Vec*, Vec*);
+void PSVECSubtract(const Vec*, const Vec*, Vec*);
+void PSVECNormalize(const Vec*, Vec*);
+void PSVECCrossProduct(const Vec*, const Vec*, Vec*);
 
 END_SCOPE_EXTERN_C
 

@@ -38,6 +38,7 @@ static OSMessage msgbuf[AUDIOPROC_MQ_BUF_COUNT];
 static u32 audioproc_mq_init;
 static volatile int intcount;
 
+extern "C" static void OSInitFastCast();
 /**
  * @TODO: Documentation
  */

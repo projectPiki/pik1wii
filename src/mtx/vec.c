@@ -24,7 +24,7 @@ void C_VECAdd(Vec* a, Vec* b, Vec* c)
  * @TODO: Documentation
  * @note UNUSED Size: 000024
  */
-ASM void PSVECAdd(register Vec* a, register Vec* b, register Vec* c)
+ASM void PSVECAdd(register const Vec* a, register const Vec* b, register Vec* c)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.x(a), 0, qr0
@@ -56,7 +56,7 @@ void C_VECSubtract(Vec* a, Vec* b, Vec* c)
  * @TODO: Documentation
  * @note UNUSED Size: 000024
  */
-ASM void PSVECSubtract(register Vec* a, register Vec* b, register Vec* c)
+ASM void PSVECSubtract(register const Vec* a, register const Vec* b, register Vec* c)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.x(a), 0, qr0
@@ -122,7 +122,7 @@ void C_VECNormalize(Vec* src, Vec* unit)
  * @TODO: Documentation
  * @note UNUSED Size: 000048
  */
-void PSVECNormalize(register Vec* vec1, register Vec* dst)
+void PSVECNormalize(register const Vec* vec1, register Vec* dst)
 {
 #ifdef __MWERKS__ // clang-format off
 	register f32 c_half  = 0.5f;
@@ -183,7 +183,7 @@ ASM f32 PSVECSquareMag(register Vec* v) {
 #endif // clang-format on
 }
 
-ASM f32 PSVECMag(register Vec* v) {
+ASM f32 PSVECMag(register const Vec* v) {
 #ifdef __MWERKS__ // clang-format off
 	psq_l   f0, Vec.x(v), 0, qr0
 	ps_mul  f0, f0, f0
@@ -265,7 +265,7 @@ void C_VECCrossProduct(Vec* a, Vec* b, Vec* axb)
  * @TODO: Documentation
  * @note UNUSED Size: 00003C
  */
-ASM void PSVECCrossProduct(register Vec* vec1, register Vec* vec2, register Vec* dst)
+ASM void PSVECCrossProduct(register const Vec* vec1, register const Vec* vec2, register Vec* dst)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f1, Vec.x(vec2), 0, qr0
@@ -289,7 +289,7 @@ ASM void PSVECCrossProduct(register Vec* vec1, register Vec* vec2, register Vec*
  * @TODO: Documentation
  * @note UNUSED Size: 0000D8
  */
-void VECHalfAngle(Vec* a, Vec* b, Vec* half)
+void C_VECHalfAngle(Vec* a, Vec* b, Vec* half)
 {
 	Vec aTmp;
 	Vec bTmp;

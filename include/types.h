@@ -35,6 +35,17 @@ typedef volatile f32 vf32;
 typedef volatile f64 vf64;
 typedef volatile f128 vf128;
 
+typedef u32 size_t;
+typedef u32 unknown;
+typedef u32 uintptr_t;
+
+#ifndef __cplusplus
+typedef u16 wchar_t;
+#endif
+
+#define SHORT_FLOAT_MAX (32768.0f)
+#define SHORT_FLOAT_MIN (-32768.0f)
+
 // For Windows-specific types
 #ifdef WIN32
 #include <windows.h>
@@ -155,11 +166,20 @@ typedef u32 HWND;
 #define MIN(a, b) (((a) < (b)) ? (a) : (b)) // Returns the minimum of a and b
 
 // Flag manipulation macros
+#define SET_FLAG(x, val)     (x |= (val))
+#define RESET_FLAG(x, val)   (x &= ~(val))
+#define IS_FLAG(x, val)      (x & val)
 #define ARRAY_SIZE(o)        (sizeof((o)) / sizeof(*(o)))   // Array size define
 #define ALIGN_PREV(X, N)     ((X) & ~((N) - 1))             // Align X to the previous N bytes (N must be power of two)
 #define ALIGN_NEXT(X, N)     ALIGN_PREV(((X) + (N) - 1), N) // Align X to the next N bytes (N must be power of two)
 #define IS_NOT_ALIGNED(X, N) (((X) & ((N) - 1)) != 0)       // True if X is not aligned to N bytes, else false
 #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))  // Align object to num bytes (num should be power of two)
+
+
+#define ROUND_UP(x, align)     (((x) + (align) - 1) & (-(align)))
+#define ROUND_UP_PTR(x, align) ((void*)((((u32)(x)) + (align) - 1) & (~((align) - 1))))
+#define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align) - 1))))
+
 
 #define BUMP_REGISTER(reg) TERNARY_BUILD_MATCHING(MACRO_ARG({ asm { mr reg, reg } }), (void)0)
 
@@ -205,16 +225,41 @@ inline void padStack(void)
 // Uses a ternary to pad the stack by some number of words
 #define STACK_PAD_TERNARY(expr, n) TERNARY_BUILD_MATCHING(REPEAT((expr) ? "fake" : "fake", n), (void)0)
 
+// Multi-character character constants
+// clang-format off
+#define TWOCC(c0, c1)                                                          \
+    (u32)((c0 & 0xFF) << 8  | (c1 & 0xFF))
+#define THREECC(c0, c1, c2)                                                    \
+    (u32)((c0 & 0xFF) << 16 | (c1 & 0xFF) << 8  | (c2 & 0xFF))
+#define FOURCC(c0, c1, c2, c3)                                                 \
+    (u32)((c0 & 0xFF) << 24 | (c1 & 0xFF) << 16 | (c2 & 0xFF) << 8 | (c3 & 0xFF))
+// clang-format on
+
 #ifdef __MWERKS__
 #define AT_ADDRESS(addr) : (addr)
 #define WEAKFUNC        __declspec(weak)
 #define DECL_SECT(name) __declspec(section name)
 #define ASM             asm
+#define DECOMP_FORCELITERAL(module, ...)               \
+	void CONCAT(FORCELITERAL##module, __LINE__)(void); \
+	void CONCAT(FORCELITERAL##module, __LINE__)(void)  \
+	{                                                  \
+		(__VA_ARGS__);                                 \
+	}
+#define DECOMP_FORCEACTIVE(module, ...)               \
+	void fake_function(...);                          \
+	void CONCAT(FORCEACTIVE##module, __LINE__)(void); \
+	void CONCAT(FORCEACTIVE##module, __LINE__)(void)  \
+	{                                                 \
+		fake_function(__VA_ARGS__);                   \
+	}
 #else
 #define AT_ADDRESS(addr)
 #define WEAKFUNC
 #define DECL_SECT(name)
 #define ASM
+#define DECOMP_FORCELITERAL(module, ...)
+#define DECOMP_FORCEACTIVE(module, ...)
 #endif
 
 #define INIT  DECL_SECT(".init")

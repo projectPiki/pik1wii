@@ -11,7 +11,7 @@
 #include "jaudio/rate.h"
 #include "jaudio/seqsetup.h"
 
-#include "RevoSDK/OS/OSError.h"
+#include "RevoSDK/os/OSError.h"
 
 #include <stddef.h>
 
@@ -55,6 +55,7 @@ static u32 SEQ_ARG[8];
 
 // predeclare this so Jam_UpdateTrackAll can use this stupid function.
 extern "C" static void OSf32tos8(f32* in, s8* out);
+extern "C" static s8 __OSf32tos8(f32 inF);
 
 /**
  * @TODO: Documentation
@@ -1446,19 +1447,24 @@ void Jam_UpdateTrackAll(seqp_* track)
 	}
 }
 
-#define OS_FASTCAST_S8 (4)
-
-/**
- * @TODO: Documentation
- */
-static void OSf32tos8(register f32* in, register s8* out)
+static inline s8 __OSf32tos8(register f32 inF)
 {
+	register s8 out;
+	u32 tmp;
+	register u32* tmpPtr = &tmp;
 #ifdef __MWERKS__
 	asm {
-		lfs       f1, 0 (in)
-		psq_st    f1, 0 (out), 0x1, OS_FASTCAST_S8
+		psq_st    inF, 0(tmpPtr), 0x1, OS_FASTCAST_S8
+		lbz       out, 0(tmpPtr)
+		extsb     out, out
 	}
 #endif
+	return out;
+}
+
+static inline void OSf32tos8(f32* f, s8* out)
+{
+	*out = __OSf32tos8(*f);
 }
 
 /**
