@@ -173,7 +173,8 @@ void YTeki::killStickToMouthPiki()
 	{
 		Creature* stuck = *iter;
 		if (stuck && stuck->isStickToMouth()) {
-			stuck->stimulate(InteractKill(this, 0));
+			InteractKill kill(this, 0);
+			stuck->stimulate(kill);
 			effectMgr->create(EffectMgr::EFF_Piki_HitA, stuck->getPosition(), nullptr, nullptr);
 			effectMgr->create(EffectMgr::EFF_Piki_HitB, stuck->getPosition(), nullptr, nullptr);
 			iter.dec();
@@ -188,11 +189,13 @@ bool YTeki::startNewMotion(int motionIdx)
 {
 	if (mTekiAnimator->getCurrentMotionIndex() != motionIdx || mTekiAnimator->isFinished()) {
 		if (!mTekiAnimator->isFinished()) {
-			mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, this));
+			PaniMotionInfo anim1(PANI_NO_MOTION, this);
+			mTekiAnimator->finishMotion(anim1);
 		}
 
 		if (mTekiAnimator->isFinishing()) {
-			mTekiAnimator->startMotion(PaniMotionInfo(motionIdx, this));
+			PaniMotionInfo anim2(motionIdx, this);
+			mTekiAnimator->startMotion(anim2);
 		}
 		return false;
 	}

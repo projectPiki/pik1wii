@@ -654,7 +654,8 @@ void ActorInstance::checkEventKeys(f32 curTime, f32 prevTime, Vector3f& pos)
 				}
 				case 2:
 				{
-					effectMgr->create(EffectMgr::EFF_Rocket_Sparkles1, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+					Vector3f zeropos(0.0f, 0.0f, 0.0f);
+					effectMgr->create(EffectMgr::EFF_Rocket_Sparkles1, zeropos, nullptr, nullptr);
 					break;
 				}
 				case 3:
@@ -846,7 +847,8 @@ void ActorInstance::checkEventKeys(f32 curTime, f32 prevTime, Vector3f& pos)
 					mEffectList[1]->setEmitPosPtr(&mJointPositions[0]);
 					mEffectList[2] = effectMgr->create(EffectMgr::EFF_Rocket_Bst1fa, mJointPositions[0], nullptr, nullptr);
 					mEffectList[2]->setEmitPosPtr(&mJointPositions[0]);
-					mEffectList[2]->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+					Vector3f xpos(1.0f, 0.0f, 0.0f);
+					mEffectList[2]->setOrientedNormalVector(xpos);
 					mJointPositions[1].set(-25000.0f, -25000.0f, -25000.0f);
 					mJointPositions[2].set(-25000.0f, -25000.0f, -25000.0f);
 					mJointPositions[3].set(-25000.0f, -25000.0f, -25000.0f);
@@ -857,7 +859,8 @@ void ActorInstance::checkEventKeys(f32 curTime, f32 prevTime, Vector3f& pos)
 
 						mEffectGrid[i][1] = effectMgr->create(EffectMgr::EFF_Rocket_NJ3FA, mJointPositions[i + 1], nullptr, nullptr);
 						mEffectGrid[i][1]->setEmitPosPtr(&mJointPositions[i + 1]);
-						mEffectGrid[i][1]->setOrientedNormalVector(Vector3f(0.0f, 1.0f, 0.0f));
+						Vector3f ypos(0.0f, 1.0f, 0.0f);
+						mEffectGrid[i][1]->setOrientedNormalVector(ypos);
 					}
 					mMeteorFlag = true;
 					break;
@@ -1033,17 +1036,20 @@ void ActorInstance::refresh(immut Matrix4f& mtx, Graphics& gfx, f32* p3)
 	int modelType = 0;
 	if (strcmp(mActiveActor->mModel->mName, "pikis/bluModel.mod") == 0) {
 		modelType = 1;
-		mActiveActor->mModel->mMaterialList[0].setColour(Colour(0, 50, 255, 255));
+		Colour blue(0, 50, 255, 255);
+		mActiveActor->mModel->mMaterialList[0].setColour(blue);
 		mAnimatedMaterials.animate(nullptr);
 
 	} else if (strcmp(mActiveActor->mModel->mName, "pikis/redModel.mod") == 0) {
 		modelType = 1;
-		mActiveActor->mModel->mMaterialList[0].setColour(Colour(255, 30, 0, 255));
+		Colour red(255, 30, 0, 255);
+		mActiveActor->mModel->mMaterialList[0].setColour(red);
 		mAnimatedMaterials.animate(nullptr);
 
 	} else if (strcmp(mActiveActor->mModel->mName, "pikis/yelModel.mod") == 0) {
 		modelType = 1;
-		mActiveActor->mModel->mMaterialList[0].setColour(Colour(255, 210, 0, 255));
+		Colour yellow(255, 210, 0, 255);
+		mActiveActor->mModel->mMaterialList[0].setColour(yellow);
 		mAnimatedMaterials.animate(nullptr);
 
 	} else if (strcmp(mActiveActor->mModel->mName, "objects/pikihead/navihead.mod") == 0) {
@@ -1111,7 +1117,8 @@ void ActorInstance::refresh(immut Matrix4f& mtx, Graphics& gfx, f32* p3)
 
 					if (i >= 3) {
 						Vector3f otherDir = -dir;
-						mEffectList[i]->setAirField(otherDir * mEffectList[i]->getAirField().length(), true);
+						Vector3f airlength = otherDir * mEffectList[i]->getAirField().length();
+						mEffectList[i]->setAirField(airlength, true);
 					}
 				} else {
 					mEffectList[i]->setEmitDir(mActorWorldDir);
@@ -1133,7 +1140,8 @@ void ActorInstance::refresh(immut Matrix4f& mtx, Graphics& gfx, f32* p3)
 
 		for (int i = 0; i < 7; i++) {
 			if (mEffectList[i]) {
-				mEffectList[i]->setEmitDir(-mActorWorldDir);
+				Vector3f emitdir = -mActorWorldDir;
+				mEffectList[i]->setEmitDir(emitdir);
 			}
 		}
 	}

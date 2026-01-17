@@ -120,12 +120,14 @@ void DynCollShape::drawAtari(Graphics& gfx)
 	gfx.initRender(0, 0);
 
 	// draw vertices for each triangle
-	gfx.setColour(Colour(255, 255, 0, 255), true); // bright yellow
+	Colour colour1(255, 255, 0, 255);
+	gfx.setColour(colour1, true); // bright yellow
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 	gfx.setPointSize(4.0f);
 	gfx.drawPoints(mVertexList, mCollisionModel->mVertexCount);
 
-	gfx.setColour(Colour(255, 0, 0, 255), true); // red
+	Colour colour2(255, 0, 0, 255);
+	gfx.setColour(colour2, true); // red
 	for (int i = 0; i < mCollisionModel->mTriCount; i++) {
 		// draw edges for each triangle
 		for (int j = 0; j < 3; j++) {
@@ -469,7 +471,9 @@ void DynObjBody::touchCallback(immut Plane& contactPlane, immut Vector3f& contac
 		Vector3f force = contactPlane.mNormal.DP(colliderVel) * contactPlane.mNormal;
 		force.multiply(mImpactForceScale);
 		// yes, these are necessary
-		applyForce(0, Vector3f(force.x, force.y, force.z), Vector3f(contactPos.x, contactPos.y, contactPos.z));
+		Vector3f v1(force.x, force.y, force.z);
+		Vector3f point(contactPos.x, contactPos.y, contactPos.z);
+		applyForce(0, v1, point);
 	}
 }
 
@@ -490,7 +494,9 @@ void DynObjBody::applyVelocity(immut Plane& contactPlane, immut Vector3f& contac
 		Vector3f force = contactPlane.mNormal.DP(velocity) * contactPlane.mNormal;
 		force.multiply(mImpactForceScale);
 		// yes, these are (also) necessary
-		applyForce(0, Vector3f(force.x, force.y, force.z), Vector3f(contactPos.x, contactPos.y, contactPos.z));
+		Vector3f v1(force.x, force.y, force.z);
+		Vector3f point(contactPos.x, contactPos.y, contactPos.z);
+		applyForce(0, v1, point);
 	}
 }
 
@@ -553,7 +559,8 @@ void DynObjSeeSaw::integrate(int prevConfigIdx, int currConfigIdx, f32 timeStep)
  */
 void DynObjBody::initRender(int)
 {
-	mRenderTransformMtx.makeVQS(mRenderPosition, mRenderOrientation, Vector3f(1.0f, 1.0f, 1.0f));
+	Vector3f scale(1.0f, 1.0f, 1.0f);
+	mRenderTransformMtx.makeVQS(mRenderPosition, mRenderOrientation, scale);
 	mCollObj->mTransformMtx.inverse(&mCollObj->mInverseMatrix);
 	mCollObj->mTransformMtx = mRenderTransformMtx;
 }
@@ -611,7 +618,8 @@ void DynObjBody::render(Graphics& gfx)
 	gfx.useMatrix(viewMtx, 0);
 	gfx.mCamera->setBoundOffset(nullptr);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
 
 	// render each spring between its attach position and anchor position
@@ -632,7 +640,8 @@ void DynObjBody::computeForces(int configIdx, f32 timeStep)
 	CollGroup* collGroups = mMapShape->getCollTris(config.mPosition);
 
 	// apply (very scaled) gravity
-	applyCMForce(Vector3f(0.0f, -140.81f, 0.0f));
+	Vector3f force(0.0f, -140.81f, 0.0f);
+	applyCMForce(force);
 
 	// apply any attached springs
 	for (int i = 0; i < mSpringCount; i++) {
@@ -833,7 +842,8 @@ void DynObjPushable::render(Graphics& gfx)
 	// set up graphics for debug text (no lighting, white text, alpha blending)
 	bool lighting = gfx.setLighting(false, nullptr);
 	gfx.useMatrix(Matrix4f::ident, 0);
-	gfx.setColour(COLOUR_WHITE, true);
+	Colour colour(COLOUR_WHITE);
+	gfx.setColour(colour, true);
 	int blend = gfx.setCBlending(BLEND_Alpha);
 
 	// draw how much force we're trying to apply above the object
@@ -1405,7 +1415,10 @@ void MapMgr::refresh(Graphics& gfx)
 		gfx.mHasTexGen = TRUE;
 		Matrix4f viewMtx;
 		Matrix4f modelMtx;
-		modelMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		Vector3f trans(0.0f, 0.0f, 0.0f);
+		modelMtx.makeSRT(scale, rot, trans);
 		gfx.calcViewMatrix(modelMtx, viewMtx);
 		gfx.setLighting(true, nullptr);
 		// don't allow translucent things
@@ -1462,21 +1475,26 @@ void MapMgr::showCollisions(immut Vector3f& focusPos)
 
 	// set up our two giant colored prisms
 	mOuterCollRenderBounds.resetBound();
-	mOuterCollRenderBounds.expandBound(Vector3f(cellOriginX - cellExpand, mMapBounds.mMin.y - cellExpand, cellOriginZ - cellExpand));
-	mOuterCollRenderBounds.expandBound(
-	    Vector3f(cellOriginX + cellSize + cellExpand, mMapBounds.mMax.y + cellExpand, cellOriginZ + cellSize + cellExpand));
+	Vector3f bound1(cellOriginX - cellExpand, mMapBounds.mMin.y - cellExpand, cellOriginZ - cellExpand);
+	mOuterCollRenderBounds.expandBound(bound1);
+	Vector3f bound2(cellOriginX + cellSize + cellExpand, mMapBounds.mMax.y + cellExpand, cellOriginZ + cellSize + cellExpand);
+	mOuterCollRenderBounds.expandBound(bound2);
 
 	mActiveCollisionBounds.resetBound();
-	mActiveCollisionBounds.expandBound(Vector3f(cellOriginX, mMapBounds.mMin.y - cellExpand, cellOriginZ));
-	mActiveCollisionBounds.expandBound(Vector3f(cellOriginX + cellSize, mMapBounds.mMax.y + cellExpand, cellOriginZ + cellSize));
+	Vector3f bound3(cellOriginX, mMapBounds.mMin.y - cellExpand, cellOriginZ);
+	mActiveCollisionBounds.expandBound(bound3);
+	Vector3f bound4(cellOriginX + cellSize, mMapBounds.mMax.y + cellExpand, cellOriginZ + cellSize);
+	mActiveCollisionBounds.expandBound(bound4);
 	collExtents = mActiveCollisionBounds;
 
 	// construct bounding box to search for triangles within
 	BoundBox focusBox;
 	focusBox.expandBound(focusPos);
 	// make box 32x32x32 around focus position
-	focusBox.mMin.sub(Vector3f(16.0f, 16.0f, 16.0f));
-	focusBox.mMax.add(Vector3f(16.0f, 16.0f, 16.0f));
+	Vector3f vec1(16.0f, 16.0f, 16.0f);
+	focusBox.mMin.sub(vec1);
+	Vector3f vec2(16.0f, 16.0f, 16.0f);
+	focusBox.mMax.add(vec2);
 
 	// gather a list of all collision that intersects our 32x32x32 box
 	CollGroup* collGroup = nullptr;
@@ -1584,7 +1602,10 @@ void MapMgr::drawXLU(Graphics& gfx)
 			gfx.mHasTexGen = TRUE;
 			Matrix4f viewMtx;
 			Matrix4f modelMtx;
-			modelMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+			Vector3f scale(1.0f, 1.0f, 1.0f);
+			Vector3f rot(0.0f, 0.0f, 0.0f);
+			Vector3f trans(0.0f, 0.0f, 0.0f);
+			modelMtx.makeSRT(scale, rot, trans);
 			gfx.calcViewMatrix(modelMtx, viewMtx);
 			gfx.useMatrix(viewMtx, 0);
 			gfx.setLighting(true, nullptr);
@@ -1638,11 +1659,14 @@ void MapMgr::postrefresh(Graphics& gfx)
 		if (gsys->mToggleBlur) {
 			// set up screen environment for drawing
 			Matrix4f orthoMtx;
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area1(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area1); 
 			bool lighting = gfx.setLighting(false, nullptr);
 			gfx.setFog(false);
-			gfx.setColour(COLOUR_WHITE, true);
-			gfx.setAuxColour(COLOUR_WHITE);
+			Colour colour1(COLOUR_WHITE);
+			gfx.setColour(colour1, true);
+			Colour colour2(COLOUR_WHITE);
+			gfx.setAuxColour(colour2);
 
 			// store this frame's non-blurred scene into mBlurSourceTexture's pixel data
 			mBlurSourceTexture->grabBuffer(mBlurSourceTexture->mWidth, mBlurSourceTexture->mHeight, false, true);
@@ -1666,7 +1690,8 @@ void MapMgr::postrefresh(Graphics& gfx)
 			gfx.setPrimEnv(&Colour(255, 255, 255, gfx.mCamera->mBlurAlpha), nullptr);
 
 			// render multi-texture blend (blur)
-			gfx.blatRectangle(AREA_FULL_SCREEN(gfx));
+			RectArea area2(AREA_FULL_SCREEN(gfx));
+			gfx.blatRectangle(area2);
 
 			// clean up graphics settings + store current blur result for use next frame
 			gfx.setCBlending(blend);
@@ -1706,18 +1731,24 @@ void MapMgr::postrefresh(Graphics& gfx)
 		// draw any fading or desaturation that's happening
 		if (mCurrDesaturationLevel > 0.0f || mCurrFadeLevel > 0.0f) {
 			Matrix4f orthoMtx;
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area3(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area3);
 
 			// apply desaturated blur texture to desired level
 			GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
-			gfx.setColour(Colour(160, 160, 160, (int)(mCurrDesaturationLevel * 255.0f)), true);
+			Colour color3(160, 160, 160, (int)(mCurrDesaturationLevel * 255.0f));
+			gfx.setColour(color3, true);
 			gfx.useTexture(mBlurResultTexture, GX_TEXMAP0);
-			gfx.drawRectangle(AREA_FULL_SCREEN(gfx), RectArea(0, 0, mBlurResultTexture->mWidth, mBlurResultTexture->mHeight), nullptr);
+			RectArea area4(AREA_FULL_SCREEN(gfx));
+			RectArea area5(0, 0, mBlurResultTexture->mWidth, mBlurResultTexture->mHeight);
+			gfx.drawRectangle(area4, area5, nullptr);
 
 			GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_ALPHA);
-			gfx.setColour(Colour(0, 0, 0, int(mCurrFadeLevel * 255.0f)), true);
+			Colour color4(0, 0, 0, int(mCurrFadeLevel * 255.0f));
+			gfx.setColour(color4, true);
 			gfx.useTexture(nullptr, GX_TEXMAP0);
-			gfx.fillRectangle(AREA_FULL_SCREEN(gfx));
+			RectArea area6(AREA_FULL_SCREEN(gfx));
+			gfx.fillRectangle(area6);
 		}
 
 		// draw debug triangle outlines
@@ -1751,7 +1782,8 @@ void MapMgr::postrefresh(Graphics& gfx)
 			}
 
 			// draw triangle counts to screen
-			gfx.setColour(COLOUR_WHITE, true);
+			Colour colour5(COLOUR_WHITE);
+			gfx.setColour(colour5, true);
 			Vector3f triCountTextPos(mDebugFocusPosition.x, mDebugFocusPosition.y + 50.0f, mDebugFocusPosition.z);
 			triCountTextPos.multMatrix(gfx.mCamera->mLookAtMtx);
 
@@ -1795,11 +1827,13 @@ void MapMgr::postrefresh(Graphics& gfx)
 			gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
 
 			if (AIPerf::showColls) {
-				gfx.setColour(Colour(255, 128, 255, 255), true); // magenta, inner box
+				Colour colour6(255, 128, 255, 255);
+				gfx.setColour(colour6, true); // magenta, inner box
 				mActiveCollisionBounds.draw(gfx);
 			}
 
-			gfx.setColour(Colour(64, 255, 255, 255), true); // cyan, outer box
+			Colour colour7(64, 255, 255, 255);
+			gfx.setColour(colour7, true); // cyan, outer box
 			mOuterCollRenderBounds.draw(gfx);
 			gfx.setFog(true);
 			gfx.setLighting(lighting, nullptr);
@@ -1869,7 +1903,8 @@ CollGroup* MapMgr::getCollGroupList(f32 x, f32 z, bool includePlatColl)
 	}
 
 	// get regular static map collision triangles
-	CollGroup* mapColl = mMapModel->getCollTris(Vector3f(x, 0.0f, z));
+	Vector3f ground(x, 0.0f, z);
+	CollGroup* mapColl = mMapModel->getCollTris(ground);
 	if (mapColl && mapColl->mTriCount) {
 		mapColl->mNextCollGroup = collList;
 		collList                = mapColl;
@@ -2023,7 +2058,8 @@ f32 MapMgr::findEdgePenetration(CollTriInfo& tri, immut Vector3f* vertexList, im
 			Vector3f edgeVec = edgeEnd - edgeStart;
 			f32 edgeSqrLen   = edgeVec.x * edgeVec.x + edgeVec.y * edgeVec.y + edgeVec.z * edgeVec.z;
 			// calc normalised edge parameter - between 0 and 1 = edge point is closest; < 0 or > 1 = vertex is closest
-			f32 t = edgeVec.DP(sphereCenter - edgeStart) / edgeSqrLen;
+			Vector3f otherVec = sphereCenter - edgeStart;
+			f32 t = edgeVec.DP(otherVec) / edgeSqrLen;
 			if (t >= 0.0f && t < 1.0f) {
 				// closest point is on an edge - get the position
 				Vector3f edgePos(edgeVec.x * t + edgeStart.x, edgeVec.y * t + edgeStart.y, edgeVec.z * t + edgeStart.z);
@@ -2089,8 +2125,10 @@ void MapMgr::recTraceMove(CollGroup* collGroupList, MoveTrace& trace, f32 timeSt
 	// build checking box around new point, with a radius a little larger than the trace radius
 	BoundBox collCheckBox;
 	collCheckBox.expandBound(proposedPosition);
-	collCheckBox.mMin.sub(Vector3f(expandedRadius, expandedRadius, expandedRadius));
-	collCheckBox.mMax.add(Vector3f(expandedRadius, expandedRadius, expandedRadius));
+	Vector3f point1(expandedRadius, expandedRadius, expandedRadius);
+	collCheckBox.mMin.sub(point1);
+	Vector3f point2(expandedRadius, expandedRadius, expandedRadius);
+	collCheckBox.mMax.add(point2);
 
 	// check all provided collision groups, to see how many triangles we need to check
 	CollGroup* currGroup = collGroupList;
@@ -2246,7 +2284,8 @@ void MapMgr::recTraceMove(CollGroup* collGroupList, MoveTrace& trace, f32 timeSt
 void MapMgr::traceMove(Creature* creature, MoveTrace& trace, f32 timeStep)
 {
 	// account for sphere tracing
-	trace.mPosition.add(Vector3f(0.0f, trace.mRadius, 0.0f));
+	Vector3f vec(0.0f, trace.mRadius, 0.0f);
+	trace.mPosition.add(vec);
 
 	// find "safe" amount of steps based on speed, timestep and radius
 	// double our step count until we can safely stay within the trace radius on a given step
@@ -2258,10 +2297,11 @@ void MapMgr::traceMove(Creature* creature, MoveTrace& trace, f32 timeStep)
 	}
 
 	// report if we're in insane "we're tracing this object for WAY too long given its speed" territory
+#if defined(DEVELOP)
 	if (doublingCount > 50) {
 		PRINT("Too many iterations [cr %08x : rad = %f : spd = %f]!!\n", creature, trace.mRadius, trace.mVelocity.length() * timeStep);
 	}
-
+#endif
 	// increment trace tick to prevent double counting of collision
 	mCurrTraceTick++;
 
@@ -2272,8 +2312,10 @@ void MapMgr::traceMove(Creature* creature, MoveTrace& trace, f32 timeStep)
 		// for each step, set up a box for checking collision
 		BoundBox collCheckBox;
 		collCheckBox.expandBound(trace.mPosition);
-		collCheckBox.mMin.sub(Vector3f(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius));
-		collCheckBox.mMax.add(Vector3f(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius));
+		Vector3f point1(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius);
+		collCheckBox.mMin.sub(point1);
+		Vector3f point2(2.0f * trace.mRadius, 4.0f * trace.mRadius, 2.0f * trace.mRadius);
+		collCheckBox.mMax.add(point2);
 
 		trace.mObject = creature;
 
@@ -2321,7 +2363,8 @@ void MapMgr::traceMove(Creature* creature, MoveTrace& trace, f32 timeStep)
 	}
 
 	// re-account for us using a sphere
-	trace.mPosition.sub(Vector3f(0.0f, trace.mRadius, 0.0f));
+	Vector3f vec2(0.0f, trace.mRadius, 0.0f);
+	trace.mPosition.sub(vec2);
 }
 
 /**

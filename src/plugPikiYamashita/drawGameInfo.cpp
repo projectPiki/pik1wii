@@ -242,7 +242,8 @@ struct LifeIconCallBack : public P2DPaneCallBack {
 	LifeIconCallBack(P2DPane* pane)
 	    : P2DPaneCallBack(pane, PANETYPE_Pane)
 	{
-		mLifeCircle = new zen::DrawNaviLifeCircle(0, Vector3f(pane->getWidth() >> 1, pane->getHeight() >> 1, 0.0f), pane->getWidth() >> 1);
+		Vector3f vec(pane->getWidth() >> 1, pane->getHeight() >> 1, 0.0f);
+		mLifeCircle = new zen::DrawNaviLifeCircle(0, vec, pane->getWidth() >> 1);
 	}
 
 	virtual bool invoke(P2DPane*) { return true; } // _08

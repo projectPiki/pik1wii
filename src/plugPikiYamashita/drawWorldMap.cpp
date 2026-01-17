@@ -264,7 +264,8 @@ public:
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 		mBottomPos.set(0.0f, bottomLengthDefault, 0.0f);
 
-		mSparkleGenerator = WMeffMgr->create(EFF2D_MapOnyonSparkle, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+		Vector3f pos(0.0f, 0.0f, 0.0f);
+		mSparkleGenerator = WMeffMgr->create(EFF2D_MapOnyonSparkle, pos, nullptr, nullptr);
 	}
 	void update(immut Vector3f& scale)
 	{
@@ -333,7 +334,8 @@ public:
 		mTargetPos.set(x, y, 0.0f);
 		mBottomPos.set(x, y + bottomLengthDefault, 0.0f);
 		mOnyonIcon->move(mCurrentPos.x, mCurrentPos.y);
-		mOnyonIcon->setScale(Vector3f(scale, scale, 1.0f));
+		Vector3f allscale(scale, scale, 1.0f);
+		mOnyonIcon->setScale(allscale);
 	}
 
 protected:
@@ -449,12 +451,14 @@ public:
 			}
 		}
 
-		mExhaustGenerators[0] = WMeffMgr->create(EFF2D_MapRocketFire, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+		Vector3f pos1(0.0f, 0.0f, 0.0f);
+		mExhaustGenerators[0] = WMeffMgr->create(EFF2D_MapRocketFire, pos1, nullptr, nullptr);
 		mExhaustGenerators[0]->invisible();
 		mFireFreqFrame = mExhaustGenerators[0]->getFreqFrm();
 		mFireInitVel   = mExhaustGenerators[0]->getInitVel();
 
-		mExhaustGenerators[1] = WMeffMgr->create(EFF2D_MapRocketSmoke, Vector3f(0.0f, 0.0f, 0.0f), nullptr, nullptr);
+		Vector3f pos2(0.0f, 0.0f, 0.0f);
+		mExhaustGenerators[1] = WMeffMgr->create(EFF2D_MapRocketSmoke, pos2, nullptr, nullptr);
 		mExhaustGenerators[1]->invisible();
 		mSmokeFreqFrame = mExhaustGenerators[1]->getFreqFrm();
 		mSmokeInitVel   = mExhaustGenerators[0]->getInitVel(); // maybe typo?
@@ -542,7 +546,8 @@ public:
 		mRocketPos.set(x, y, 0.0f);
 		mTargetPos.set(x, y, 0.0f);
 		mRocketIcon->move(x, y);
-		mRocketIcon->setScale(Vector3f(scale, scale, 1.0f));
+		Vector3f allscale(scale, scale, 1.0f);
+		mRocketIcon->setScale(allscale);
 		setOnyonPos(scale);
 	}
 
@@ -638,7 +643,8 @@ protected:
 		f32 rocketScale = mRocketIcon->getScale().x;
 		orbitCenter.set(mRocketPos.x + ONYON_OFFSET_X, mRocketPos.y + ONYON_OFFSET_Y, mRocketPos.z + ONYON_OFFSET_Z);
 
-		mBlueOnyonPos.add(Vector3f(mOnyonVelocity * time));
+		Vector3f vel(mOnyonVelocity * time);
+		mBlueOnyonPos.add(vel);
 		orbitVec.set(mBlueOnyonPos - orbitCenter);
 		f32 norm = orbitVec.length();
 		if (norm < 0.000001f) {
@@ -648,7 +654,8 @@ protected:
 		}
 
 		newBlueTargetPos.set(orbitCenter + orbitVec);
-		mOnyonVelocity.add(Vector3f(newBlueTargetPos - mBlueOnyonPos));
+		Vector3f pos(newBlueTargetPos - mBlueOnyonPos);
+		mOnyonVelocity.add(pos);
 		mBlueOnyonPos.set(newBlueTargetPos);
 
 		// set blue onyon position (just calculated, reference for others)
@@ -791,14 +798,16 @@ protected:
 		f32 angle = mRocketIcon->getRotate() - HALF_PI;
 		Vector3f vec1;
 		vec1.set(mRocketIcon->getPosH() + (mRocketIcon->getWidth() >> 1), mRocketIcon->getPosV() + (mRocketIcon->getHeight() >> 1), 0.0f);
-		vec1.add(Vector3f(NMathF::cos(angle) * (-f32(mRocketIcon->getWidth() >> 1) * mRocketIcon->getScale().x),
-		                  NMathF::sin(angle) * (-f32(mRocketIcon->getHeight() >> 1) * mRocketIcon->getScale().y), 0.0f));
+		Vector3f rocketvec(NMathF::cos(angle) * (-f32(mRocketIcon->getWidth() >> 1) * mRocketIcon->getScale().x),
+		                  NMathF::sin(angle) * (-f32(mRocketIcon->getHeight() >> 1) * mRocketIcon->getScale().y), 0.0f);
+		vec1.add(rocketvec);
 		vec1.y = 480.0f - vec1.y;
 
 		if (mExhaustGenerators[0]) {
 			mExhaustGenerators[0]->visible();
 			mExhaustGenerators[0]->setEmitPos(vec1);
-			mExhaustGenerators[0]->setEmitDir(Vector3f(-NMathF::cos(angle), NMathF::sin(angle), 0.0f));
+			Vector3f dir1(-NMathF::cos(angle), NMathF::sin(angle), 0.0f);
+			mExhaustGenerators[0]->setEmitDir(dir1);
 			mExhaustGenerators[0]->setScaleSize(mRocketIcon->getScale().x * 0.5f);
 			mExhaustGenerators[0]->setInitVel(mFireInitVel * mRocketIcon->getScale().x * mRocketIcon->getScale().x);
 			if (mUfoStatus == UFO_Hovering) {
@@ -811,7 +820,8 @@ protected:
 		if (mExhaustGenerators[1]) {
 			mExhaustGenerators[1]->visible();
 			mExhaustGenerators[1]->setEmitPos(vec1);
-			mExhaustGenerators[1]->setEmitDir(Vector3f(-NMathF::cos(angle), NMathF::sin(angle), 0.0f));
+			Vector3f dir2(-NMathF::cos(angle), NMathF::sin(angle), 0.0f);
+			mExhaustGenerators[1]->setEmitDir(dir2);
 			mExhaustGenerators[1]->setScaleSize(mRocketIcon->getScale().x * 0.7f);
 			mExhaustGenerators[1]->setInitVel(mSmokeInitVel * mRocketIcon->getScale().x * mRocketIcon->getScale().x);
 			if (mUfoStatus == UFO_Hovering) {

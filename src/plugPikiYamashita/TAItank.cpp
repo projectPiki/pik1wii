@@ -170,7 +170,8 @@ public:
 			if (mouth->mCentre.y > mapMgr->getMinY(mouth->mCentre.x, mouth->mCentre.z, true)) {
 				Vector3f pos;
 				pos = mouth->mCentre + dir * -15.0f;
-				teki.initCylinderTYpePtclCallBack(&teki, pos, Vector3f(dir * 10.0f * 30.0f), 0.5f, teki.getParameterF(TPF_AttackPower),
+				Vector3f vec(dir * 10.0f * 30.0f);
+				teki.initCylinderTYpePtclCallBack(&teki, pos, vec, 0.5f, teki.getParameterF(TPF_AttackPower),
 				                                  200.0f, 20.0f, &FireEffect::eventCallBackFire);
 
 				zen::particleGenerator* ptclGen

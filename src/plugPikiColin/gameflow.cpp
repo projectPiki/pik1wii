@@ -53,9 +53,12 @@ static const char* timopts[] = { " [off]", "  [on]", "[full]" };
 void GameLoadIdler::draw(Graphics& gfx)
 {
 	gfx.mAmbientColour.set(48, 48, 48, 255); // very dark grey, but not perfect black
-	gfx.setViewport(AREA_FULL_SCREEN(gfx));
-	gfx.setScissor(AREA_FULL_SCREEN(gfx));
-	gfx.setClearColour(COLOUR_TRANSPARENT);
+	RectArea area1(AREA_FULL_SCREEN(gfx));
+	gfx.setViewport(area1);
+	RectArea area2(AREA_FULL_SCREEN(gfx));
+	gfx.setScissor(area2);
+	Colour transparent(COLOUR_TRANSPARENT);
+	gfx.setClearColour(transparent);
 	gfx.clearBuffer(3, false);
 
 	// try and display level banner
@@ -91,21 +94,21 @@ void GameFlow::drawLoadLogo(Graphics& gfx, bool force60FPSSpin, Texture* logoTex
 	// this spin speed is unused. maybe the logos used to rotate?
 	llspin += (force60FPSSpin) ? 1.0f / 60.0f : gsys->getFrameTime();
 
-	gfx.setOrthogonal(screenMtx.mMtx, AREA_FULL_SCREEN(gfx));
+	RectArea area(AREA_FULL_SCREEN(gfx));
+	gfx.setOrthogonal(screenMtx.mMtx, area);
 
 	if (mIsNintendoLoadLogo) {
-// red - this is just for the Nintendo logo on boot-up.
-#if defined(VERSION_GPIJ01_01)
-		gfx.setColour(Colour(0, 70, 255, fadeInFactor * 255.0f), true);
-		gfx.setAuxColour(Colour(0, 70, 255, fadeInFactor * 255.0f));
-#else
-		gfx.setColour(Colour(220, 0, 0, fadeInFactor * 255.0f), true);
-		gfx.setAuxColour(Colour(220, 0, 0, fadeInFactor * 255.0f));
-#endif
+// white - this is just for the Nintendo logo on boot-up.
+		Colour logocolour1(255, 255, 255, fadeInFactor * 255.0f);
+		gfx.setColour(logocolour1, true);
+		Colour logocolour2(255, 255, 255, fadeInFactor * 255.0f);
+		gfx.setAuxColour(logocolour2);
 	} else {
 		// browny-red and gold.
-		gfx.setColour(Colour(192, 64, 0, fadeInFactor * 255.0f), true);
-		gfx.setAuxColour(Colour(255, 192, 0, fadeInFactor * 255.0f));
+		Colour colour1(192, 64, 0, fadeInFactor * 255.0f);
+		gfx.setColour(colour1, true);
+		Colour colour2(255, 192, 0, fadeInFactor * 255.0f);
+		gfx.setAuxColour(colour2);
 	}
 
 	gfx.useTexture(logoTex, GX_TEXMAP0);
@@ -119,10 +122,9 @@ void GameFlow::drawLoadLogo(Graphics& gfx, bool force60FPSSpin, Texture* logoTex
 		top -= 40;
 	}
 
-	gfx.drawRectangle(RectArea(left, top, left + logoTex->mWidth, top + logoTex->mHeight),
-	                  RectArea(0, 0, logoTex->mWidth, logoTex->mHeight), nullptr);
-
-	STACK_PAD_VAR(1);
+	RectArea logoarea1(left, top, left + logoTex->mWidth, top + logoTex->mHeight);
+	RectArea logoarea2(0, 0, logoTex->mWidth, logoTex->mHeight);
+	gfx.drawRectangle(logoarea1, logoarea2, nullptr);
 }
 
 /**

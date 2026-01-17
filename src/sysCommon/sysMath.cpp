@@ -585,26 +585,51 @@ int CollTriInfo::behindEdge(immut Vector3f& point)
 void BoundBox::draw(Graphics& gfx)
 {
 	// Top face
-	gfx.drawLine(Vector3f(mMin.x, mMin.y, mMin.z), Vector3f(mMax.x, mMin.y, mMin.z));
-	gfx.drawLine(Vector3f(mMax.x, mMin.y, mMin.z), Vector3f(mMax.x, mMin.y, mMax.z));
-	gfx.drawLine(Vector3f(mMax.x, mMin.y, mMax.z), Vector3f(mMin.x, mMin.y, mMax.z));
-	gfx.drawLine(Vector3f(mMin.x, mMin.y, mMax.z), Vector3f(mMin.x, mMin.y, mMin.z));
+	Vector3f point1(mMin.x, mMin.y, mMin.z);
+	Vector3f point2(mMax.x, mMin.y, mMin.z);
+	gfx.drawLine(point1, point2);
+	Vector3f point3(mMax.x, mMin.y, mMin.z);
+	Vector3f point4(mMax.x, mMin.y, mMax.z);
+	gfx.drawLine(point3, point4);
+	Vector3f point5(mMax.x, mMin.y, mMax.z);
+	Vector3f point6(mMin.x, mMin.y, mMax.z);
+	gfx.drawLine(point5, point6);
+	Vector3f point7(mMin.x, mMin.y, mMax.z);
+	Vector3f point8(mMin.x, mMin.y, mMin.z);
+	gfx.drawLine(point7, point8);
 
 	// Bottom face
-	gfx.drawLine(Vector3f(mMin.x, mMax.y, mMin.z), Vector3f(mMax.x, mMax.y, mMin.z));
-	gfx.drawLine(Vector3f(mMax.x, mMax.y, mMin.z), Vector3f(mMax.x, mMax.y, mMax.z));
-	gfx.drawLine(Vector3f(mMax.x, mMax.y, mMax.z), Vector3f(mMin.x, mMax.y, mMax.z));
-	gfx.drawLine(Vector3f(mMin.x, mMax.y, mMax.z), Vector3f(mMin.x, mMax.y, mMin.z));
+	Vector3f point9(mMin.x, mMax.y, mMin.z);
+	Vector3f point10(mMax.x, mMax.y, mMin.z);
+	gfx.drawLine(point9, point10);
+	Vector3f point11(mMax.x, mMax.y, mMin.z);
+	Vector3f point12(mMax.x, mMax.y, mMax.z);
+	gfx.drawLine(point11, point12);
+	Vector3f point13(mMax.x, mMax.y, mMax.z);
+	Vector3f point14(mMin.x, mMax.y, mMax.z);
+	gfx.drawLine(point13, point14);
+	Vector3f point15(mMin.x, mMax.y, mMax.z);
+	Vector3f point16(mMin.x, mMax.y, mMin.z);
+	gfx.drawLine(point15, point16);
 
 	// Vertical edges
-	gfx.drawLine(Vector3f(mMin.x, mMin.y, mMin.z), Vector3f(mMin.x, mMax.y, mMin.z));
-	gfx.drawLine(Vector3f(mMax.x, mMin.y, mMin.z), Vector3f(mMax.x, mMax.y, mMin.z));
-	gfx.drawLine(Vector3f(mMin.x, mMin.y, mMax.z), Vector3f(mMin.x, mMax.y, mMax.z));
-	gfx.drawLine(Vector3f(mMax.x, mMin.y, mMax.z), Vector3f(mMax.x, mMax.y, mMax.z));
+	Vector3f point17(mMin.x, mMin.y, mMin.z);
+	Vector3f point18(mMin.x, mMax.y, mMin.z);
+	gfx.drawLine(point18, point17);
+	Vector3f point19(mMax.x, mMin.y, mMin.z);
+	Vector3f point20(mMax.x, mMax.y, mMin.z);
+	gfx.drawLine(point19, point20);
+	Vector3f point21(mMin.x, mMin.y, mMax.z);
+	Vector3f point22(mMin.x, mMax.y, mMax.z);
+	gfx.drawLine(point21, point22);
+	Vector3f point23(mMax.x, mMin.y, mMax.z);
+	Vector3f point24(mMax.x, mMax.y, mMax.z);
+	gfx.drawLine(point23, point24);
 
 	Vector3f triangleVertices[4];
 	Vector2f unk2[4];
-	gfx.setColour(Colour(gfx.mPrimaryColour.r, gfx.mPrimaryColour.g, gfx.mPrimaryColour.b, 32), true);
+	Colour colour(gfx.mPrimaryColour.r, gfx.mPrimaryColour.g, gfx.mPrimaryColour.b, 32);
+	gfx.setColour(colour, true);
 
 	triangleVertices[0].set(mMin.x, mMin.y, mMax.z);
 	triangleVertices[1].set(mMin.x, mMax.y, mMax.z);

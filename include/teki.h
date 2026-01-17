@@ -396,8 +396,16 @@ public:
 
 	void inputVelocity(immut Vector3f& vel) { mVelocity.input(vel); }
 	void inputDrive(immut Vector3f& drive) { mTargetVelocity.input(drive); }
-	void stopVelocity() { inputVelocity(Vector3f(0.0f, 0.0f, 0.0f)); }
-	void stopDrive() { inputDrive(Vector3f(0.0f, 0.0f, 0.0f)); }
+	void stopVelocity() 
+	{
+		Vector3f vel(0.0f, 0.0f, 0.0f);		
+		inputVelocity(vel); 
+	}
+	void stopDrive() 
+	{ 
+		Vector3f drive(0.0f, 0.0f, 0.0f); 
+		inputDrive(drive); 
+	}
 	void stopMove()
 	{
 		stopVelocity();

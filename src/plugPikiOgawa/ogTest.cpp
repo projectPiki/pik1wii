@@ -435,9 +435,12 @@ void OgTestScreen::update()
  */
 void OgTestScreen::draw(Graphics& gfx)
 {
-	gfx.setViewport(AREA_FULL_SCREEN(gfx));
-	gfx.setScissor(AREA_FULL_SCREEN(gfx));
-	gfx.setClearColour(COLOUR_BLACK);
+	RectArea area1(AREA_FULL_SCREEN(gfx));
+	gfx.setViewport(area1);
+	RectArea area2(AREA_FULL_SCREEN(gfx));
+	gfx.setScissor(area2);
+	Colour colour1(COLOUR_BLACK);
+	gfx.setClearColour(colour1);
 	gfx.clearBuffer(3, false);
 
 	Camera cam;
@@ -465,9 +468,12 @@ void OgTestScreen::draw(Graphics& gfx)
 
 	if (mActiveMode == TESTMODE_INACTIVE) {
 		Matrix4f ortho;
-		gfx.setOrthogonal(ortho.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(Colour(255, 255, 0, 255));
+		RectArea area3(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(ortho.mMtx, area3);
+		Colour colour2(COLOUR_WHITE);
+		gfx.setColour(colour2, true);
+		Colour colour3(255, 255, 0, 255);
+		gfx.setAuxColour(colour3);
 
 		char scrnSelectorText[PATH_MAX];
 #if defined(VERSION_GPIP01_00)
@@ -477,8 +483,10 @@ void OgTestScreen::draw(Graphics& gfx)
 #endif
 		gfx.texturePrintf(mFont, 320 - mFont->stringWidth(scrnSelectorText) / 2, 20, scrnSelectorText);
 
-		gfx.setColour(Colour(200, 255, 255, 255), true);
-		gfx.setAuxColour(Colour(50, 50, 255, 255));
+		Colour colour4(200, 255, 255, 255);
+		gfx.setColour(colour4, true);
+		Colour colour5(50, 50, 255, 255);
+		gfx.setAuxColour(colour5);
 
 		char optionsTexts[11][PATH_MAX];
 
@@ -512,8 +520,10 @@ void OgTestScreen::draw(Graphics& gfx)
 			gfx.texturePrintf(mFont, 200, 30 * i + 60, optionsTexts[i]);
 		}
 
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(COLOUR_WHITE);
+		Colour colour6(COLOUR_WHITE);
+		gfx.setColour(colour6, true);
+		Colour colour7(COLOUR_WHITE);
+		gfx.setAuxColour(colour7);
 
 		char arrowText[256];
 		sprintf(arrowText, "＞");
@@ -522,9 +532,12 @@ void OgTestScreen::draw(Graphics& gfx)
 
 	if (mActiveMode == TESTMODE_Tutorial) {
 		Matrix4f ortho;
-		gfx.setOrthogonal(ortho.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setColour(COLOUR_WHITE, true);
-		gfx.setAuxColour(Colour(255, 255, 150, 255));
+		RectArea area4(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(ortho.mMtx, area4);
+		Colour colour8(COLOUR_WHITE);
+		gfx.setColour(colour8, true);
+		Colour colour9(255, 255, 150, 255);
+		gfx.setAuxColour(colour9);
 
 		ogScrMessageMgr* msgMgr = mTutorialMgr->getScrMsgMgr();
 		char tutorialText[PATH_MAX];

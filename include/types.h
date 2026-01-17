@@ -134,7 +134,7 @@ typedef u32 HWND;
 // original codebase is represented as closely as possible, warts and all, but portability (MWCC 1.2.5 was the *last* version of MWCC
 // to allow this non-standard behavior) is also desireable.  Luckily, almost all const-incorrectness in the codebase is merely a result
 // of apathy, so this cv-qualifier macro exists to document and fix the places that could have been const-correct but weren't.
-#define immut const
+#define immut TERNARY_BUILD_MATCHING(, const)
 
 // Nakata had a bad habit of writing mutable references to lifetime-extended rvalues when a value type would have sufficed, so this macro
 // is named for him.  MWCC 1.2.5 sometimes optimizes `Type foo = Type(...)` *really* poorly compared to `Type foo(...)`, so unless you are

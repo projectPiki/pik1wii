@@ -51,8 +51,10 @@ void CullFrustum::draw(Graphics& gfx)
 	bool prevLightSetting = gfx.setLighting(false, nullptr);
 	gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
-	gfx.setColour(COLOUR_WHITE, true);
-	gfx.setAuxColour(COLOUR_WHITE);
+	Colour white1(COLOUR_WHITE);
+	gfx.setColour(white1, true);
+	Colour white2(COLOUR_WHITE);
+	gfx.setAuxColour(white2);
 	gfx.drawLine(mPosition, mFocus);
 
 	f32 targetDist = mPosition.distance(mFocus);
@@ -110,7 +112,8 @@ void CullFrustum::draw(Graphics& gfx)
 	Vector3f odir3(vec11.DP(mViewXAxis) + odir.x, vec11.DP(mViewYAxis) + odir.y, vec11.DP(mViewZAxis) + odir.z);
 	Vector3f odir4(vec12.DP(mViewXAxis) + odir.x, vec12.DP(mViewYAxis) + odir.y, vec12.DP(mViewZAxis) + odir.z);
 
-	gfx.setColour(Colour(32, 255, 32, 128), true);
+	Colour colour1(32, 255, 32, 128);
+	gfx.setColour(colour1, true);
 	gfx.drawLine(dir1, dir2);
 	gfx.drawLine(dir2, dir3);
 	gfx.drawLine(dir3, dir4);
@@ -126,7 +129,8 @@ void CullFrustum::draw(Graphics& gfx)
 	gfx.drawLine(targ3, targ4);
 	gfx.drawLine(targ4, targ1);
 
-	gfx.setColour(Colour(255, 32, 32, 128), true);
+	Colour colour2(255, 32, 32, 128);
+	gfx.setColour(colour2, true);
 	gfx.drawLine(odir1, odir2);
 	gfx.drawLine(odir2, odir3);
 	gfx.drawLine(odir3, odir4);
@@ -137,7 +141,8 @@ void CullFrustum::draw(Graphics& gfx)
 	gfx.drawLine(odir3, targ3);
 	gfx.drawLine(odir4, targ4);
 
-	gfx.setColour(Colour(255, 0, 0, 16), true);
+	Colour colour3(255, 0, 0, 16);
+	gfx.setColour(colour3, true);
 	Vector3f vec3Block1[4];
 	Vector2f vec2Block1[4];
 	vec2Block1[0].set(0.0f, 0.0f);
@@ -151,21 +156,24 @@ void CullFrustum::draw(Graphics& gfx)
 	vec3Block1[3] = odir2;
 	gfx.drawOneTri(vec3Block1, nullptr, vec2Block1, 4);
 
-	gfx.setColour(Colour(255, 0, 32, 16), true);
+	Colour colour4(255, 0, 32, 16);
+	gfx.setColour(colour4, true);
 	vec3Block1[0] = dir3;
 	vec3Block1[1] = dir2;
 	vec3Block1[2] = odir2;
 	vec3Block1[3] = odir3;
 	gfx.drawOneTri(vec3Block1, nullptr, vec2Block1, 4);
 
-	gfx.setColour(Colour(255, 0, 0, 16), true);
+	Colour colour5(255, 0, 0, 16);
+	gfx.setColour(colour5, true);
 	vec3Block1[0] = dir4;
 	vec3Block1[1] = dir3;
 	vec3Block1[2] = odir3;
 	vec3Block1[3] = odir4;
 	gfx.drawOneTri(vec3Block1, nullptr, vec2Block1, 4);
 
-	gfx.setColour(Colour(255, 0, 32, 16), true);
+	Colour colour6(255, 0, 32, 16);
+	gfx.setColour(colour6, true);
 	vec3Block1[0] = dir1;
 	vec3Block1[1] = dir4;
 	vec3Block1[2] = odir4;
@@ -227,12 +235,14 @@ void CullFrustum::createViewPlanes()
 	mTotalPlaneCount = 0;
 	mDepth           = sinf(PI * (0.5f * mFov) / 180.0f);
 	mWidth           = cosf(PI * (0.5f * mFov) / 180.0f);
-	vectorToWorldPlane(Vector3f(0.0f, 0.0f, 1.0f), planes[0]);
+	Vector3f vec1(0.0f, 0.0f, 1.0f);
+	vectorToWorldPlane(vec1, planes[0]);
 	planes[0].mPlane.mOffset += mNear;
 	planes[0].CheckMinMaxDir();
 	planes[0].mIsEnabled = true;
 
-	vectorToWorldPlane(Vector3f(0.0f, 0.0f, -1.0f), planes[1]);
+	Vector3f vec2(0.0f, 0.0f, -1.0f);
+	vectorToWorldPlane(vec2, planes[1]);
 	planes[1].mPlane.mOffset -= 2600.0f;
 	planes[1].CheckMinMaxDir();
 	planes[1].mIsEnabled = true;
@@ -466,14 +476,17 @@ void LightCamera::calcProjection(Graphics& gfx, bool p2, Node* p3)
 		f32 height = 2.0f * mLightMap->mHeight;
 		gfx.setPerspective(mPerspectiveMatrix.mMtx, mFov, mAspectRatio, 30.0f, mFar, 1.0f);
 
-		gfx.setViewport(RectArea(-(mProjectionX * width), -(height * mProjectionY), width + (int(width * mProjectionX)),
-		                         height + (int(height * mProjectionY))));
+		RectArea area1(-(mProjectionX * width), -(height * mProjectionY), width + (int(width * mProjectionX)),
+		                         height + (int(height * mProjectionY)));
+		gfx.setViewport(area1);
 
 		Camera* cam = gfx.mCamera;
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		Colour transparent(COLOUR_TRANSPARENT);
+		gfx.setClearColour(transparent);
 		gfx.clearBuffer(3, 0);
 
-		gfx.setScissor(RectArea(4, 4, int(width) - 4, int(height) - 4));
+		RectArea area2(4, 4, int(width) - 4, int(height) - 4);
+		gfx.setScissor(area2);
 		gfx.setFog(false);
 		gfx.setLighting(false, nullptr);
 		gfx.setCamera(this);

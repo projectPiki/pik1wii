@@ -39,7 +39,8 @@ void MizuAi::initMizu(Mizu* mizu)
 	_08   = effectMgr->create(EffectMgr::EFF_Mizu_IdleBubbles, mMizu->mSRT.t, nullptr, nullptr);
 	mMizu->setCurrentState(0);
 	mMizu->setNextState(0);
-	mMizu->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Wait1, this));
+	PaniMotionInfo anim(TekiMotion::Wait1, this);
+	mMizu->mAnimator.startMotion(anim);
 	mMizu->setAnimTimer(30.0f);
 	initWait(0);
 }
@@ -54,7 +55,8 @@ void MizuAi::initGeyzer(Mizu* geyzer)
 	_08   = effectMgr->create(EffectMgr::EFF_Mizu_IdleBubbles, mMizu->mSRT.t, nullptr, nullptr);
 	mMizu->setCurrentState(1);
 	mMizu->setNextState(1);
-	mMizu->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Wait1, this));
+	PaniMotionInfo anim(TekiMotion::Wait1, this);
+	mMizu->mAnimator.startMotion(anim);
 	mMizu->setAnimTimer(30.0f);
 	initReady(1);
 }
@@ -108,7 +110,8 @@ void MizuAi::naviGeyzerJump()
 	targetPos.y        = mapMgr->getMinY(targetPos.x, targetPos.z, true);
 
 	Navi* navi = naviMgr->getNavi();
-	navi->stimulate(InteractGeyzer(mMizu, targetPos));
+	InteractGeyzer jump(mMizu, targetPos);
+	navi->stimulate(jump);
 }
 
 /**
@@ -144,7 +147,8 @@ bool MizuAi::waitTransit()
 void MizuAi::initWait(int stateID)
 {
 	mMizu->setNextState(stateID);
-	mMizu->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Wait1, this));
+	PaniMotionInfo anim(TekiMotion::Wait1, this);
+	mMizu->mAnimator.startMotion(anim);
 	mMizu->_3B8       = true;
 	mMizu->mIsVisible = true;
 	mMizu->setIsAlive(true);
@@ -165,7 +169,8 @@ void MizuAi::initWait(int stateID)
 void MizuAi::initReady(int stateID)
 {
 	mMizu->setNextState(stateID);
-	mMizu->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Wait1, this));
+	PaniMotionInfo anim(TekiMotion::Wait1, this);
+	mMizu->mAnimator.startMotion(anim);
 	mMizu->_3B8       = false;
 	mMizu->mIsVisible = false;
 	mMizu->setIsAlive(false);
@@ -190,7 +195,8 @@ void MizuAi::initReady(int stateID)
 void MizuAi::initJet(int stateID)
 {
 	mMizu->setNextState(stateID);
-	mMizu->mAnimator.startMotion(PaniMotionInfo(TekiMotion::Type1, this));
+	PaniMotionInfo anim(TekiMotion::Type1, this);
+	mMizu->mAnimator.startMotion(anim);
 	mMizu->_3B8       = true;
 	mMizu->mIsVisible = false;
 	mMizu->setIsAlive(false);
@@ -211,7 +217,8 @@ void MizuAi::initJet(int stateID)
 	zen::particleGenerator* ptcl = effectMgr->create(EffectMgr::EFF_Mizu_JetStream, mMizu->mSRT.t, nullptr, nullptr);
 	mPuffCallBack->set(ptcl);
 	if (ptcl) {
-		ptcl->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+		Vector3f pos(1.0f, 0.0f, 0.0f);
+		ptcl->setOrientedNormalVector(pos);
 	}
 
 	effectMgr->create(EffectMgr::EFF_Mizu_JetMist, mMizu->mSRT.t, nullptr, nullptr);

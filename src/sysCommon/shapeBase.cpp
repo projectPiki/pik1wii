@@ -1975,7 +1975,8 @@ void BaseShape::drawculled(Graphics& gfx, Camera& cam, ShapeDynMaterials* dynMat
 		for (int i = 0; i < mJointCount; i++) {
 			gfx.useMatrix(gfx.mCamera->mLookAtMtx, 0);
 			gfx.useTexture(nullptr, GX_TEXMAP0);
-			gfx.setColour(Colour(255, 32, 32, 255), true);
+			Colour colour(255, 32, 32, 255);
+			gfx.setColour(colour, true);
 			bool lighting = gfx.setLighting(false, nullptr);
 			mJointList[i].mBounds.draw(gfx);
 			gfx.setLighting(lighting, nullptr);
@@ -1985,7 +1986,8 @@ void BaseShape::drawculled(Graphics& gfx, Camera& cam, ShapeDynMaterials* dynMat
 			if (cam.isBoundVisible(box, 0x8000 | 0x10 | 0x20 | 0x1 | 0x2 | 0x4 | 0x8)) {
 				bool lighting = gfx.setLighting(false, nullptr);
 				gfx.useMatrix(Matrix4f::ident, 0);
-				gfx.setColour(COLOUR_WHITE, true);
+				Colour colour2(COLOUR_WHITE);
+				gfx.setColour(colour2, true);
 				int blend = gfx.setCBlending(BLEND_Alpha);
 				Vector3f centre((box.mMax.x + box.mMin.x) * 0.5f, (box.mMax.y + box.mMin.y) * 0.5f + 10.0f,
 				                (box.mMax.z + box.mMin.z) * 0.5f);
@@ -2915,9 +2917,11 @@ void BaseShape::createCollisions(int gridSize)
 			f32 size = mGridSize * 1.0f;
 
 			BoundBox box1;
-			box1.expandBound(Vector3f(minX - size, mCourseExtents.mMin.y - size, minZ - size));
+			Vector3f vec1(minX - size, mCourseExtents.mMin.y - size, minZ - size);
+			box1.expandBound(vec1);
 
-			box1.expandBound(Vector3f(minX + mGridSize + size, mCourseExtents.mMax.y + size, minZ + mGridSize + size));
+			Vector3f vec2(minX + mGridSize + size, mCourseExtents.mMax.y + size, minZ + mGridSize + size);
+			box1.expandBound(vec2);
 
 			triCount = 0;
 			for (int i = 0; i < mTriCount; i++) {

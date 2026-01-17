@@ -163,7 +163,9 @@ struct IntroGameSetupSection : public BaseGameSection {
 		// start our cutscene listener state
 		mCurrentModeState = new IntroModeState(this);
 
-		gameflow.mMoviePlayer->setGameCamInfo(false, 60.0f, Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+		Vector3f pos1(0.0f, 0.0f, 0.0f);
+		Vector3f pos2(0.0f, 0.0f, 0.0f);
+		gameflow.mMoviePlayer->setGameCamInfo(false, 60.0f, pos1, pos2);
 
 		mIsInitialSetup          = true;
 		gameflow.mIsDayEndActive = FALSE;
@@ -187,7 +189,6 @@ struct IntroGameSetupSection : public BaseGameSection {
 		gameflow.mMoviePlayer->startMovie(DEMOID_OpeningIntroPt1, 0, nullptr, nullptr, nullptr, CAF_AllVisibleMask, true);
 		gameflow.mMoviePlayer->startMovie(DEMOID_OpeningIntroPt2, 0, nullptr, nullptr, nullptr, CAF_AllVisibleMask, true);
 		gsys->setFade(1.0f);
-		STACK_PAD_TERNARY(size, 1);
 	}
 
 	/**
@@ -197,9 +198,12 @@ struct IntroGameSetupSection : public BaseGameSection {
 	void mainRender(Graphics& gfx)
 	{
 		// set up space environment for cutscene and keep movie playing
-		gfx.setViewport(AREA_FULL_SCREEN(gfx));
-		gfx.setScissor(AREA_FULL_SCREEN(gfx));
-		gfx.setClearColour(COLOUR_TRANSPARENT);
+		RectArea area1(AREA_FULL_SCREEN(gfx));
+		gfx.setViewport(area1);
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setScissor(area2);
+		Colour transparent(COLOUR_TRANSPARENT);
+		gfx.setClearColour(transparent);
 		gfx.clearBuffer(3, false);
 		gfx.setPerspective(gfx.mCamera->mPerspectiveMatrix.mMtx, gfx.mCamera->mFov, gfx.mCamera->mAspectRatio, gfx.mCamera->mNear,
 		                   gfx.mCamera->mFar, 1.0f);
@@ -222,12 +226,16 @@ struct IntroGameSetupSection : public BaseGameSection {
 		gfx.setPerspective(gfx.mCamera->mPerspectiveMatrix.mMtx, 60.0f, gfx.mCamera->mAspectRatio, 1.0f, gfx.mCamera->mFar, 1.0f);
 
 		Matrix4f unused;
-		unused.makeSRT(Vector3f(0.1f, 0.1f, 0.1f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, -5.0f));
+		Vector3f scale(0.1f, 0.1f, 0.1f);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		Vector3f trans(0.0f, 0.0f, -5.0f);
+		unused.makeSRT(scale, rot, trans);
 
 		Matrix4f orthoMtx;
 		gfx.mMatRenderMask = (MATFLAG_Opaque | MATFLAG_AlphaTest | MATFLAG_AlphaBlend);
 		mCurrentModeState->postRender(gfx);
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area);
 	}
 
 	/// Updates controller each frame (even though our inputs make no difference in retail).
@@ -288,13 +296,16 @@ struct IntroGameSetupSection : public BaseGameSection {
 		// do any 2D overlay rendering - we never have any, so this is a bit pointless
 		if (!(gameflow.mDemoFlags & CinePlayerFlags::NonGameMovie)) {
 			gsys->mTimer->start("postRender", true);
-			gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+			RectArea area1(AREA_FULL_SCREEN(gfx));
+			gfx.setOrthogonal(orthoMtx.mMtx, area1);
 			postRender(gfx);
 			gsys->mTimer->stop("postRender");
 		}
 
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
-		gfx.setOrthogonal(orthoMtx.mMtx, AREA_FULL_SCREEN(gfx));
+		RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area2);
+		RectArea area3(AREA_FULL_SCREEN(gfx));
+		gfx.setOrthogonal(orthoMtx.mMtx, area3);
 
 		// handle fade-ins and fade-outs
 		BaseGameSection::draw(gfx);

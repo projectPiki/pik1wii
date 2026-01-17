@@ -361,7 +361,8 @@ struct WhistleTemplate : public KEffect {
 
 			diff.normalize();
 			zen::makeRotMatrix(diff, mtx1);
-			zen::makeRotMatrix(Vector3f(tri->mTriangle.mNormal * -1.0f), mtx2);
+			Vector3f vec(tri->mTriangle.mNormal * -1.0f);
+			zen::makeRotMatrix(vec, mtx2);
 
 			q1.fromMat3f(mtx1);
 			q2.fromMat3f(mtx2);

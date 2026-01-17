@@ -325,7 +325,8 @@ void P2DPane::makeMatrix(int x, int y)
 	}
 	}
 
-	mLocalMtx.makeSRT(mScale, rotAxis, Vector3f(f32(mOffsetX) + f32(x), f32(mOffsetY) + f32(y), mPaneZ));
+	Vector3f trans(f32(mOffsetX) + f32(x), f32(mOffsetY) + f32(y), mPaneZ);
+	mLocalMtx.makeSRT(mScale, rotAxis, trans);
 	mLocalMtx.mMtx[0][3] += mLocalMtx.mMtx[0][0] * -mOffsetX + mLocalMtx.mMtx[0][1] * -mOffsetY;
 	mLocalMtx.mMtx[1][3] += mLocalMtx.mMtx[1][0] * -mOffsetX + mLocalMtx.mMtx[1][1] * -mOffsetY;
 	mLocalMtx.mMtx[2][3] += mLocalMtx.mMtx[2][0] * -mOffsetX + mLocalMtx.mMtx[2][1] * -mOffsetY;

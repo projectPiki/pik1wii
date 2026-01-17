@@ -898,7 +898,8 @@ bool TAIAflyingInTerritory::act(Teki& teki)
 	f32 yPos   = teki.getYFromSeaLevel();
 	f32 ySpeed = teki.mTargetVelocity.y;
 
-	if (teki.mTargetPosition.distance(Vector3f(teki.getPosition().x, yPos, teki.getPosition().z)) <= teki.getParameterF(TPF_WalkVelocity)) {
+	Vector3f tekipos(teki.getPosition().x, yPos, teki.getPosition().z);
+	if (teki.mTargetPosition.distance(tekipos) <= teki.getParameterF(TPF_WalkVelocity)) {
 		setTargetPosition(teki);
 	}
 

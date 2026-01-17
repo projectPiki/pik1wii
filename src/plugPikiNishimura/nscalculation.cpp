@@ -46,7 +46,8 @@ void NsCalculation::calcMatrix(const Vector3f& xVec, const Vector3f& yVec, const
 	calcVectorTrans(yVec, 1, mtx);
 	calcVectorTrans(zVec, 2, mtx);
 
-	mtx.scale(Vector3f(inXVec.length(), inYVec.length(), inZVec.length()));
+	Vector3f vec(inXVec.length(), inYVec.length(), inZVec.length());
+	mtx.scale(vec);
 
 	calcVectorTrans(transVec, 3, mtx);
 }

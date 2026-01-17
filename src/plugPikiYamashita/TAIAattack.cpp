@@ -260,7 +260,8 @@ bool TAIAflickCheck::act(Teki& teki)
 {
 	bool res = false;
 	if (getDamageCountLimit(teki) < 0) {
-		f32 damageCount = teki.getFlickDamageCount(teki.countPikis(TekiLowerRangeCondition(&teki)));
+		TekiLowerRangeCondition cond(&teki);
+		f32 damageCount = teki.getFlickDamageCount(teki.countPikis(cond));
 		res             = teki.mDamageCount >= damageCount;
 	} else if (teki.mDamageCount >= getDamageCountLimit(teki)) {
 		res = true;
@@ -423,13 +424,13 @@ bool TAIAbiteForKabekui::hitCheck(Teki& teki)
 			{
 				Creature* navi = *iter;
 				if (mouth->mCentre.distance(navi->getPosition()) < getNaviAttackSize(teki)) {
-					teki.attackTarget(*navi, teki.getAttackRange(), teki.getParameterF(TPF_AttackPower), TekiRecognitionCondition(&teki));
+					TekiRecognitionCondition cond(&teki);
+					teki.attackTarget(*navi, teki.getAttackRange(), teki.getParameterF(TPF_AttackPower), cond);
 				}
 			}
 		}
 	}
-
-	STACK_PAD_TERNARY(res, 2);
+	
 	return res;
 }
 

@@ -94,7 +94,8 @@ void zen::simplePtclManager::draw(Graphics& gfx)
 			Colour primColor(ptcl->mPrimaryColor.r, ptcl->mPrimaryColor.g, ptcl->mPrimaryColor.b,
 			                 RoundOff(ptcl->mPrimaryColor.a * ptcl->mAlphaFactor));
 			gfx.setPrimEnv(&primColor, &ptcl->mEnvColor);
-			gfx.drawRotParticle(*gfx.mCamera, ptcl->mLocalPosition + ptcl->mGlobalPosition, -ptcl->mRotAngle,
+			Vector3f ptclpos(ptcl->mLocalPosition + ptcl->mGlobalPosition);
+			gfx.drawRotParticle(*gfx.mCamera, ptclpos, -ptcl->mRotAngle,
 			                    ptcl->mSize * ptcl->mScaleFactor * 25.0f);
 		}
 	}

@@ -478,10 +478,11 @@ void SmokeEmitter::draw(Graphics& gfx)
 		if (gfx.initParticle(true)) {
 			for (Smoke* smoke = mActiveSmokeList->mNext; smoke != mActiveSmokeList; smoke = smoke->mNext) {
 				if (mBlendMode == BLEND_Alpha) {
-					gfx.setColour(Colour(255, 255, 255, smoke->mAlpha * 255), true);
+					Colour colour1(255, 255, 255, smoke->mAlpha * 255);
+					gfx.setColour(colour1, true);
 				} else {
-					gfx.setColour(Colour(smoke->mAlpha * 255.0f, smoke->mAlpha * 255.0f, smoke->mAlpha * 255.0f, smoke->mAlpha * 255.0f),
-					              true);
+					Colour colour2(smoke->mAlpha * 255.0f, smoke->mAlpha * 255.0f, smoke->mAlpha * 255.0f, smoke->mAlpha * 255.0f);
+					gfx.setColour(colour2, true);
 				}
 
 				gfx.drawParticle(*gfx.mCamera, smoke->mPosition, 6.0f * smoke->mSize);
@@ -497,7 +498,9 @@ void SmokeEmitter::draw(Graphics& gfx)
 	for (Smoke* smoke = mActiveSmokeList->mNext; smoke != mActiveSmokeList; smoke = smoke->mNext) {
 		Matrix4f mtx1;
 		Matrix4f mtx2;
-		mtx1.makeSRT(Vector3f(smoke->mSize, smoke->mSize, smoke->mSize), Vector3f(0.0f, 0.0f, 0.0f), smoke->mPosition);
+		Vector3f scale(smoke->mSize, smoke->mSize, smoke->mSize);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		mtx1.makeSRT(scale, rot, smoke->mPosition);
 		gfx.calcViewMatrix(mtx1, mtx2);
 		gfx.useMatrix(mtx2, 0);
 		mModel->drawshape(gfx, *gfx.mCamera, nullptr);

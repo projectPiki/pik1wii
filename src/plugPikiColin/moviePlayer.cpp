@@ -473,7 +473,9 @@ void MoviePlayer::startMovie(int movieIdx, int, Creature* target, immut Vector3f
 		if (pos && rot) {
 			PRINT("    localized at (%.1f, %.1f, %.1f) (%.1f, %.1f, %.1f)\n", pos->x, pos->y, pos->z, rot->x, rot->y, rot->z);
 		}
-		info->mRootTransform.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), rot ? *rot : Vector3f(0.0f, 0.0f, 0.0f), *pos);
+		Vector3f pos1(1.0f, 1.0f, 1.0f);
+		Vector3f pos2(0.0f, 0.0f, 0.0f);
+		info->mRootTransform.makeSRT(pos1, rot ? *rot : pos2, *pos);
 	} else {
 		info->mRootTransform.makeIdentity();
 	}

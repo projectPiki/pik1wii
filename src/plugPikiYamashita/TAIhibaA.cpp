@@ -151,7 +151,8 @@ public:
 			}
 
 			if (teki.getFrameCounter() > teki.getParameterF(TAIhibaAFloatParams::AttackTime)) {
-				teki.mTekiAnimator->finishMotion(PaniMotionInfo(PANI_NO_MOTION, &teki));
+				PaniMotionInfo anim(PANI_NO_MOTION, &teki);
+				teki.mTekiAnimator->finishMotion(anim);
 				ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk0);
 				if (ptclGen) {
 					ptclGen->finish();
@@ -323,7 +324,8 @@ void TAIhibaAStrategy::act(Teki& teki)
 			if (part) {
 				Matrix4f mtx = part->getMatrix();
 				ptclGen->setEmitPos(part->mCentre);
-				ptclGen->setEmitDir(Vector3f(mtx.mMtx[0][1], mtx.mMtx[1][1], mtx.mMtx[2][1]));
+				Vector3f dir(mtx.mMtx[0][1], mtx.mMtx[1][1], mtx.mMtx[2][1]);
+				ptclGen->setEmitDir(dir);
 			} else {
 				ptclGen->finish();
 				teki.setPtclGenPtr(YTeki::PTCL_Unk0, nullptr);

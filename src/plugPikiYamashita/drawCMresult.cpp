@@ -321,15 +321,10 @@ void zen::DrawCMresult::createRankInEffect()
 {
 	if (_8C >= 0) {
 		P2DPane* pane = mResultScreen->getScreenPtr()->search('bi_w', true);
-		mEffectMgr2D->create(EFF2D_Unk14,
-		                     Vector3f(pane->getPosH() + (pane->getWidth() >> 1), 480 - (pane->getPosV() + (pane->getHeight() >> 1)), 0.0f),
-		                     nullptr, nullptr);
-		mEffectMgr2D->create(EFF2D_Unk13,
-		                     Vector3f(pane->getPosH() + (pane->getWidth() >> 1), 480 - (pane->getPosV() + (pane->getHeight() >> 1)), 0.0f),
-		                     nullptr, nullptr);
-		mEffectMgr2D->create(EFF2D_Unk12,
-		                     Vector3f(pane->getPosH() + (pane->getWidth() >> 1), 480 - (pane->getPosV() + (pane->getHeight() >> 1)), 0.0f),
-		                     nullptr, nullptr);
+		Vector3f pos1(pane->getPosH() + (pane->getWidth() >> 1), 480 - (pane->getPosV() + (pane->getHeight() >> 1)), 0.0f);
+		mEffectMgr2D->create(EFF2D_Unk14, pos1, nullptr, nullptr);
+		mEffectMgr2D->create(EFF2D_Unk13, pos1, nullptr, nullptr);
+		mEffectMgr2D->create(EFF2D_Unk12, pos1, nullptr, nullptr);
 
 		int x, y;
 		char buf[8];
@@ -339,8 +334,9 @@ void zen::DrawCMresult::createRankInEffect()
 		x += pane->getWidth() >> 1;
 		y += pane->getHeight() >> 1;
 
-		mEffectMgr2D->create(EFF2D_Unk16, Vector3f(x, 480 - y, 0.0f), nullptr, nullptr);
-		mEffectMgr2D->create(EFF2D_Unk15, Vector3f(x, 480 - y, 0.0f), nullptr, nullptr);
+		Vector3f pos2(x, 480 - y, 0.0f);
+		mEffectMgr2D->create(EFF2D_Unk16, pos2, nullptr, nullptr);
+		mEffectMgr2D->create(EFF2D_Unk15, pos2, nullptr, nullptr);
 
 		SeSystem::playSysSe(SYSSE_CHG_HISCORE);
 	}

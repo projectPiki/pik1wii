@@ -284,7 +284,8 @@ bool TAIAunvisibleTarget::act(Teki& teki)
  */
 bool TAIAstickingPiki::act(Teki& teki)
 {
-	int pikiCount = teki.countPikis(TekiStickerCondition(&teki));
+	TekiStickerCondition cond(&teki);
+	int pikiCount = teki.countPikis(cond);
 	if (pikiCount >= getPikiNum(teki)) {
 		return true;
 	}

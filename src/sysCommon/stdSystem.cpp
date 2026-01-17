@@ -502,7 +502,8 @@ LFlareGroup* StdSystem::registerLFlare(Texture* tex)
  */
 void StdSystem::flushLFlares(Graphics& gfx)
 {
-	gfx.setFog(true, COLOUR_TRANSPARENT, 1.0f, gfx.mCamera->mNear, gfx.mCamera->mFar);
+	Colour colour(COLOUR_TRANSPARENT);
+	gfx.setFog(true, colour, 1.0f, gfx.mCamera->mNear, gfx.mCamera->mFar);
 
 	int oldBlend     = gfx.setCBlending(BLEND_Additive);
 	bool oldLighting = gfx.setLighting(false, nullptr);

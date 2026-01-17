@@ -184,35 +184,46 @@ void Slime::drawShape(Graphics& gfx)
 #endif
 	{
 		Matrix4f transformMtx;
-		mWorldMtx.makeSRT(Vector3f(1.0f, 1.0f, 1.0f), Vector3f(0.0f, 0.0f, 0.0f), Vector3f(0.0f, 0.0f, 0.0f));
+		Vector3f scale(1.0f, 1.0f, 1.0f);
+		Vector3f rot(0.0f, 0.0f, 0.0f);
+		Vector3f trans(0.0f, 0.0f, 0.0f);
+		mWorldMtx.makeSRT(scale, rot, trans);
 		gfx.mCamera->mLookAtMtx.multiplyTo(mWorldMtx, transformMtx);
 
 		gfx.setLighting(false, nullptr);
 		gfx.setFog(false);
 		gfx.useTexture(nullptr, GX_TEXMAP0);
 
-		gfx.setColour(Colour(255, 0, 0, 255), true);
+		Colour colour1(255, 0, 0, 255);
+		gfx.setColour(colour1, true);
 		gfx.drawSphere(mSlimeCreatures[0]->mSRT.t, 15.0f, transformMtx);
 
-		gfx.setColour(Colour(0, 0, 255, 255), true);
+		Colour colour2(0, 0, 255, 255);
+		gfx.setColour(colour2, true);
 		gfx.drawSphere(mSlimeCreatures[1]->mSRT.t, 15.0f, transformMtx);
 
-		gfx.setColour(Colour(255, 255, 0, 255), true);
+		Colour colour3(255, 255, 0, 255);
+		gfx.setColour(colour3, true);
 		gfx.drawSphere(mSlimeCreatures[2]->mSRT.t, 15.0f, transformMtx);
 
-		gfx.setColour(Colour(0, 255, 0, 255), true);
+		Colour colour4(0, 255, 0, 255);
+		gfx.setColour(colour4, true);
 		gfx.drawSphere(mSlimeCreatures[3]->mSRT.t, 15.0f, transformMtx);
 
-		gfx.setColour(Colour(255, 0, 0, 255), true);
+		Colour colour5(255, 0, 0, 255);
+		gfx.setColour(colour5, true);
 		gfx.drawSphere(mSlimeBody->mPrevVelocities[0], 15.0f, transformMtx);
 
-		gfx.setColour(Colour(0, 0, 255, 255), true);
+		Colour colour6(0, 0, 255, 255);
+		gfx.setColour(colour6, true);
 		gfx.drawSphere(mSlimeBody->mPrevVelocities[1], 15.0f, transformMtx);
 
-		gfx.setColour(Colour(255, 255, 0, 255), true);
+		Colour colour7(255, 255, 0, 255);
+		gfx.setColour(colour7, true);
 		gfx.drawSphere(mSlimeBody->mPrevVelocities[2], 15.0f, transformMtx);
 
-		gfx.setColour(Colour(0, 255, 0, 255), true);
+		Colour colour8(0, 255, 0, 255);
+		gfx.setColour(colour8, true);
 		gfx.drawSphere(mSlimeBody->mPrevVelocities[3], 15.0f, transformMtx);
 	}
 #endif

@@ -245,7 +245,8 @@ public:
 				Creature* sprout = *iter;
 				if (sprout && sprout->getPosition().distance(teki.getPosition()) < teki.getParameterF(TPF_VisibleRange)) {
 					PRINT("Bikkuri %08x \n", sprout);
-					sprout->stimulate(InteractBikkuri(navi));
+					InteractBikkuri bikkuri(navi);
+					sprout->stimulate(bikkuri);
 				}
 			}
 
@@ -447,7 +448,8 @@ public:
 protected:
 	virtual f32 getWalkVelocity(Teki& teki) // _20
 	{
-		int pikiCount   = teki.countPikis(TekiStickerCondition(&teki));
+		TekiStickerCondition cond(&teki);
+		int pikiCount   = teki.countPikis(cond);
 		f32 speedFactor = f32(pikiCount) / teki.getParameterF(DOROROPF_PikiNumForMaxDrag);
 		if (speedFactor > 1.0f) {
 			speedFactor = 1.0f;
@@ -505,7 +507,8 @@ protected:
 		{
 			Creature* piki = *iter;
 			if (piki && part->mCentre.distance(piki->getPosition()) < range) {
-				piki->stimulate(InteractKill(&teki, 0));
+				InteractKill kill(&teki, 0);
+				piki->stimulate(kill);
 				iter.dec();
 			}
 		}
@@ -846,24 +849,28 @@ void TAIdororoStrategy::act(Teki& teki)
 	ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk2); // fragments
 	if (ptclGen) {
 		ptclGen->setEmitDir(vec);
-		ptclGen->setEmitVelocity(Vector3f(teki.mVelocity * 0.035f));
+		Vector3f vel1(teki.mVelocity * 0.035f);
+		ptclGen->setEmitVelocity(vel1);
 	}
 
 	ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk3); // specks
 	if (ptclGen) {
 		ptclGen->setEmitDir(vec);
-		ptclGen->setEmitVelocity(Vector3f(teki.mVelocity * 0.035f));
+		Vector3f vel2(teki.mVelocity * 0.035f);
+		ptclGen->setEmitVelocity(vel2);
 	}
 
 	ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk6); // smoke
 	if (ptclGen) {
 		ptclGen->setEmitDir(vec);
-		ptclGen->setEmitVelocity(Vector3f(teki.mVelocity * 0.0175f));
+		Vector3f vel3(teki.mVelocity * 0.0175f);
+		ptclGen->setEmitVelocity(vel3);
 	}
 
 	ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk4); // body trail
 	if (ptclGen) {
-		ptclGen->setEmitVelocity(Vector3f(teki.mVelocity * 0.01f));
+		Vector3f vel4(teki.mVelocity * 0.01f);
+		ptclGen->setEmitVelocity(vel4);
 	}
 
 	ptclGen = teki.getPtclGenPtr(YTeki::PTCL_Unk5); // glow

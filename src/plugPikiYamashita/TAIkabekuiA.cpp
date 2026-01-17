@@ -107,7 +107,8 @@ protected:
 			zen::particleGenerator* generator = effectMgr->create(
 			    EffectMgr::EFF_Kabekui_EatBridgeA, mouthSlot->getChildAt(mouthSlot->getChildCount() - 1)->mCentre, nullptr, nullptr);
 			if (generator != nullptr) {
-				generator->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+				Vector3f vec1(1.0f, 0.0f, 0.0f);
+				generator->setOrientedNormalVector(vec1);
 			}
 
 			teki.playEventSound(&teki, SE_WALLEAT_EAT);
@@ -120,7 +121,8 @@ protected:
 			zen::particleGenerator* generator = effectMgr->create(
 			    EffectMgr::EFF_Kabekui_EatBridgeB, mouthSlot->getChildAt(mouthSlot->getChildCount() - 1)->mCentre, nullptr, nullptr);
 			if (generator != nullptr) {
-				generator->setOrientedNormalVector(Vector3f(1.0f, 0.0f, 0.0f));
+				Vector3f vec2(1.0f, 0.0f, 0.0f);
+				generator->setOrientedNormalVector(vec2);
 			}
 		}
 	}

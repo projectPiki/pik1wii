@@ -38,7 +38,8 @@ struct NaviWhistle : public KEffect {
 
 			diff.normalize();
 			zen::makeRotMatrix(diff, mtx1);
-			zen::makeRotMatrix(Vector3f(tri->mTriangle.mNormal * -1.0f), mtx2);
+			Vector3f diff2(tri->mTriangle.mNormal * -1.0f);
+			zen::makeRotMatrix(diff2, mtx2);
 
 			q1.fromMat3f(mtx1);
 			q2.fromMat3f(mtx2);

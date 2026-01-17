@@ -957,7 +957,8 @@ void zen::particleGenerator::drawPtclBillboard(Graphics& gfx)
 			Colour col(ptcl->mPrimaryColor.r, ptcl->mPrimaryColor.g, ptcl->mPrimaryColor.b,
 			           RoundOff(ptcl->mPrimaryColor.a * ptcl->mAlphaFactor));
 			gfx.setPrimEnv(&col, &ptcl->mEnvColor);
-			gfx.drawRotParticle(*gfx.mCamera, ptcl->mLocalPosition + ptcl->mGlobalPosition, -ptcl->mRotAngle,
+			Vector3f ptclpos(ptcl->mLocalPosition + ptcl->mGlobalPosition);
+			gfx.drawRotParticle(*gfx.mCamera, ptclpos, -ptcl->mRotAngle,
 			                    ptcl->mSize * ptcl->mScaleFactor * 25.0f);
 
 			list = next;
@@ -1745,7 +1746,8 @@ void zen::particleGenerator::drawPtclChildren(Graphics& gfx)
 		next                    = list->mNext;
 
 		gfx.setPrimEnv(&child->mPrimaryColor, &child->mPrimaryColor);
-		gfx.drawParticle(*gfx.mCamera, child->mLocalPosition + child->mGlobalPosition, 25.0f * child->mSize);
+		Vector3f childpos(child->mLocalPosition + child->mGlobalPosition);
+		gfx.drawParticle(*gfx.mCamera, childpos, 25.0f * child->mSize);
 
 		list = next;
 	}

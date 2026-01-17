@@ -593,8 +593,8 @@ public:
 	void update()
 	{
 		if (zen::Rand(100.0f) < mStarFallChance) {
-			WMeffMgr->create(EFF2D_MapShootingStar, Vector3f(zen::Rand(640.0f), 500.0f - zen::Rand(50.0f), -zen::Rand(150.0f)), nullptr,
-			                 nullptr);
+			Vector3f pos(zen::Rand(640.0f), 500.0f - zen::Rand(50.0f), -zen::Rand(150.0f));
+			WMeffMgr->create(EFF2D_MapShootingStar, pos, nullptr, nullptr);
 		}
 		if (mIsRapidFireMode) {
 			if (mStarFallChance < 0.0f) {
