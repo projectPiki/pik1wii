@@ -173,12 +173,18 @@ void GaugeInfo::refresh(Graphics& gfx)
 	// bottom value first (red, changing value showing how many Pikmin are lifting/pushing/moving the object)
 	Colour colour;
 	colour.set(255, 32, 32, (int)mDisplayAlpha);
+	
+	
 
 	// makes a visually "dominant" value by scaling down the other digit to 75%
 	// - when we're below the minimum number to move the object, make top value (target number) dominant
 	// - when we're able to move the object, make bottom value (current number) dominant
 	f32 bottomScale = (mStickCount < mMinCount) ? 0.75f : 1.0f;
 	f32 topScale    = (mStickCount < mMinCount) ? 1.0f : 0.75f;
+	
+	if (mParentLifeGauge->mUseColor){
+		colour.set(mParentLifeGauge->mColor.r, mParentLifeGauge->mColor.g, mParentLifeGauge->mColor.b, (int)mDisplayAlpha);
+	}
 
 	// draw bottom digit (current number)
 	showDigits(pos, colour, mStickCount, mDigitHalfWidth * bottomScale, mDigitHalfHeight * bottomScale);
@@ -201,6 +207,11 @@ void GaugeInfo::refresh(Graphics& gfx)
 	// draw center of top number (blue, static value showing target amount to move object) 10 units above line
 	pos.y += 10.0f;
 	colour.set(32, 32, 255, (int)mDisplayAlpha);
+	
+	if (mParentLifeGauge->mUseColor){
+		colour.set(mParentLifeGauge->mColor.r, mParentLifeGauge->mColor.g, mParentLifeGauge->mColor.b, (int)mDisplayAlpha);
+	}
+	
 	showDigits(pos, colour, mMinCount, mDigitHalfWidth * topScale, mDigitHalfHeight * topScale);
 }
 
@@ -322,7 +333,7 @@ LifeGauge::LifeGauge()
 	mScale             = 48.0f;
 	mActiveCarryNumber = nullptr;
 	mColor.set(255, 255, 255, 255);
-	mUnk        = false;
+	mUseColor        = false;
 }
 
 /**

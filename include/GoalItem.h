@@ -81,9 +81,11 @@ struct GoalItem : public Suckable, public zen::CallBack2<zen::particleGenerator*
 	virtual Vector3f getSuckPos();                                   // _164
 	virtual void suckMe(Pellet*);                                    // _168
 	virtual int getRouteIndex() { return mWaypointIdx; }             // _170
+	virtual Colour getPelletColor();
 	virtual bool invoke(zen::particleGenerator*, zen::particleMdl*); // _180
 	virtual bool isVisible() { return true; }                        // _74
 	virtual bool isAlive() { return true; }                          // _88
+	
 
 	void setFlowEffect(bool);
 	void setSpotActive(bool);

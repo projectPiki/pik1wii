@@ -84,6 +84,18 @@ static const EffectMgr::effTypeTable unusedEffects[3] = {
  */
 DEFINE_PRINT("ufoItem")
 
+
+/**
+ * @todo: Documentation
+ */
+Colour UfoItem::getPelletColor()
+{
+	Colour colour;
+	colour.set(255, 255, 255, 255);
+
+	return colour;
+}
+
 /**
  * @todo: Documentation
  */

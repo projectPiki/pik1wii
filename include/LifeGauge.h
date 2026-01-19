@@ -137,7 +137,7 @@ struct LifeGauge {
 	f32 mScale;                     ///< _34, display scale of gauge.
 	GaugeInfo* mActiveCarryNumber;  ///< _38, associated carry number display, managed by `LifeGaugeMgr`.
 	Colour mColor;
-	bool mUnk;
+	bool mUseColor;
 };
 
 extern LifeGaugeMgr* lgMgr;

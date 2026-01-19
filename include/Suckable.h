@@ -21,6 +21,7 @@ struct Suckable : public ItemCreature {
 	virtual void suckMe(Pellet*)   = 0;  // _168
 	virtual void finishSuck(Pellet*) { } // _16C (weak)
 	virtual int getRouteIndex() = 0;     // _170
+	virtual Colour getPelletColor() = 0; // _17C, new
 
 	// _00      = VTBL
 	// _00-_3C8 = ItemCreature

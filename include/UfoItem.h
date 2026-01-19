@@ -122,6 +122,7 @@ public:
 	virtual void suckMe(Pellet*);                              // _168
 	virtual void finishSuck(Pellet*);                          // _16C
 	virtual int getRouteIndex() { return mWaypointID; }        // _170
+	virtual Colour getPelletColor();
 	virtual bool isVisible() { return true; }                  // _74
 	virtual bool isAlive() { return true; }                    // _88
 

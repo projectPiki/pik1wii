@@ -64,6 +64,33 @@ static void printMatrix(immut char* name, immut Matrix4f& mat)
 /**
  * @todo: Documentation
  */
+Colour GoalItem::getPelletColor()
+{
+	Colour colour;
+	switch (mOnionColour){
+	case Red:
+	{
+		colour.set(255, 48, 48, 255);
+		break;
+	}
+	case Blue:
+	{
+		colour.set(64, 64, 255, 255);
+		break;
+	}
+	case Yellow:
+	{
+		colour.set(239, 239, 0, 255);
+		break;
+	}
+	}
+
+	return colour;
+}
+
+/**
+ * @todo: Documentation
+ */
 bool GoalItem::insideSafeArea(immut Vector3f& pos)
 {
 	Vector3f diff = pos - mSRT.t;

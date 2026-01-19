@@ -17,6 +17,7 @@
 #include "StateMachine.h"
 #include "Stickers.h"
 #include "UtEffect.h"
+#include "Suckable.h"
 #include "jaudio/pikiinter.h"
 #include "teki.h"
 #include "zen/Math.h"
@@ -223,6 +224,8 @@ Pellet::Pellet()
 	mCollisionRadius = 4.0f;
 	mCarryDirection.set(0.0f, 0.0f, 0.0f);
 	setTrySound(false);
+	mLifeGauge.mColor.set(102, 153, 153, 255);
+	mLifeGauge.mUseColor = true;
 }
 
 /**
@@ -1168,6 +1171,19 @@ void Pellet::update()
 #define ASSERT_POSITION_NOTNAN(...)
 #endif
 
+	if (mTargetGoal){
+		Colour colour = mTargetGoal->getPelletColor();
+		mLifeGauge.mColor.set(colour.r, colour.g, colour.b, colour.a);
+		mLifeGauge.mUseColor = true;
+		if (mCarrierCounter < mConfig->mCarryMinPikis()) {
+			mLifeGauge.mColor.set(32, 110, 80, 255);
+			mLifeGauge.mUseColor = true;
+		}
+	} else {
+		mLifeGauge.mColor.set(32, 110, 80, 255);
+		mLifeGauge.mUseColor = true;
+	}
+	
 	mLastPosition   = mSRT.t;
 	bool isOnGround = onGround();
 	if (isOnGround && !mIsAIActive && mConfig->mBounceSoundID() != -1) {
