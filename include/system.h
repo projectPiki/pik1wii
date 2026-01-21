@@ -50,7 +50,9 @@ enum SystemHeapType {
 	SYSHEAP_Movie   = 5,  // Movie heap
 	SYSHEAP_Message = 6,  // Message heap
 	SYSHEAP_Lang    = 7,  // Language heap
-	SYSHEAP_COUNT,        // 8, total number of heaps
+	SYSHEAP_Mem1    = 8,  // MEM1 heap
+	SYSHEAP_App1    = 9,  // App1 heap
+	SYSHEAP_COUNT,        // 10, total number of heaps
 };
 
 /**
@@ -249,9 +251,7 @@ struct StdSystem {
 	int mActiveHeapIdx;            // _194
 	BOOL mForcePrint;              // _198
 	MemInfo* mCurrMemInfo;         // _19C
-#if defined(VERSION_GPIP01_00)
-	LanguageID mLanguageID; // _1A0, language ID for PAL.
-#endif
+	LanguageID mLanguageID; 	   // _1A0, language ID for PAL.
 
 	// the vtable has to be at 0x1A0, so it's in the middle, yes.
 	virtual void initSoftReset();                                                                         // _08
@@ -408,6 +408,7 @@ struct System : public StdSystem {
 
 	// _00      = VTBL
 	// _00-_248 = StdSystem
+	u8 _298[0x8];                                        
 	u32 mHeapStart;                                  // _244
 	u32 mHeapEnd;                                    // _248
 	Graphics* mDGXGfx;                               // _24C, cast to DGXGraphics in DOL
