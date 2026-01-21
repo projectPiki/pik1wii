@@ -205,8 +205,8 @@ protected:
 	u16 mPaneType;              // _08, see P2DPaneType enum
 	u16 _0A;                    // _0A
 	struct {
-		bool mIsVisible : 1;
-		u16 mRotationAxis : 2;
+		u32 mIsVisible : 1;
+		u32 mRotationAxis : 2;
 	} mFlag;                    // _0C
 	u32 mTagName;               // _10, unknown
 	f32 mPaneZ;                 // _14
@@ -221,7 +221,8 @@ protected:
 	f32 mRotation;              // _BC
 	Vector3f mScale;            // _C0
 	int mCullMode;              // _CC
-	PSUTree<P2DPane> mPaneTree; // _D0
+	bool mUseWidescreen;        // _D0
+	PSUTree<P2DPane> mPaneTree; // _D4
 };
 
 #endif
