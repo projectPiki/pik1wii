@@ -567,10 +567,10 @@ MSL_C/PPCEABI/bare/H/w_asin.c:
 MSL_C/PPCEABI/bare/H/w_atan2.c:
 	.text       start:0x80034020 end:0x80034024
 
-MSL_C/PPCEABI/bare/H/w_exp.c:
+MSL_C/PPCEABI/bare/H/w_fmod.c:
 	.text       start:0x80034024 end:0x80034028
 
-MSL_C/PPCEABI/bare/H/w_fmod.c:
+MSL_C/PPCEABI/bare/H/w_log10.c:
 	.text       start:0x80034028 end:0x8003402C
 
 MSL_C/PPCEABI/bare/H/w_pow.c:
@@ -1364,7 +1364,9 @@ plugPikiColin/gauges.cpp:
 	.text       start:0x800EF020 end:0x800F0998
 	.ctors      start:0x802F5E14 end:0x802F5E18
 	.data       start:0x80337880 end:0x80337890
+	.sdata      start:0x804983D8 end:0x80498440
 	.sbss       start:0x8049EBF0 end:0x8049EC08
+	.sdata2     start:0x804A0030 end:0x804A00B0
 
 plugPikiColin/genMapObject.cpp:
 	.text       start:0x800F0998 end:0x800F0BB4
@@ -2252,12 +2254,15 @@ plugPikiNakata/tekibteki.cpp:
 	.text       start:0x801B789C end:0x801BCFFC
 	.ctors      start:0x802F607C end:0x802F6080
 	.data       start:0x803448C0 end:0x80344AD8
+	.sdata      start:0x8049B6F8 end:0x8049B7B8
 	.sdata2     start:0x804A1A18 end:0x804A1AA0
 
 plugPikiNakata/tekiconditions.cpp:
 	.text       start:0x801BCFFC end:0x801BD614
 	.ctors      start:0x802F6080 end:0x802F6084
 	.data       start:0x80344AD8 end:0x80344BB0
+	.sdata      start:0x8049B7B8 end:0x8049B7D0
+	.sdata2     start:0x804A1AA0 end:0x804A1AA8
 
 plugPikiNakata/tekievent.cpp:
 	.text       start:0x801BD614 end:0x801BD688
@@ -2266,12 +2271,16 @@ plugPikiNakata/tekiinteraction.cpp:
 	.text       start:0x801BD688 end:0x801BD87C
 	.ctors      start:0x802F6084 end:0x802F6088
 	.data       start:0x80344BB0 end:0x80344C08
+	.sdata      start:0x8049B7D0 end:0x8049B800
 
 plugPikiNakata/tekimgr.cpp:
 	.text       start:0x801BD87C end:0x801BE2B8
 	.ctors      start:0x802F6088 end:0x802F608C
+	.rodata     start:0x80305540 end:0x803056B0
 	.data       start:0x80344C08 end:0x80344DA8
+	.sdata      start:0x8049B800 end:0x8049B830
 	.sbss       start:0x8049EED0 end:0x8049EED8
+	.sdata2     start:0x804A1AA8 end:0x804A1AB8
 
 plugPikiNakata/tekinakata.cpp:
 	.text       start:0x801BE2B8 end:0x801BEB9C
@@ -2285,11 +2294,13 @@ plugPikiNakata/tekinteki.cpp:
 plugPikiNakata/tekiparameters.cpp:
 	.text       start:0x801BEF00 end:0x801BFC78
 	.ctors      start:0x802F6094 end:0x802F6098
+	.rodata     start:0x803056B0 end:0x80305B60
 	.data       start:0x80344FB0 end:0x80344FE0
 
 plugPikiNakata/tekipersonality.cpp:
 	.text       start:0x801BFC78 end:0x801C0414
 	.ctors      start:0x802F6098 end:0x802F609C
+	.rodata     start:0x80305B60 end:0x80305C30
 	.data       start:0x80344FE0 end:0x80344FF0
 
 plugPikiNakata/tekistrategy.cpp:
@@ -2300,6 +2311,7 @@ plugPikiNakata/tekistrategy.cpp:
 plugPikiNakata/genteki.cpp:
 	.text       start:0x801C0528 end:0x801C092C
 	.ctors      start:0x802F60A0 end:0x802F60A4
+	.rodata     start:0x80305C30 end:0x80305C60
 	.data       start:0x80345018 end:0x80345050
 
 plugPikiNakata/nakatacode.cpp:
@@ -2310,17 +2322,23 @@ plugPikiNakata/nakatacode.cpp:
 plugPikiNakata/nlibfunction.cpp:
 	.text       start:0x801C09A4 end:0x801C0D80
 	.data       start:0x80345050 end:0x80345080
+	.sdata2     start:0x804A1B18 end:0x804A1B28
 
 plugPikiNakata/nlibgeometry3d.cpp:
 	.text       start:0x801C0D80 end:0x801C12A4
 	.data       start:0x80345080 end:0x803450A0
+	.sdata2     start:0x804A1B28 end:0x804A1B2C
 
 plugPikiNakata/nlibgeometry.cpp:
 	.text       start:0x801C12A4 end:0x801C2D5C
 	.data       start:0x803450A0 end:0x803450B0
+	.sdata      start:0x8049B908 end:0x8049B914
+	.sdata2     start:0x804A1B30 end:0x804A1B3C
 
 plugPikiNakata/nlibgraphics.cpp:
 	.text       start:0x801C2D5C end:0x801C308C
+	.sdata      start:0x8049B918 end:0x8049B930
+	.sdata2     start:0x804A1B40 end:0x804A1B48
 
 plugPikiNakata/nlibmath.cpp:
 	.text       start:0x801C308C end:0x801C339C
@@ -2347,11 +2365,13 @@ plugPikiNakata/panipikianimmgr.cpp:
 plugPikiNakata/panitekianimator.cpp:
 	.text       start:0x801C4900 end:0x801C4C1C
 	.ctors      start:0x802F60B0 end:0x802F60B4
+	.rodata     start:0x80305C60 end:0x80305D00
 	.data       start:0x80345938 end:0x80345990
 
 plugPikiNakata/panitestsection.cpp:
 	.text       start:0x801C4C1C end:0x801C6280
 	.ctors      start:0x802F60B4 end:0x802F60B8
+	.rodata     start:0x80305D00 end:0x80305DE0
 	.data       start:0x80345990 end:0x80345A08
 
 plugPikiNakata/paraparameters.cpp:
@@ -2361,15 +2381,18 @@ plugPikiNakata/paraparameters.cpp:
 plugPikiNakata/pcamcamera.cpp:
 	.text       start:0x801C677C end:0x801C8A40
 	.ctors      start:0x802F60B8 end:0x802F60BC
+	.rodata     start:0x80305DE0 end:0x80305E40
 	.data       start:0x80345A70 end:0x80345AC0
 
 plugPikiNakata/pcamcameramanager.cpp:
 	.text       start:0x801C8A40 end:0x801C8F10
 	.ctors      start:0x802F60BC end:0x802F60C0
+	.rodata     start:0x80305E40 end:0x80305E80
 	.data       start:0x80345AC0 end:0x80345AF0
 
 plugPikiNakata/pcamcameraparameters.cpp:
 	.text       start:0x801C8F10 end:0x801C9A84
+	.rodata     start:0x80305E80 end:0x80306328
 	.data       start:0x80345AF0 end:0x80345B20
 
 plugPikiNakata/pcammotionevents.cpp:
@@ -2502,6 +2525,7 @@ plugPikiNishimura/Boss.cpp:
 
 plugPikiNishimura/BossAnimMgr.cpp:
 	.text       start:0x801EDC54 end:0x801EDCD0
+	.rodata     start:0x803065A8 end:0x803065E0
 	.data       start:0x80347AA0 end:0x80347AD0
 
 plugPikiNishimura/BossCnd.cpp:
@@ -2767,6 +2791,8 @@ plugPikiYamashita/zenGraphics.cpp:
 
 plugPikiYamashita/zenMath.cpp:
 	.text       start:0x8022A3AC end:0x8022A6F0
+	.sdata      start:0x8049D008 end:0x8049D020
+	.sdata2     start:0x804A2CF0 end:0x804A2CF8
 
 plugPikiYamashita/zenSys.cpp:
 	.text       start:0x8022A6F0 end:0x8022A964
