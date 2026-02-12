@@ -1280,6 +1280,7 @@ sysDolphin/gameApp.cpp:
 
 sysDolphin/sysNew.cpp:
 	.text       start:0x800DAE20 end:0x800DB044
+	.rodata     start:0x802FEAD8 end:0x802FEB10
 
 sysDolphin/system.cpp:
 	.text       start:0x800DB044 end:0x800DE098
