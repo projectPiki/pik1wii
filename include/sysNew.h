@@ -5,7 +5,10 @@
 #include "types.h"
 #include <stddef.h>
 
-void* operator new(size_t size);
+inline void* operator new(size_t size)
+{
+    System::alloc(size);
+}
 void* operator new[](size_t size);
 void* operator new(size_t size, int alignment);
 void* operator new[](size_t size, int alignment);

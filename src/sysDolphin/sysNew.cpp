@@ -14,7 +14,7 @@ DEFINE_ERROR(4)
  * @note UNUSED Size: 0000F0
  */
 DEFINE_PRINT("sysNew");
-
+/*
 void* operator new(size_t size)
 {
 	return System::alloc(size);
@@ -23,7 +23,7 @@ void* operator new[](size_t size)
 {
 	return System::alloc(size);
 }
-
+*/
 /**
  * @todo: Documentation
  */

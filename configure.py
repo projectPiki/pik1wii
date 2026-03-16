@@ -654,9 +654,9 @@ config.libs = [
         "mtx",
         [
             Object(NonMatching, "mtx/mtx.c"),
-            Object(NonMatching, "mtx/mtxvec.c"),
-            Object(NonMatching, "mtx/mtx44.c"),
-            Object(NonMatching, "mtx/mtx44vec.c"),
+            Object(Matching, "mtx/mtxvec.c"),
+            Object(Matching, "mtx/mtx44.c"),
+            Object(Matching, "mtx/mtx44vec.c"),
             Object(NonMatching, "mtx/vec.c"),
         ],
     ),

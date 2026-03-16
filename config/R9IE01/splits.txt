@@ -720,18 +720,22 @@ gx/GXPerf.c:
 
 mtx/mtx.c:
 	.text       start:0x8004AD3C end:0x8004B900
+	.sdata      start:0x804975B8 end:0x804975C0
+	.sdata2     start:0x8049FA68 end:0x8049FA88
 
 mtx/mtxvec.c:
 	.text       start:0x8004B900 end:0x8004B954
 
 mtx/mtx44.c:
 	.text       start:0x8004B954 end:0x8004BB74
+	.sdata2     start:0x8049FA88 end:0x8049FAA0
 
 mtx/mtx44vec.c:
 	.text       start:0x8004BB74 end:0x8004BBEC
 
 mtx/vec.c:
 	.text       start:0x8004BBEC end:0x8004BDCC
+	.sdata2     start:0x8049FAA0 end:0x8049FAB8
 
 NdevExi2A/DebuggerDriver.c:
 	.text       start:0x8004BDCC end:0x8004C100
