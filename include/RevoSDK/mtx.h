@@ -29,6 +29,7 @@ void PSMTXIdentity(Mtx mtx);
 void PSMTXConcat(const Mtx A, const Mtx B, Mtx concat);
 void PSMTXTranspose(const Mtx src, Mtx xPose);
 u32 PSMTXInverse(const Mtx src, Mtx inv);
+void PSMTXRotTrig(Mtx mtx, char axis, f32 sinA, f32 cosA);
 ////////////////////////////////////////////
 
 ///////////  MATRIX44 FUNCTIONS ////////////

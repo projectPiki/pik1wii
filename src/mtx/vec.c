@@ -5,10 +5,6 @@
 #pragma - fp_contract off
 #define qr0 0
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000034
- */
 void C_VECAdd(Vec* a, Vec* b, Vec* c)
 {
 	// UNUSED FUNCTION
@@ -20,10 +16,6 @@ void C_VECAdd(Vec* a, Vec* b, Vec* c)
 	c->z = a->z + b->z;
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000024
- */
 ASM void PSVECAdd(register Vec* a, register Vec* b, register Vec* c)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -38,10 +30,6 @@ ASM void PSVECAdd(register Vec* a, register Vec* b, register Vec* c)
 #endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000034
- */
 void C_VECSubtract(Vec* a, Vec* b, Vec* c)
 {
 	OSAssertMsgLine(0x9C, a, "VECSubtract():  NULL VecPtr 'a' ");
@@ -52,10 +40,6 @@ void C_VECSubtract(Vec* a, Vec* b, Vec* c)
 	c->z = a->z - b->z;
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000024
- */
 ASM void PSVECSubtract(register Vec* a, register Vec* b, register Vec* c)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -70,10 +54,6 @@ ASM void PSVECSubtract(register Vec* a, register Vec* b, register Vec* c)
 #endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000028
- */
 void C_VECScale(Vec* src, Vec* dst, f32 scale)
 {
 	OSAssertMsgLine(0xE2, src, "VECScale():  NULL VecPtr 'src' ");
@@ -83,10 +63,6 @@ void C_VECScale(Vec* src, Vec* dst, f32 scale)
 	dst->z = (src->z * scale);
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000020
- */
 ASM void PSVECScale(register Vec* src, register Vec* dst, register f32 mult)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -99,10 +75,6 @@ ASM void PSVECScale(register Vec* src, register Vec* dst, register f32 mult)
 	#endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 0000C8
- */
 void C_VECNormalize(Vec* src, Vec* unit)
 {
 	f32 mag;
@@ -118,10 +90,6 @@ void C_VECNormalize(Vec* src, Vec* unit)
 	unit->z = src->z * mag;
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000048
- */
 void PSVECNormalize(register Vec* vec1, register Vec* dst)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -155,10 +123,6 @@ void PSVECNormalize(register Vec* vec1, register Vec* dst)
 	#endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000024
- */
 f32 C_VECSquareMag(Vec* v)
 {
 	f32 sqmag;
@@ -169,9 +133,6 @@ f32 C_VECSquareMag(Vec* v)
 	return sqmag;
 }
 
-/**
- * @TODO: Documentation
- */
 ASM f32 PSVECSquareMag(register Vec* v) {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.x(v), 0, 0
@@ -186,34 +147,29 @@ ASM f32 PSVECSquareMag(register Vec* v) {
 ASM f32 PSVECMag(register Vec* v) {
 #ifdef __MWERKS__ // clang-format off
 	psq_l   f0, Vec.x(v), 0, qr0
+	lfs     f4, 3.0f
 	ps_mul  f0, f0, f0
 	lfs     f1, Vec.z(v)
+	fsubs f2, f4, f4
 	ps_madd f1, f1, f1, f0
-	lfs     f4, 0.5f
 	ps_sum0 f1, f1, f0, f0
+	fcmpu cr0, f1, f2
+	beqlr
 	frsqrte f0, f1
 	lfs     f3, 3.0f
 	fmuls   f2, f0, f0
 	fmuls   f0, f0, f4
 	fnmsubs f2, f2, f1, f3
 	fmuls   f0, f2, f0
-	fsel    f0, f0, f0, f1
 	fmuls   f1, f1, f0
 #endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- */
 f32 VECMag(Vec* v)
 {
 	return sqrtf(PSVECSquareMag(v));
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000030
- */
 f32 C_VECDotProduct(Vec* a, Vec* b)
 {
 	f32 dot;
@@ -224,11 +180,7 @@ f32 C_VECDotProduct(Vec* a, Vec* b)
 	return dot;
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000020
- */
-ASM void PSVECDotProduct(register Vec* vec1, register Vec* vec2)
+ASM f32 PSVECDotProduct(register Vec* vec1, register Vec* vec2)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.y(vec1), 0, qr0
@@ -241,10 +193,6 @@ ASM void PSVECDotProduct(register Vec* vec1, register Vec* vec2)
 #endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 00004C
- */
 void C_VECCrossProduct(Vec* a, Vec* b, Vec* axb)
 {
 	Vec vTmp;
@@ -261,10 +209,6 @@ void C_VECCrossProduct(Vec* a, Vec* b, Vec* axb)
 	axb->z = vTmp.z;
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 00003C
- */
 ASM void PSVECCrossProduct(register Vec* vec1, register Vec* vec2, register Vec* dst)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -285,11 +229,7 @@ ASM void PSVECCrossProduct(register Vec* vec1, register Vec* vec2, register Vec*
 #endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 0000D8
- */
-void VECHalfAngle(Vec* a, Vec* b, Vec* half)
+void C_VECHalfAngle(const Vec* a, const Vec* b, Vec* half)
 {
 	Vec aTmp;
 	Vec bTmp;
@@ -304,20 +244,16 @@ void VECHalfAngle(Vec* a, Vec* b, Vec* half)
 	bTmp.x = -b->x;
 	bTmp.y = -b->y;
 	bTmp.z = -b->z;
-	VECNormalize(&aTmp, &aTmp);
-	VECNormalize(&bTmp, &bTmp);
-	VECAdd(&aTmp, &bTmp, &hTmp);
-	if (VECDotProduct(&hTmp, &hTmp) > 0.0f) {
-		VECNormalize(&hTmp, half);
+	PSVECNormalize(&aTmp, &aTmp);
+	PSVECNormalize(&bTmp, &bTmp);
+	PSVECAdd(&aTmp, &bTmp, &hTmp);
+	if (PSVECDotProduct(&hTmp, &hTmp) > 0.0f) {
+		PSVECNormalize(&hTmp, half);
 		return;
 	}
 	*half = hTmp;
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 0000D4
- */
 void VECReflect(Vec* src, Vec* normal, Vec* dst)
 {
 	f32 cosA;
@@ -340,10 +276,6 @@ void VECReflect(Vec* src, Vec* normal, Vec* dst)
 	VECNormalize(dst, dst);
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 00003C
- */
 f32 C_VECSquareDistance(Vec* a, Vec* b)
 {
 	Vec diff;
@@ -354,10 +286,6 @@ f32 C_VECSquareDistance(Vec* a, Vec* b)
 	return (diff.z * diff.z) + ((diff.x * diff.x) + (diff.y * diff.y));
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000028
- */
 ASM void PSVECSquareDistance(register Vec* vec1, register Vec* vec2) {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.y(vec1), 0, qr0
@@ -372,10 +300,6 @@ ASM void PSVECSquareDistance(register Vec* vec1, register Vec* vec2) {
 #endif // clang-format on
 }
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000088
- */
 f32 VECDistance(Vec* a, Vec* b)
 {
 	return sqrtf(VECSquareDistance(a, b));

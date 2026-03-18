@@ -1,13 +1,8 @@
 #include "RevoSDK/mtx.h"
 #include <math.h>
 
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 00009C
- */
-void MTXFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
+void C_MTXFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
 {
-	// just for float ordering
 	f32 tmp;
 
 	tmp     = 1 / (r - l);
@@ -29,17 +24,9 @@ void MTXFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
 	m[3][1] = 0;
 	m[3][2] = -1;
 	m[3][3] = 0;
-	// UNUSED FUNCTION
 }
 
-/**
- * @TODO: Documentation
- */
-#if defined(VERSION_GPIP01_00) || defined(VERSION_G98E01_PIKIDEMO)
 void C_MTXPerspective(Mtx m, f32 fovY, f32 aspect, f32 n, f32 f)
-#else
-void MTXPerspective(Mtx m, f32 fovY, f32 aspect, f32 n, f32 f)
-#endif
 {
 	f32 angle;
 	f32 cot;
@@ -67,14 +54,7 @@ void MTXPerspective(Mtx m, f32 fovY, f32 aspect, f32 n, f32 f)
 	m[3][3] = 0.0f;
 }
 
-/**
- * @TODO: Documentation
- */
-#if defined(VERSION_GPIP01_00) || defined(VERSION_G98E01_PIKIDEMO)
 void C_MTXOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
-#else
-void MTXOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f)
-#endif
 {
 	f32 tmp;
 
