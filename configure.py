@@ -324,6 +324,15 @@ cflags_runtime = [
     "-inline auto",
 ]
 
+cflags_revo = [
+    *cflags_base,
+    "-str reuse,readonly",
+    "-fp_contract off",
+    "-common off",
+    "-inline auto",
+    "-ipa file",
+]
+
 
 config.linker_version = "GC/3.0a5.2"
 
@@ -333,7 +342,7 @@ def RevolutionLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/3.0a5.2",
-        "cflags": [*cflags_base, "-str noreadonly", "-ipa file"],
+        "cflags": cflags_revo,
         "progress_category": "sdk",
         "objects": objects,
     }
@@ -1161,7 +1170,7 @@ config.libs = [
             Object(NonMatching, "plugPikiNakata/tekianimationmanager.cpp"),
             Object(NonMatching, "plugPikiNakata/tekibteki.cpp"),
             Object(NonMatching, "plugPikiNakata/tekiconditions.cpp"),
-            Object(NonMatching, "plugPikiNakata/tekievent.cpp"),
+            Object(Matching, "plugPikiNakata/tekievent.cpp"),
             Object(NonMatching, "plugPikiNakata/tekiinteraction.cpp"),
             Object(NonMatching, "plugPikiNakata/tekimgr.cpp"),
             Object(NonMatching, "plugPikiNakata/tekinakata.cpp"),
@@ -1172,7 +1181,7 @@ config.libs = [
             Object(NonMatching, "plugPikiNakata/genteki.cpp"),
             Object(NonMatching, "plugPikiNakata/nakatacode.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibfunction.cpp"),
-            Object(NonMatching, "plugPikiNakata/nlibgeometry3d.cpp"),
+            Object(Matching, "plugPikiNakata/nlibgeometry3d.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibgeometry.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibgraphics.cpp"),
             Object(NonMatching, "plugPikiNakata/nlibmath.cpp"),
@@ -1208,7 +1217,7 @@ config.libs = [
         "objects": [
             Object(NonMatching, "plugPikiNishimura/Pom.cpp"),
             Object(NonMatching, "plugPikiNishimura/PomAi.cpp"),
-            Object(NonMatching, "plugPikiNishimura/RumbleData.cpp"),
+            Object(Matching, "plugPikiNishimura/RumbleData.cpp"),
             Object(NonMatching, "plugPikiNishimura/Slime.cpp"),
             Object(NonMatching, "plugPikiNishimura/SlimeAi.cpp"),
             Object(NonMatching, "plugPikiNishimura/SlimeBody.cpp"),
@@ -1220,7 +1229,7 @@ config.libs = [
             Object(NonMatching, "plugPikiNishimura/SpiderAi.cpp"),
             Object(NonMatching, "plugPikiNishimura/SpiderLeg.cpp"),
             Object(NonMatching, "plugPikiNishimura/Boss.cpp"),
-            Object(NonMatching, "plugPikiNishimura/BossAnimMgr.cpp"),
+            Object(Matching, "plugPikiNishimura/BossAnimMgr.cpp"),
             Object(NonMatching, "plugPikiNishimura/BossCnd.cpp"),
             Object(NonMatching, "plugPikiNishimura/BossMgr.cpp"),
             Object(NonMatching, "plugPikiNishimura/BossShapeObj.cpp"),
@@ -1292,7 +1301,7 @@ config.libs = [
             Object(NonMatching, "plugPikiYamashita/yai.cpp"),
             Object(NonMatching, "plugPikiYamashita/zenController.cpp"),
             Object(NonMatching, "plugPikiYamashita/zenGraphics.cpp"),
-            Object(NonMatching, "plugPikiYamashita/zenMath.cpp"),
+            Object(Matching, "plugPikiYamashita/zenMath.cpp"),
             Object(NonMatching, "plugPikiYamashita/zenSys.cpp"),
             Object(NonMatching, "plugPikiYamashita/alphaWipe.cpp"),
             Object(NonMatching, "plugPikiYamashita/bBoardColourAnim.cpp"),
@@ -1630,8 +1639,8 @@ config.libs = [
     },
     {
         "lib": "homebuttonLib",
-        "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3",
+        "cflags": [*cflags_revo, "-RTTI on", "-str noreadonly", "-sdata 0", "-sdata2 0"],
+        "mw_version": "GC/3.0a5",
         "progress_category": "hbm",
         "objects": [
             Object(NonMatching, "homebuttonLib/HBMFrameController.cpp"),
@@ -1640,7 +1649,7 @@ config.libs = [
             Object(NonMatching, "homebuttonLib/HBMController.cpp"),
             Object(NonMatching, "homebuttonLib/HBMRemoteSpk.cpp"),
             Object(NonMatching, "homebuttonLib/HBMAxSound.cpp"),
-            Object(NonMatching, "homebuttonLib/HBMCommon.c"),
+            Object(NonMatching, "homebuttonLib/HBMCommon.cpp"),
             Object(NonMatching, "homebuttonLib/HBMBase.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_animation.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_arcResourceAccessor.cpp"),
@@ -1653,8 +1662,8 @@ config.libs = [
             Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_pane.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_picture.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_resourceAccessor.cpp"),
-            Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_textBox.cpp"),
-            Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_window.cpp"),
+            Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_textBox.cpp", mw_version="GC/3.0a5.2"),
+            Object(NonMatching, "homebuttonLib/nw4hbm/lyt/lyt_window.cpp", mw_version="GC/3.0a5.2"),
             Object(NonMatching, "homebuttonLib/nw4hbm/math/math_triangular.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/ut/ut_binaryFileFormat.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/ut/ut_CharStrmReader.cpp"),
@@ -1666,15 +1675,15 @@ config.libs = [
             Object(NonMatching, "homebuttonLib/nw4hbm/ut/ut_ResFontBase.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/ut/ut_TagProcessorBase.cpp"),
             Object(NonMatching, "homebuttonLib/nw4hbm/ut/ut_TextWriterBase.cpp"),
-            Object(NonMatching, "homebuttonLib/sound/mix.c"),
-            Object(NonMatching, "homebuttonLib/sound/syn.c"),
-            Object(NonMatching, "homebuttonLib/sound/synctrl.c"),
-            Object(NonMatching, "homebuttonLib/sound/synenv.c"),
-            Object(NonMatching, "homebuttonLib/sound/synmix.c"),
-            Object(NonMatching, "homebuttonLib/sound/synpitch.c"),
-            Object(NonMatching, "homebuttonLib/sound/synsample.c"),
-            Object(NonMatching, "homebuttonLib/sound/synvoice.c"),
-            Object(NonMatching, "homebuttonLib/sound/seq.c"),
+            Object(NonMatching, "homebuttonLib/sound/mix.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/syn.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/synctrl.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/synenv.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/synmix.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/synpitch.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/synsample.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/synvoice.cpp"),
+            Object(NonMatching, "homebuttonLib/sound/seq.cpp"),
         ],
     },
     RevolutionLib(

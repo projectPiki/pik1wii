@@ -26,7 +26,7 @@
 #include "RevoSDK/OS/OSTime.h"
 #include "RevoSDK/OS/OSUtil.h"
 
-// #include "RevoSDK/OS/OSFastCast.h" // Is intentionally omitted for jaudio bc paired single asm instructions mess with proc 750
+#include "RevoSDK/OS/OSFastCast.h" // Is intentionally omitted for jaudio bc paired single asm instructions mess with proc 750
 
 BEGIN_SCOPE_EXTERN_C
 
@@ -46,6 +46,7 @@ extern void __OSInitMemoryProtection();
 void OSInit();
 
 // Other OS functions.
+void OSRegisterVersion(const char*);
 #define OS_CONSOLE_RETAIL4     0x00000004
 #define OS_CONSOLE_RETAIL3     0x00000003
 #define OS_CONSOLE_RETAIL2     0x00000002
