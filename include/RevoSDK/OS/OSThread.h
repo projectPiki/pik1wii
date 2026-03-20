@@ -69,6 +69,7 @@ struct OSThread {
 	u8* stackBase;           // _304, stack high addr.
 	u32* stackEnd;           // _308, stack low addr (last word).
 	s32 error;               // _30C
+	void* specific[2];       // _310
 };
 
 // Thread global addresses.
@@ -131,6 +132,7 @@ enum OS_THREAD_STATE {
 };
 
 // Thread attributes.
+#define OS_THREAD_ATTR_NO_FLAGS 0
 #define OS_THREAD_ATTR_DETACH 0x1U
 
 // Thread priority.

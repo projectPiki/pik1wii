@@ -23,11 +23,24 @@ extern void GXInitTexObjCI(GXTexObj* obj, void* imagePtr, u16 width, u16 height,
                            GXTexWrapMode tWrap, GXBool useMIPmap, u32 tlutName);
 extern void GXInitTexObjLOD(GXTexObj* obj, GXTexFilter minFilter, GXTexFilter maxFilter, f32 minLOD, f32 maxLOD, f32 lodBias,
                             GXBool doBiasClamp, GXBool doEdgeLOD, GXAnisotropy maxAniso);
+extern void GXInitTexObjUserData(GXTexObj* obj, void* user_data);
 
 // Get functions.
 extern GXTexFmt GXGetTexObjFmt(const GXTexObj* obj);
 extern GXBool GXGetTexObjMipMap(const GXTexObj* obj);
 extern u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, GXBool mipmap, u8 max_lod);
+u32 GXGetTexObjTlut(const GXTexObj*);
+u16 GXGetTexObjWidth(const GXTexObj *obj);
+u16 GXGetTexObjHeight(const GXTexObj *obj);
+GXTexWrapMode GXGetTexObjWrapS(const GXTexObj *obj);
+u32 GXGetTexObjTlut(const GXTexObj *);
+GXTexWrapMode GXGetTexObjWrapT(const GXTexObj *);
+void *GXGetTexObjData(const GXTexObj *);
+void* GXGetTexObjUserData(const GXTexObj* obj);
+void GXGetTexObjLODAll(const GXTexObj* obj, GXTexFilter* min_filt,
+                       GXTexFilter* mag_filt, f32* minLod, f32* maxLod,
+                       f32* lodBias, GXBool* biasClampEnable,
+                       GXBool* edgeLodEnable, GXAnisotropy* anisotropy);
 
 // Load functions.
 extern void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID map);

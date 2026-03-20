@@ -69,8 +69,16 @@ f64 frexp(f64, int*);
 f64 ldexp(f64, int);
 f64 sqrt(f64);
 f64 pow(f64, f64);
+static inline f32 powf(f32 x, f32 x2)
+{
+	return pow(x, x2);
+}
 f64 log(f64);
 f64 log10(f64);
+static inline f32 log10f(f32 x)
+{
+	return log10(x);
+}
 f64 fmod(f64, f64);
 f64 scalbn(f64, int);
 

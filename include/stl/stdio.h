@@ -109,6 +109,7 @@ int printf(const char*, ...);
 // int fprintf(FILE*, const char* format, ...);
 int vprintf(const char* format, va_list arg);
 int vsnprintf(char* s, size_t n, const char* format, va_list arg);
+int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
 int vsprintf(char* s, const char* format, va_list arg);
 int snprintf(char* s, size_t n, const char* format, ...);
 int sprintf(char* s, const char* format, ...);

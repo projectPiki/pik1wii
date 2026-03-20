@@ -24,6 +24,7 @@ struct OSAlarm {
 	OSAlarm* next;          // _14
 	OSTime period;          // _18, period of periodic alarm
 	OSTime start;           // _20, start of periodic alarm
+	void* userData;       	// _28
 };
 
 // Queue struct for OSAlarm.
@@ -37,6 +38,15 @@ void OSInitAlarm();
 void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler);
 void OSCreateAlarm(OSAlarm* alarm);
 void OSCancelAlarm(OSAlarm* alarm);
+
+void OSSetAlarmUserData(OSAlarm* alarm, void* userData);
+void *OSGetAlarmUserData(const OSAlarm* alarm);
+
+#define OSGetAlarmUserDataAny(type_, alarm_)	\
+	((type_)(OSGetAlarmUserData(alarm_)))
+
+#define OSSetAlarmUserDataAny(alarm_, data_)	\
+	OSSetAlarmUserData(alarm_, (void *)(data_))
 
 // Unused/inlined in P2.
 BOOL OSCheckAlarmQueue();
