@@ -324,6 +324,14 @@ cflags_runtime = [
     "-inline auto",
 ]
 
+cflags_revo = [
+    *cflags_base,
+    "-fp_contract off",
+    "-common off",
+    "-inline auto",
+    "-ipa file",
+]
+
 
 config.linker_version = "GC/3.0a5.2"
 
@@ -333,7 +341,7 @@ def RevolutionLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/3.0a5.2",
-        "cflags": [*cflags_base, "-str noreadonly", "-ipa file"],
+        "cflags": cflags_revo,
         "progress_category": "sdk",
         "objects": objects,
     }
