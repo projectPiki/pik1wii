@@ -1133,6 +1133,11 @@ ipc/ipcProfile.c:
 
 kpad/KPAD.c:
 	.text       start:0x800AD220 end:0x800B0300
+	.data       start:0x80335008 end:0x80335060
+	.bss        start:0x80445180 end:0x80446690
+	.sdata      start:0x804977E0 end:0x80497850
+	.sbss       start:0x8049EAF0 end:0x8049EB10
+	.sdata2     start:0x8049FC10 end:0x8049FC70
 
 mem/mem_heapCommon.c:
 	.text       start:0x800B0300 end:0x800B08AC
