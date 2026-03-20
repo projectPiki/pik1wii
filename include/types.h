@@ -35,6 +35,22 @@ typedef volatile f32 vf32;
 typedef volatile f64 vf64;
 typedef volatile f128 vf128;
 
+typedef u32 size_t;
+typedef u32 unknown;
+typedef u32 uintptr_t;
+
+
+#ifndef __cplusplus
+typedef u16 wchar_t;
+#endif
+
+typedef unsigned char			byte1_t;
+typedef unsigned short int		byte2_t;
+typedef unsigned long int		byte4_t;
+typedef unsigned long long int	byte8_t;
+
+typedef byte1_t					byte_t;
+
 // For Windows-specific types
 #ifdef WIN32
 #include <windows.h>
@@ -153,6 +169,7 @@ typedef u32 HWND;
 #define PATH_MAX  (256)                     // Max path length
 #define MAX(a, b) (((a) > (b)) ? (a) : (b)) // Returns the maximum of a and b
 #define MIN(a, b) (((a) < (b)) ? (a) : (b)) // Returns the minimum of a and b
+#define MIN_EQ(a, b) ((a) <= (b) ? (a) : (b))
 
 // Flag manipulation macros
 #define ARRAY_SIZE(o)        (sizeof((o)) / sizeof(*(o)))   // Array size define
@@ -204,6 +221,29 @@ inline void padStack(void)
 
 // Uses a ternary to pad the stack by some number of words
 #define STACK_PAD_TERNARY(expr, n) TERNARY_BUILD_MATCHING(REPEAT((expr) ? "fake" : "fake", n), (void)0)
+
+// Fix decltype
+#define DECLTYPE(x)  __decltype__(x)
+
+
+#define ROUND_UP(x, align)     (((x) + (align) - 1) & (-(align)))
+#define ROUND_UP_PTR(x, align) ((void*)((((u32)(x)) + (align) - 1) & (~((align) - 1))))
+#define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align) - 1))))
+
+#define POINTER_ADD_TYPE(type_, ptr_, offset_)		((type_)((unsigned long)(ptr_) + (unsigned long)(offset_)))
+#define POINTER_ADD(ptr_, offset_)					POINTER_ADD_TYPE(__typeof__(ptr_), ptr_, offset_)
+
+#define BOOLIFY_TERNARY_TRUE_TYPE(type_, expr_)		((expr_) ? ((type_)(1)) : ((type_)(0)))
+#define BOOLIFY_TERNARY_TRUE(expr_)					BOOLIFY_TERNARY_TRUE_TYPE(int, expr_)
+
+#define BOOLIFY_TERNARY_FALSE_TYPE(type_, expr_)	((expr_) ? ((type_)(0)) : ((type_)(1)))
+#define BOOLIFY_TERNARY_FALSE(expr_)				BOOLIFY_TERNARY_FALSE_TYPE(int, expr_)
+
+#define BOOLIFY_TERNARY_TYPE						BOOLIFY_TERNARY_TRUE_TYPE
+#define BOOLIFY_TERNARY								BOOLIFY_TERNARY_TRUE
+
+
+#define DECOMP_DONT_INLINE __attribute__((noinline))
 
 #ifdef __MWERKS__
 #define AT_ADDRESS(addr) : (addr)

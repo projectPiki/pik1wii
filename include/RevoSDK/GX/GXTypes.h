@@ -36,11 +36,6 @@ typedef struct _GXColorS10 {
 // NB: these are all generic structs. Members aren't
 // referenced directly, they only exist for size.
 
-// Generic struct for texture objects.
-typedef struct _GXTexObj {
-	u8 pad[0x20]; // _00
-} GXTexObj;       // size 0x20
-
 // Internal struct for texture objects.
 typedef struct _GXTexObjPriv {
 	u32 mode0;       // _00
@@ -54,6 +49,12 @@ typedef struct _GXTexObjPriv {
 	u8 loadFormat;   // _1E
 	u8 flags;        // _1F
 } GXTexObjPriv;
+
+// Generic struct for texture objects.
+typedef struct _GXTexObj {
+	u32 pad[((32) - sizeof(GXTexObjPriv) + sizeof(GXTexObjPriv)) /
+                  sizeof(u32)]; // _00
+} GXTexObj;        // size 0x20
 
 // Generic struct for texture memory storage.
 typedef struct _GXTexRegion {

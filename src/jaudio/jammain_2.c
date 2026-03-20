@@ -1446,20 +1446,6 @@ void Jam_UpdateTrackAll(seqp_* track)
 	}
 }
 
-#define OS_FASTCAST_S8 (4)
-
-/**
- * @TODO: Documentation
- */
-static void OSf32tos8(register f32* in, register s8* out)
-{
-#ifdef __MWERKS__
-	asm {
-		lfs       f1, 0 (in)
-		psq_st    f1, 0 (out), 0x1, OS_FASTCAST_S8
-	}
-#endif
-}
 
 /**
  * @TODO: Documentation
