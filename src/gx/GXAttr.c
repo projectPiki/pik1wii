@@ -705,7 +705,7 @@ void GXGetVtxAttrFmtv(GXVtxFmt fmt, GXVtxAttrFmtList* vat)
 /**
  * @TODO: Documentation
  */
-void GXSetArray(GXAttr attr, void* base_ptr, u8 stride)
+void GXSetArray(GXAttr attr, const void* base_ptr, u8 stride)
 {
 	GXAttr cpAttr;
 	unsigned long phyAddr;

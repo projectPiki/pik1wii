@@ -207,7 +207,7 @@ jaudio/interface.c:
 jaudio/verysimple.c:
 	.text       start:0x80019AE0 end:0x8001A660
 	.data       start:0x80315608 end:0x80315688
-	.bss        start:0x803C4138 end:0x803C4250
+	.bss        start:0x803C4138 end:0x803C4210
 	.sbss       start:0x8049E188 end:0x8049E1B0
 
 jaudio/app_inter.c:
@@ -221,7 +221,7 @@ jaudio/pikiinter.c:
 
 jaudio/piki_player.c:
 	.text       start:0x8001B820 end:0x8001BF20
-	.bss        start:0x803C4250 end:0x803C4368
+	.bss        start:0x803C4210 end:0x803C4368
 	.sdata      start:0x804973C8 end:0x804973D0
 	.sbss       start:0x8049E1C8 end:0x8049E200
 
@@ -3334,10 +3334,12 @@ nw4r/ut/ut_CharStrmReader.cpp:
 nw4r/ut/ut_TagProcessorBase.cpp:
 	.text       start:0x8027EA30 end:0x8027F100
 	.data       start:0x8034FE70 end:0x8034FE98
+	.sdata2     start:0x804A3A20 end:0x804A3A28
 
 nw4r/ut/ut_LockedCache.cpp:
 	.text       start:0x8027F100 end:0x8027F2AC
 	.ctors      start:0x802F62F8 end:0x802F62FC
+	.bss        start:0x804728A0 end:0x804728C0
 
 nw4r/ut/ut_Font.cpp:
 	.text       start:0x8027F2AC end:0x8027F354
@@ -3354,30 +3356,38 @@ nw4r/ut/ut_ResFontBase.cpp:
 
 nw4r/ut/ut_ResFont.cpp:
 	.text       start:0x802800B4 end:0x802803B8
-	.data       start:0x8034FFF8 end:0x803500E0
+	.data       start:0x8034FFF8 end:0x80350054
 
 nw4r/ut/ut_CharWriter.cpp:
 	.text       start:0x802803B8 end:0x80281AE0
+	.bss        start:0x804728C0 end:0x804728E0
 	.sbss       start:0x8049F008 end:0x8049F010
+	.sdata2     start:0x804A3A28 end:0x804A3A48
 
 nw4r/ut/ut_TextWriterBase.cpp:
 	.text       start:0x80281AE0 end:0x80285F58
 	.ctors      start:0x802F62FC end:0x802F6300
+	.bss        start:0x804728E0 end:0x804728F8
 	.sdata      start:0x8049DF28 end:0x8049DF30
 	.sbss       start:0x8049F010 end:0x8049F028
+	.sdata2     start:0x804A3A48 end:0x804A3A60
 
 nw4r/math/math_arithmetic.cpp:
 	.text       start:0x80285F58 end:0x80285F7C
+	.sdata2     start:0x804A3A60 end:0x804A3A68
 
 nw4r/math/math_triangular.cpp:
 	.text       start:0x80285F7C end:0x802860A8
 	.rodata     start:0x8030D780 end:0x8030E790
+	.sdata2     start:0x804A3A68 end:0x804A3A70
 
 nw4r/math/math_types.cpp:
 	.text       start:0x802860A8 end:0x802864EC
+	.sdata2     start:0x804A3A70 end:0x804A3A80
 
 nw4r/math/math_geometry.cpp:
 	.text       start:0x802864EC end:0x80287080
+	.sdata2     start:0x804A3A80 end:0x804A3A90
 
 nw4r/db/db_directPrint.cpp:
 	.text       start:0x80287080 end:0x802870D0
@@ -3387,6 +3397,8 @@ nw4r/db/db_console.cpp:
 
 nw4r/db/db_assert.cpp:
 	.text       start:0x802871A4 end:0x80287634
+	.data       start:0x80350058 end:0x803500E0
+	.bss        start:0x804728F8 end:0x80472940
 	.sdata      start:0x8049DF30 end:0x8049DF38
 	.sbss       start:0x8049F028 end:0x8049F038
 
@@ -3412,6 +3424,7 @@ nw4r/g3d/g3d_restev.cpp:
 
 nw4r/g3d/g3d_resmat.cpp:
 	.text       start:0x80289BC4 end:0x8028B1F0
+	.sdata2     start:0x804A3A90 end:0x804A3AC8
 
 nw4r/g3d/g3d_resvtx.cpp:
 	.text       start:0x8028B1F0 end:0x8028B5B0
@@ -3421,45 +3434,61 @@ nw4r/g3d/g3d_restex.cpp:
 
 nw4r/g3d/g3d_resnode.cpp:
 	.text       start:0x8028B74C end:0x8028BA50
+	.sdata2     start:0x804A3AC8 end:0x804A3AD8
 
 nw4r/g3d/g3d_resanm.cpp:
 	.text       start:0x8028BA50 end:0x8028BC7C
+	.sdata2     start:0x804A3AD8 end:0x804A3AF0
 
 nw4r/g3d/g3d_resanmvis.cpp:
 	.text       start:0x8028BC7C end:0x8028BD9C
+	.sdata2     start:0x804A3AF0 end:0x804A3B00
 
 nw4r/g3d/g3d_resanmclr.cpp:
 	.text       start:0x8028BD9C end:0x8028BF08
+	.sdata2     start:0x804A3B00 end:0x804A3B10
 
 nw4r/g3d/g3d_resanmtexpat.cpp:
 	.text       start:0x8028BF08 end:0x8028C2A4
 
 nw4r/g3d/g3d_resanmtexsrt.cpp:
 	.text       start:0x8028C2A4 end:0x8028C6B8
+	.sdata2     start:0x804A3B10 end:0x804A3B18
 
 nw4r/g3d/g3d_resanmchr.cpp:
 	.text       start:0x8028C6B8 end:0x8028DEFC
 	.rodata     start:0x8030E7D0 end:0x8030E7F0
+	.sdata2     start:0x804A3B18 end:0x804A3B38
 
 nw4r/g3d/g3d_anmvis.cpp:
 	.text       start:0x8028DEFC end:0x8028E61C
 	.rodata     start:0x8030E7F0 end:0x8030E818
+	.data       start:0x80350240 end:0x803502C8
+	.sdata2     start:0x804A3B38 end:0x804A3B48
 
 nw4r/g3d/g3d_anmclr.cpp:
 	.text       start:0x8028E61C end:0x8028F3A0
 	.rodata     start:0x8030E818 end:0x8030E848
+	.data       start:0x803502C8 end:0x80350358
+	.sdata2     start:0x804A3B48 end:0x804A3B58
 
 nw4r/g3d/g3d_anmtexpat.cpp:
 	.text       start:0x8028F3A0 end:0x8028FDCC
 	.rodata     start:0x8030E848 end:0x8030E878
+	.data       start:0x80350358 end:0x803503E8
+	.sdata2     start:0x804A3B58 end:0x804A3B68
 
 nw4r/g3d/g3d_anmtexsrt.cpp:
 	.text       start:0x8028FDCC end:0x80290848
 	.rodata     start:0x8030E878 end:0x8030E8A8
+	.data       start:0x803503E8 end:0x80350478
+	.sdata2     start:0x804A3B68 end:0x804A3B88
 
 nw4r/g3d/g3d_anmchr.cpp:
 	.text       start:0x80290848 end:0x8029143C
 	.rodata     start:0x8030E8A8 end:0x8030E8D0
+	.data       start:0x80350478 end:0x80350528
+	.sdata2     start:0x804A3B88 end:0x804A3B98
 
 nw4r/g3d/g3d_anmshp.cpp:
 	.text       start:0x8029143C end:0x80291458
@@ -3471,96 +3500,135 @@ nw4r/g3d/g3d_anmscn.cpp:
 nw4r/g3d/g3d_obj.cpp:
 	.text       start:0x8029176C end:0x802917F4
 	.rodata     start:0x8030E8E0 end:0x8030E8F0
+	.data       start:0x80350528 end:0x80350548
 
 nw4r/g3d/g3d_anmobj.cpp:
 	.text       start:0x802917F4 end:0x802918AC
-	.rodata     start:0x8030E8F0 end:0x8030E900
-	.sdata      start:0x8049DF38 end:0x8049DF40
+	.rodata     start:0x8030E8F0 end:0x8030E8FC
+	.sdata      start:0x8049DF38 end:0x8049DF3C
+	.sdata2     start:0x804A3B98 end:0x804A3BA0
 
 nw4r/g3d/g3d_gpu.cpp:
 	.text       start:0x802918AC end:0x80291DBC
+	.sdata2     start:0x804A3BA0 end:0x804A3BB8
 
 nw4r/g3d/g3d_cpu.cpp:
 	.text       start:0x80291DBC end:0x80291F60
+	.sdata2     start:0x804A3BB8 end:0x804A3BC0
 
 nw4r/g3d/g3d_state.cpp:
 	.text       start:0x80291F60 end:0x8029582C
 	.ctors      start:0x802F6300 end:0x802F6304
-	.sdata      start:0x8049DF40 end:0x8049DF50
+	.rodata     start:0x8030E900 end:0x8030E930
+	.data       start:0x80350548 end:0x80350560
+	.bss        start:0x80472940 end:0x80477F00
+	.sdata      start:0x8049DF40 end:0x8049DF48
+	.sbss       start:0x8049F038 end:0x8049F058
+	.sdata2     start:0x804A3BC0 end:0x804A3BE8
 
 nw4r/g3d/g3d_draw1mat1shp.cpp:
 	.text       start:0x8029582C end:0x80296560
+	.rodata     start:0x8030E930 end:0x8030E940
+	.sdata2     start:0x804A3BE8 end:0x804A3C08
 
 nw4r/g3d/g3d_calcview.cpp:
 	.text       start:0x80296560 end:0x80298400
 	.rodata     start:0x8030E940 end:0x8030E960
+	.sdata2     start:0x804A3C08 end:0x804A3C10
 
 nw4r/g3d/g3d_dcc.cpp:
 	.text       start:0x80298400 end:0x802984DC
 
 nw4r/g3d/g3d_workmem.cpp:
 	.text       start:0x802984DC end:0x8029851C
+	.bss        start:0x80477F00 end:0x8048FF00
 
 nw4r/g3d/g3d_calcworld.cpp:
 	.text       start:0x8029851C end:0x80298DBC
+	.data       start:0x80350560 end:0x80350570
+	.sdata      start:0x8049DF48 end:0x8049DF50
+	.sdata2     start:0x804A3C10 end:0x804A3C18
 
 nw4r/g3d/g3d_draw.cpp:
 	.text       start:0x80298DBC end:0x8029ABEC
-	.sdata      start:0x8049DF50 end:0x8049DF60
+	.sdata      start:0x8049DF50 end:0x8049DF58
+	.sdata2     start:0x804A3C18 end:0x804A3C28
 
 nw4r/g3d/g3d_camera.cpp:
 	.text       start:0x8029ABEC end:0x8029B780
+	.sdata2     start:0x804A3C28 end:0x804A3C58
 
 nw4r/g3d/g3d_basic.cpp:
 	.text       start:0x8029B780 end:0x8029BA44
+	.sdata2     start:0x804A3C58 end:0x804A3C68
 
 nw4r/g3d/g3d_maya.cpp:
 	.text       start:0x8029BA44 end:0x8029C704
+	.rodata     start:0x8030E960 end:0x8030E998
+	.sdata2     start:0x804A3C68 end:0x804A3C80
 
 nw4r/g3d/g3d_xsi.cpp:
 	.text       start:0x8029C704 end:0x8029D2C4
+	.rodata     start:0x8030E998 end:0x8030E9D0
+	.sdata2     start:0x804A3C80 end:0x804A3C90
 
 nw4r/g3d/g3d_3dsmax.cpp:
 	.text       start:0x8029D2C4 end:0x8029DD74
+	.rodata     start:0x8030E9D0 end:0x8030EA08
+	.sdata2     start:0x804A3C90 end:0x804A3CA8
 
 nw4r/g3d/g3d_scnobj.cpp:
 	.text       start:0x8029DD74 end:0x8029F47C
 	.rodata     start:0x8030EA08 end:0x8030EA38
+	.data       start:0x80350570 end:0x80350638
+	.sbss       start:0x8049F058 end:0x8049F060
+	.sdata2     start:0x804A3CA8 end:0x804A3CB0
 
 nw4r/g3d/g3d_scnroot.cpp:
 	.text       start:0x8029F47C end:0x802A0D30
 	.rodata     start:0x8030EA38 end:0x8030EA48
-	.sdata      start:0x8049DF60 end:0x8049DF70
+	.data       start:0x80350638 end:0x803506A8
+	.sdata      start:0x8049DF58 end:0x8049DF68
+	.sdata2     start:0x804A3CB0 end:0x804A3CB8
 
 nw4r/g3d/g3d_scnmdlsmpl.cpp:
 	.text       start:0x802A0D30 end:0x802A2A78
 	.rodata     start:0x8030EA48 end:0x8030EA60
+	.data       start:0x803506A8 end:0x80350718
+	.sdata      start:0x8049DF68 end:0x8049DF80
+	.sdata2     start:0x804A3CB8 end:0x804A3CC0
 
 nw4r/g3d/g3d_scnmdl.cpp:
 	.text       start:0x802A2A78 end:0x802A517C
 	.rodata     start:0x8030EA60 end:0x8030EA70
+	.data       start:0x80350718 end:0x80350760
 
 nw4r/g3d/g3d_calcmaterial.cpp:
 	.text       start:0x802A517C end:0x802A558C
 
 nw4r/g3d/g3d_init.cpp:
 	.text       start:0x802A558C end:0x802A5688
+	.data       start:0x80350760 end:0x803507A8
 	.sdata      start:0x8049DF80 end:0x8049DF88
 
 nw4r/g3d/g3d_fog.cpp:
 	.text       start:0x802A5688 end:0x802A57FC
+	.sdata2     start:0x804A3CC0 end:0x804A3CC8
 
 nw4r/g3d/g3d_light.cpp:
 	.text       start:0x802A57FC end:0x802A5F20
+	.sdata2     start:0x804A3CC8 end:0x804A3CF8
 
 nw4r/g3d/g3d_calcvtx.cpp:
 	.text       start:0x802A5F20 end:0x802A6718
+	.sdata2     start:0x804A3CF8 end:0x804A3D00
 
 nw4r/lyt/lyt_pane.cpp:
 	.text       start:0x802A6718 end:0x802A7590
 	.ctors      start:0x802F6304 end:0x802F6308
 	.data       start:0x803507A8 end:0x80350820
 	.sbss       start:0x8049F060 end:0x8049F068
+	.sdata2     start:0x804A3D00 end:0x804A3D20
 
 nw4r/lyt/lyt_group.cpp:
 	.text       start:0x802A7590 end:0x802A78D0
@@ -3570,24 +3638,29 @@ nw4r/lyt/lyt_layout.cpp:
 	.text       start:0x802A78D0 end:0x802A88B0
 	.data       start:0x80350830 end:0x80350870
 	.sbss       start:0x8049F068 end:0x8049F070
+	.sdata2     start:0x804A3D20 end:0x804A3D28
 
 nw4r/lyt/lyt_picture.cpp:
 	.text       start:0x802A88B0 end:0x802A8E0C
 	.ctors      start:0x802F6308 end:0x802F630C
 	.data       start:0x80350870 end:0x803508E8
 	.sbss       start:0x8049F070 end:0x8049F078
+	.sdata2     start:0x804A3D28 end:0x804A3D30
 
 nw4r/lyt/lyt_textBox.cpp:
 	.text       start:0x802A8E0C end:0x802AA5D4
 	.ctors      start:0x802F630C end:0x802F6310
 	.data       start:0x803508E8 end:0x80350970
+	.sdata      start:0x8049DF88 end:0x8049DF90
 	.sbss       start:0x8049F078 end:0x8049F080
+	.sdata2     start:0x804A3D30 end:0x804A3D48
 
 nw4r/lyt/lyt_window.cpp:
 	.text       start:0x802AA5D4 end:0x802ACB88
 	.ctors      start:0x802F6310 end:0x802F6314
 	.data       start:0x80350970 end:0x80350A38
 	.sbss       start:0x8049F080 end:0x8049F088
+	.sdata2     start:0x804A3D48 end:0x804A3D60
 
 nw4r/lyt/lyt_bounding.cpp:
 	.text       start:0x802ACB88 end:0x802ACC34
@@ -3598,18 +3671,22 @@ nw4r/lyt/lyt_bounding.cpp:
 nw4r/lyt/lyt_material.cpp:
 	.text       start:0x802ACC34 end:0x802AF9DC
 	.data       start:0x80350AB0 end:0x80350B20
+	.sdata2     start:0x804A3D60 end:0x804A3D80
 	.sbss2      start:0x804A4238 end:0x804A4240
 
 nw4r/lyt/lyt_texMap.cpp:
 	.text       start:0x802AF9DC end:0x802AFBB4
+	.sdata2     start:0x804A3D80 end:0x804A3D90
 
 nw4r/lyt/lyt_drawInfo.cpp:
 	.text       start:0x802AFBB4 end:0x802AFC68
 	.data       start:0x80350B20 end:0x80350B30
+	.sdata2     start:0x804A3D90 end:0x804A3D98
 
 nw4r/lyt/lyt_animation.cpp:
 	.text       start:0x802AFC68 end:0x802B114C
 	.data       start:0x80350B30 end:0x80350B58
+	.sdata2     start:0x804A3D98 end:0x804A3DB8
 
 nw4r/lyt/lyt_resourceAccessor.cpp:
 	.text       start:0x802B114C end:0x802B11A4
@@ -3618,10 +3695,13 @@ nw4r/lyt/lyt_resourceAccessor.cpp:
 nw4r/lyt/lyt_arcResourceAccessor.cpp:
 	.text       start:0x802B11A4 end:0x802B1584
 	.data       start:0x80350B70 end:0x80350B84
+	.sdata      start:0x8049DF90 end:0x8049DF98
 
 nw4r/lyt/lyt_common.cpp:
 	.text       start:0x802B1584 end:0x802B2074
+	.bss        start:0x8048FF00 end:0x8048FF20
 	.sbss       start:0x8049F090 end:0x8049F098
+	.sdata2     start:0x804A3DB8 end:0x804A3DC0
 
 nw4r/lyt/lyt_util.cpp:
 	.text       start:0x802B2074 end:0x802B20E4

@@ -43,6 +43,29 @@ static inline void OSInitFastCast()
 #endif
 }
 
+static void OSSetGQR6(register u32 type, register u32 scale)
+{
+	register u32 val = ((scale << 8 | type) << 16) | ((scale << 8) | type);
+
+#ifdef __MWERKS__ // clang-format off
+    ASM (
+        mtspr 0x396, val
+    );
+#endif // clang-format on
+}
+
+static void OSSetGQR7(register u32 type, register u32 scale)
+{
+	register u32 val = ((scale << 8 | type) << 16) | ((scale << 8) | type);
+
+#ifdef __MWERKS__ // clang-format off
+    ASM (
+        mtspr 0x397, val
+    );
+#endif // clang-format on
+}
+
+
 // f32 to int.
 // NB: should theoretically have these for u8/u16/s8/s16 eventually.
 static inline s16 __OSf32tos16(register f32 inF)
@@ -63,6 +86,26 @@ static inline void OSf32tos16(f32* f, s16* out)
 {
 	*out = __OSf32tos16(*f);
 }
+
+/// Int to float.
+/// u8 to f32
+static inline f32 __OSu8tof32(register u8* arg)
+{
+	register f32 ret;
+
+#ifdef __MWERKS__ // clang-format off
+    asm {
+        psq_l ret, 0(arg), 1, 2
+	}
+#endif // clang-format on
+
+	return ret;
+}
+static inline void OSu8tof32(u8* in, volatile f32* out)
+{
+	*out = __OSu8tof32(in);
+}
+
 
 /// f32 to u16
 static inline u16 __OSf32tou16(register f32 arg)

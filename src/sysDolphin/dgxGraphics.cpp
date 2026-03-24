@@ -914,11 +914,8 @@ void DGXGraphics::useMatrixQuick(immut Matrix4f& mtx, int id)
 
 	if (mHasTexGen) {
 		Mtx texMtx;
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIP01_00)
 		f32 mag = 0.5f / PSVECMag((Vec*)mtx.mMtx);
-#else
-		f32 mag = 0.5f / VECMag((Vec*)mtx.mMtx);
-#endif
+
 		texMtx[0][0] = mag * mtx.mMtx[0][0];
 		texMtx[0][1] = mag * mtx.mMtx[0][1];
 		texMtx[0][2] = mag * mtx.mMtx[0][2];
@@ -1520,12 +1517,12 @@ void DGXGraphics::setBlendMode(u8 blendFactor, u8 zMode, u8 blendMode)
 	}
 	case 2:
 	{
-		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C2, GX_CC_C0, GX_CC_TEXC, GX_CC_ZERO);
+		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C1, GX_CC_C0, GX_CC_TEXC, GX_CC_ZERO);
 		break;
 	}
 	case 3:
 	{
-		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C0, GX_CC_C2);
+		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C0, GX_CC_C1);
 		break;
 	}
 	case 4:

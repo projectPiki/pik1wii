@@ -4,6 +4,7 @@
 #include "RevoSDK/OS/OSContext.h"
 #include "RevoSDK/OS/OSUtil.h"
 #include "types.h"
+#include "stdarg.h"
 
 BEGIN_SCOPE_EXTERN_C
 
@@ -19,6 +20,7 @@ OSErrorHandler OSSetErrorHandler(OSError error, OSErrorHandler handler);
 
 // OS logging and reporting.
 void OSReport(const char* message, ...);
+void OSVReport(const char* message, va_list list);
 void OSPanic(const char* file, int line, const char* message, ...);
 
 #define OSError(...)           OSPanic(__FILE__, __LINE__, __VA_ARGS__)

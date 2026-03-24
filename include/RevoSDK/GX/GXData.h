@@ -92,7 +92,7 @@ struct __GXData_struct {
 	unsigned long nextTexRgn;                                 // offset 0x2C8, size 0x4
 	unsigned long nextTexRgnCI;                               // offset 0x2CC, size 0x4
 	GXTlutRegion TlutRegions[20];                             // offset 0x2D0, size 0x140
-	GXTexRegion* (*texRegionCallback)(GXTexObj*, GXTexMapID); // offset 0x410, size 0x4
+	GXTexRegion* (*texRegionCallback)(const GXTexObj*, GXTexMapID); // offset 0x410, size 0x4
 	GXTlutRegion* (*tlutRegionCallback)(unsigned long);       // offset 0x414, size 0x4
 	GXAttrType nrmType;                                       // offset 0x418, size 0x4
 	unsigned char hasNrms;                                    // offset 0x41C, size 0x1

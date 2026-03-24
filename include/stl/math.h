@@ -64,9 +64,22 @@ static inline f32 atan2f(f32 x, f32 x2)
 }
 
 f64 ceil(f64);
+static inline f32 ceilf(f32 x)
+{
+	return ceil(x);
+}
 f64 floor(f64);
+static inline f32 floorf(f32 x)
+{
+	return floor(x);
+}
 f64 frexp(f64, int*);
 f64 ldexp(f64, int);
+static inline f32 ldexpf(f32 x, int x2)
+{
+	return ldexp(x, x2);
+}
+f64 modf(f64, f64*);
 f64 sqrt(f64);
 f64 pow(f64, f64);
 static inline f32 powf(f32 x, f32 x2)
@@ -80,6 +93,10 @@ static inline f32 log10f(f32 x)
 	return log10(x);
 }
 f64 fmod(f64, f64);
+static inline f32 fmodf(f32 x, f32 x2)
+{
+	return fmod(x, x2);
+}
 f64 scalbn(f64, int);
 
 f64 __ieee754_acos(f64);
@@ -123,6 +140,17 @@ void __mtfsfi(int, int);
 void __mtfsb0(int);
 void __mtfsb1(int);
 f64 __setflm(f64);
+
+inline f32 modff(f32 x, f32* iptr)
+{
+	f32 frac;
+	f64 intg;
+
+	frac  = modf(x, &intg);
+	*iptr = intg;
+
+	return frac;
+}
 
 #define fabs(x)  __fabs(x)
 #define fabsf(x) __fabsf(x)

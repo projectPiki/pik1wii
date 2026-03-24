@@ -9,6 +9,11 @@
 
 BEGIN_SCOPE_EXTERN_C
 
+typedef enum {
+	GX_FIELD_EVEN,
+	GX_FIELD_ODD,
+} GXInterlaceField;
+
 /////////// TRANSFORM FUNCTIONS ////////////
 // Matrix and projection functions.
 extern void GXSetProjection(const Mtx44 mtx, GXProjectionType type);

@@ -10,7 +10,7 @@ BEGIN_SCOPE_EXTERN_C
 
 //////////// TEXTURE CALLBACKS /////////////
 
-typedef GXTexRegion* (*GXTexRegionCallback)(GXTexObj* t_obj, GXTexMapID id);
+typedef GXTexRegion* (*GXTexRegionCallback)(const GXTexObj* t_obj, GXTexMapID id);
 typedef GXTlutRegion* (*GXTlutRegionCallback)(u32 idx);
 
 ////////////////////////////////////////////
@@ -43,8 +43,8 @@ void GXGetTexObjLODAll(const GXTexObj* obj, GXTexFilter* min_filt,
                        GXBool* edgeLodEnable, GXAnisotropy* anisotropy);
 
 // Load functions.
-extern void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID map);
-extern void GXLoadTexObj(GXTexObj* obj, GXTexMapID map);
+extern void GXLoadTexObjPreLoaded(const GXTexObj* obj, GXTexRegion* region, GXTexMapID map);
+extern void GXLoadTexObj(const GXTexObj* obj, GXTexMapID map);
 
 // Tlut functions.
 extern void GXInitTlutObj(GXTlutObj* obj, void* table, GXTlutFmt format, u16 numEntries);

@@ -53,7 +53,7 @@ static void DisableWriteGatherPipe(void)
 /**
  * @TODO: Documentation
  */
-static GXTexRegion* __GXDefaultTexRegionCallback(GXTexObj* t_obj, GXTexMapID unused)
+static GXTexRegion* __GXDefaultTexRegionCallback(const GXTexObj* t_obj, GXTexMapID unused)
 {
 	GXTexFmt fmt = GXGetTexObjFmt(t_obj);
 

@@ -620,7 +620,7 @@ u32 GXGetTexObjTlut(const GXTexObj* tex_obj)
 /**
  * @TODO: Documentation
  */
-void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID id)
+void GXLoadTexObjPreLoaded(const GXTexObj* obj, GXTexRegion* region, GXTexMapID id)
 {
 	GXTlutRegionPriv* tlr;
 	GXTexObjPriv* t    = (GXTexObjPriv*)obj;
@@ -662,7 +662,7 @@ void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID id)
 /**
  * @TODO: Documentation
  */
-void GXLoadTexObj(GXTexObj* obj, GXTexMapID id)
+void GXLoadTexObj(const GXTexObj* obj, GXTexMapID id)
 {
 	GXTexRegion* r;
 

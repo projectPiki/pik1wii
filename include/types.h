@@ -242,7 +242,18 @@ inline void padStack(void)
 #define BOOLIFY_TERNARY_TYPE						BOOLIFY_TERNARY_TRUE_TYPE
 #define BOOLIFY_TERNARY								BOOLIFY_TERNARY_TRUE
 
+#define __CONCAT(x, y) x##y
+#define CONCAT(x, y)   __CONCAT(x, y)
 
+// Multi-character character constants
+// clang-format off
+#define TWOCC(c0, c1)                                                          \
+    (u32)((c0 & 0xFF) << 8  | (c1 & 0xFF))
+#define THREECC(c0, c1, c2)                                                    \
+    (u32)((c0 & 0xFF) << 16 | (c1 & 0xFF) << 8  | (c2 & 0xFF))
+#define FOURCC(c0, c1, c2, c3)                                                 \
+    (u32)((c0 & 0xFF) << 24 | (c1 & 0xFF) << 16 | (c2 & 0xFF) << 8 | (c3 & 0xFF))
+// clang-format on
 #define DECOMP_DONT_INLINE __attribute__((noinline))
 
 #ifdef __MWERKS__
@@ -250,11 +261,26 @@ inline void padStack(void)
 #define WEAKFUNC        __declspec(weak)
 #define DECL_SECT(name) __declspec(section name)
 #define ASM             asm
+#define DECOMP_FORCELITERAL(module, ...)               \
+	void CONCAT(FORCELITERAL##module, __LINE__)(void); \
+	void CONCAT(FORCELITERAL##module, __LINE__)(void)  \
+	{                                                  \
+		(__VA_ARGS__);                                 \
+	}
+#define DECOMP_FORCEACTIVE(module, ...)               \
+	void fake_function(...);                          \
+	void CONCAT(FORCEACTIVE##module, __LINE__)(void); \
+	void CONCAT(FORCEACTIVE##module, __LINE__)(void)  \
+	{                                                 \
+		fake_function(__VA_ARGS__);                   \
+	}
 #else
 #define AT_ADDRESS(addr)
 #define WEAKFUNC
 #define DECL_SECT(name)
 #define ASM
+#define DECOMP_FORCELITERAL(module, ...)
+#define DECOMP_FORCEACTIVE(module, ...)
 #endif
 
 #define INIT  DECL_SECT(".init")

@@ -24,7 +24,7 @@ void C_VECAdd(Vec* a, Vec* b, Vec* c)
  * @TODO: Documentation
  * @note UNUSED Size: 000024
  */
-ASM void PSVECAdd(register Vec* a, register Vec* b, register Vec* c)
+ASM void PSVECAdd(const register Vec* a, const register Vec* b, register Vec* c)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.x(a), 0, qr0
@@ -56,7 +56,7 @@ void C_VECSubtract(Vec* a, Vec* b, Vec* c)
  * @TODO: Documentation
  * @note UNUSED Size: 000024
  */
-ASM void PSVECSubtract(register Vec* a, register Vec* b, register Vec* c)
+ASM void PSVECSubtract(const register Vec* a, const register Vec* b, register Vec* c)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.x(a), 0, qr0
@@ -122,7 +122,7 @@ void C_VECNormalize(Vec* src, Vec* unit)
  * @TODO: Documentation
  * @note UNUSED Size: 000048
  */
-void PSVECNormalize(register Vec* vec1, register Vec* dst)
+void PSVECNormalize(const register Vec* vec1, register Vec* dst)
 {
 #ifdef __MWERKS__ // clang-format off
 	register f32 c_half  = 0.5f;
@@ -183,31 +183,37 @@ ASM f32 PSVECSquareMag(register Vec* v) {
 #endif // clang-format on
 }
 
-ASM f32 PSVECMag(register Vec* v) {
-#ifdef __MWERKS__ // clang-format off
-	psq_l   f0, Vec.x(v), 0, qr0
-	ps_mul  f0, f0, f0
-	lfs     f1, Vec.z(v)
-	ps_madd f1, f1, f1, f0
-	lfs     f4, 0.5f
-	ps_sum0 f1, f1, f0, f0
-	frsqrte f0, f1
-	lfs     f3, 3.0f
-	fmuls   f2, f0, f0
-	fmuls   f0, f0, f4
-	fnmsubs f2, f2, f1, f3
-	fmuls   f0, f2, f0
-	fsel    f0, f0, f0, f1
-	fmuls   f1, f1, f0
-#endif // clang-format on
-}
-
-/**
- * @TODO: Documentation
- */
-f32 VECMag(Vec* v)
+f32 PSVECMag(const register Vec* v)
 {
-	return sqrtf(PSVECSquareMag(v));
+	register f32 v_xy, v_zz, square_mag;
+	register f32 ret_mag, n_0, n_1;
+	register f32 three, half, zero;
+	half = 0.5f;
+#ifdef __MWERKS__ // clang-format off
+	asm {
+		psq_l       v_xy, 0(v), 0, 0
+		ps_mul      v_xy, v_xy, v_xy
+		lfs         v_zz, 8(v)
+		fsubs       zero, half, half
+		ps_madd     square_mag, v_zz, v_zz, v_xy
+		ps_sum0     square_mag, square_mag, v_xy, v_xy
+		fcmpu       cr0, square_mag, zero
+		beq-        __exit
+		frsqrte     ret_mag, square_mag
+	}
+#endif // clang-format on
+	three = 3.0f;
+#ifdef __MWERKS__ // clang-format off
+	asm {
+		fmuls       n_0, ret_mag, ret_mag
+		fmuls       n_1, ret_mag, half
+		fnmsubs     n_0, n_0, square_mag, three
+		fmuls       ret_mag, n_0, n_1
+		fmuls       square_mag, square_mag, ret_mag
+	__exit:
+	}
+#endif // clang-format on
+	return square_mag;
 }
 
 /**
@@ -228,7 +234,7 @@ f32 C_VECDotProduct(Vec* a, Vec* b)
  * @TODO: Documentation
  * @note UNUSED Size: 000020
  */
-ASM void PSVECDotProduct(register Vec* vec1, register Vec* vec2)
+ASM f32 PSVECDotProduct(register Vec* vec1, register Vec* vec2)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.y(vec1), 0, qr0
@@ -265,7 +271,7 @@ void C_VECCrossProduct(Vec* a, Vec* b, Vec* axb)
  * @TODO: Documentation
  * @note UNUSED Size: 00003C
  */
-ASM void PSVECCrossProduct(register Vec* vec1, register Vec* vec2, register Vec* dst)
+ASM void PSVECCrossProduct(const register Vec* vec1, const register Vec* vec2, register Vec* dst)
 {
 #ifdef __MWERKS__ // clang-format off
     psq_l f1, Vec.x(vec2), 0, qr0
@@ -287,9 +293,8 @@ ASM void PSVECCrossProduct(register Vec* vec1, register Vec* vec2, register Vec*
 
 /**
  * @TODO: Documentation
- * @note UNUSED Size: 0000D8
  */
-void VECHalfAngle(Vec* a, Vec* b, Vec* half)
+void C_VECHalfAngle(const Vec* a, const Vec* b, Vec* half)
 {
 	Vec aTmp;
 	Vec bTmp;
@@ -304,11 +309,11 @@ void VECHalfAngle(Vec* a, Vec* b, Vec* half)
 	bTmp.x = -b->x;
 	bTmp.y = -b->y;
 	bTmp.z = -b->z;
-	VECNormalize(&aTmp, &aTmp);
-	VECNormalize(&bTmp, &bTmp);
-	VECAdd(&aTmp, &bTmp, &hTmp);
-	if (VECDotProduct(&hTmp, &hTmp) > 0.0f) {
-		VECNormalize(&hTmp, half);
+	PSVECNormalize(&aTmp, &aTmp);
+	PSVECNormalize(&bTmp, &bTmp);
+	PSVECAdd(&aTmp, &bTmp, &hTmp);
+	if (PSVECDotProduct(&hTmp, &hTmp) > 0.0f) {
+		PSVECNormalize(&hTmp, half);
 		return;
 	}
 	*half = hTmp;
@@ -358,7 +363,7 @@ f32 C_VECSquareDistance(Vec* a, Vec* b)
  * @TODO: Documentation
  * @note UNUSED Size: 000028
  */
-ASM void PSVECSquareDistance(register Vec* vec1, register Vec* vec2) {
+ASM f32 PSVECSquareDistance(const register Vec* vec1, const register Vec* vec2) {
 #ifdef __MWERKS__ // clang-format off
     psq_l f2, Vec.y(vec1), 0, qr0
     psq_l f3, Vec.y(vec2), 0, qr0

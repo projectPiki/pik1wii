@@ -26,7 +26,9 @@
 #include "RevoSDK/OS/OSTime.h"
 #include "RevoSDK/OS/OSUtil.h"
 
-#include "RevoSDK/OS/OSFastCast.h" // Is intentionally omitted for jaudio bc paired single asm instructions mess with proc 750
+#include "RevoSDK/OS/OSFastCast.h"
+
+#include "RevoSDK/PPCArch.h"
 
 BEGIN_SCOPE_EXTERN_C
 

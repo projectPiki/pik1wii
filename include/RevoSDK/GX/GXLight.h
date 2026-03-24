@@ -21,7 +21,7 @@ extern void GXInitSpecularDir(GXLightObj* obj, f32 nX, f32 nY, f32 nZ);
 extern void GXInitLightColor(GXLightObj* obj, GXColor color);
 
 // Load functions.
-extern void GXLoadLightObjImm(GXLightObj* obj, GXLightID light);
+extern void GXLoadLightObjImm(const GXLightObj* obj, GXLightID light);
 
 // Set functions.
 extern void GXSetChanAmbColor(GXChannelID channel, GXColor color);
@@ -29,15 +29,18 @@ extern void GXSetChanMatColor(GXChannelID channel, GXColor color);
 extern void GXSetNumChans(u8 count);
 extern void GXSetChanCtrl(GXChannelID channel, GXBool doEnable, GXColorSrc ambSrc, GXColorSrc matSrc, u32 mask, GXDiffuseFn diffFunc,
                           GXAttnFn attnFunc);
+						  
+// Get functions.
+extern void GXGetLightPos(const GXLightObj* obj, f32* x, f32* y, f32* z);
+extern void GXGetLightDir(const GXLightObj* obj, f32* nX, f32* nY, f32* nZ);
+
+
 
 // Unused/inlined in P2.
 extern void GXInitLightAttnA(GXLightObj* obj, f32 a0, f32 a1, f32 a2);
 extern void GXGetLightAttnA(GXLightObj* obj, f32* a0, f32* a1, f32* a2);
 extern void GXInitLightAttnK(GXLightObj* obj, f32 k0, f32 k1, f32 k2);
 extern void GXGetLightAttnK(GXLightObj* obj, f32* k0, f32* k1, f32* k2);
-
-extern void GXGetLightPos(GXLightObj* obj, f32* x, f32* y, f32* z);
-extern void GXGetLightDir(GXLightObj* obj, f32* nX, f32* nY, f32* nZ);
 
 extern void GXInitSpecularDirHA(GXLightObj* obj, f32 nX, f32 nY, f32 nZ, f32 hX, f32 hY, f32 hZ);
 

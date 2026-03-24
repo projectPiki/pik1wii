@@ -74,6 +74,12 @@ BEGIN_SCOPE_EXTERN_C
  */
 #define GX_BP_SET_OPCODE(cmd, opcode) (cmd) = GX_BITFIELD_SET(cmd, 0, 8, (opcode))
 
+#define GX_BP_OPCODE_SHIFT 24
+/**
+ * Size of BP command
+ */
+#define GX_BP_CMD_SZ (sizeof(u8) + sizeof(u32))
+
 /************************************************************
  *
  *
@@ -89,6 +95,11 @@ BEGIN_SCOPE_EXTERN_C
 	GXWGFifo.s8  = GX_FIFO_CMD_LOAD_CP_REG; \
 	GXWGFifo.s8  = (addr);                  \
 	GXWGFifo.s32 = (data);
+
+/**
+ * Size of CP command
+ */
+#define GX_CP_CMD_SZ (sizeof(u8) + sizeof(u8) + sizeof(u32))
 
 /************************************************************
  *
@@ -120,6 +131,11 @@ BEGIN_SCOPE_EXTERN_C
 		u32 cmd = (size) << 16 | addr; \
 		GX_XF_LOAD_REG_HDR(cmd);       \
 	}
+
+/**
+ * Size of XF command
+ */
+#define GX_XF_CMD_SZ (sizeof(u8) + sizeof(u32) + sizeof(u32))
 
 END_SCOPE_EXTERN_C
 #endif

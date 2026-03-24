@@ -56,11 +56,6 @@ typedef struct _GXTexObj {
                   sizeof(u32)]; // _00
 } GXTexObj;        // size 0x20
 
-// Generic struct for texture memory storage.
-typedef struct _GXTexRegion {
-	u8 padding[0x10]; // _00
-} GXTexRegion;
-
 typedef struct _GXTexRegionPriv {
 	u32 image1;
 	u32 image2;
@@ -70,10 +65,11 @@ typedef struct _GXTexRegionPriv {
 	u8 isCached;
 } GXTexRegionPriv;
 
-// Generic struct for texture look-up table objects.
-typedef struct _GXTlutObj {
-	u8 padding[0xc]; // _00
-} GXTlutObj;
+// Generic struct for texture memory storage.
+typedef struct _GXTexRegion {
+	u32 padding[((16) - sizeof(GXTexRegionPriv) + sizeof(GXTexRegionPriv)) /
+                  sizeof(u32)]; // _00
+} GXTexRegion;
 
 typedef struct _GXTlutObjPriv {
 	u32 tlut;
@@ -82,15 +78,22 @@ typedef struct _GXTlutObjPriv {
 	u8 padding[0x2]; // _0A
 } GXTlutObjPriv;
 
-// Generic struct for texture look-up table memory storage.
-typedef struct _GXTlutRegion {
-	u8 padding[0x10]; // _00
-} GXTlutRegion;
+// Generic struct for texture look-up table objects.
+typedef struct _GXTlutObj {
+	u32 padding[((0x0C) - sizeof(GXTlutObjPriv) + sizeof(GXTlutObjPriv)) /
+                  sizeof(u32)]; // _00
+} GXTlutObj;
 
 typedef struct _GXTlutRegionPriv {
 	u32 loadTlut1;         // _00
 	GXTlutObjPriv tlutObj; // _04
 } GXTlutRegionPriv;
+
+// Generic struct for texture look-up table memory storage.
+typedef struct _GXTlutRegion {
+	u8 padding[((16) - sizeof(GXTlutRegionPriv) + sizeof(GXTlutRegionPriv)) /
+                  sizeof(u32)]; // _00
+} GXTlutRegion;
 
 // Generic struct for light information.
 typedef struct _GXLightObj {

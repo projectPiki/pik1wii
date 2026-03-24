@@ -249,7 +249,7 @@ void GXInitLightPos(GXLightObj* lt_obj, f32 x, f32 y, f32 z)
  * @TODO: Documentation
  * @note UNUSED Size: 00001C
  */
-void GXGetLightPos(GXLightObj* lt_obj, f32* x, f32* y, f32* z)
+void GXGetLightPos(const GXLightObj* lt_obj, f32* x, f32* y, f32* z)
 {
 	struct __GXLightObjInt_struct* obj;
 
@@ -281,7 +281,7 @@ void GXInitLightDir(GXLightObj* lt_obj, f32 nx, f32 ny, f32 nz)
  * @TODO: Documentation
  * @note UNUSED Size: 000028
  */
-void GXGetLightDir(GXLightObj* lt_obj, f32* nx, f32* ny, f32* nz)
+void GXGetLightDir(const GXLightObj* lt_obj, f32* nx, f32* ny, f32* nz)
 {
 	struct __GXLightObjInt_struct* obj;
 
@@ -394,7 +394,7 @@ void GXGetLightColor(GXLightObj* lt_obj, GXColor* color)
 /**
  * @TODO: Documentation
  */
-void GXLoadLightObjImm(GXLightObj* lt_obj, GXLightID light)
+void GXLoadLightObjImm(const GXLightObj* lt_obj, GXLightID light)
 {
 	unsigned long addr;
 	unsigned long idx;

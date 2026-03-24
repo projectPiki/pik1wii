@@ -21,7 +21,7 @@ extern void GXClearVtxDesc();
 extern void GXSetVtxAttrFmt(GXVtxFmt format, GXAttr attr, GXCompCnt count, GXCompType type, u8 frac);
 extern void GXSetVtxAttrFmtv(GXVtxFmt format, GXVtxAttrFmtList* list);
 
-extern void GXSetArray(GXAttr attr, void* basePtr, u8 stride);
+extern void GXSetArray(GXAttr attr, const void* basePtr, u8 stride);
 extern void GXInvalidateVtxCache();
 extern void GXSetTexCoordGen2(GXTexCoordID coord, GXTexGenType genType, GXTexGenSrc srcParam, u32 mtx, GXBool doNormalise, u32 postMtx);
 extern void GXSetNumTexGens(u8 count);

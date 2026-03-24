@@ -11,7 +11,7 @@ DECL_SECT(".init") void __fill_mem(void*, int, size_t);
 DECL_SECT(".init") void* memset(void*, int, size_t);
 
 #ifdef __MWERKS__
-typedef struct {
+typedef struct __va_list_struct{
 	char gpr;
 	char fpr;
 	char reserved[2];

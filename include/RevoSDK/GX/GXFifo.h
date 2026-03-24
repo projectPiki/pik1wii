@@ -59,6 +59,7 @@ typedef union {
 	s64 s64;
 	f32 f32;
 	f64 f64;
+	void* v;
 } PPCWGPipe;
 
 #ifdef __MWERKS__
@@ -196,6 +197,13 @@ extern GXFifoObj* GXGetGPFifo();
 extern void GXBeginDisplayList(void* list, u32 size);
 extern u32 GXEndDisplayList();
 extern void GXCallDisplayList(void* list, u32 numBytes);
+
+static void GXFastCallDisplayList(void* list, u32 size)
+{
+	GXWGFifo.u8  = GX_FIFO_CMD_CALL_DL;
+	GXWGFifo.v   = list;
+	GXWGFifo.u32 = size;
+}
 
 ////////////////////////////////////////////
 
