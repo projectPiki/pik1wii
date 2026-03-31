@@ -242,6 +242,7 @@ public:
 	// _00      = VTBL
 	// _00-_2B8 = Creature
 	// _2B8     = PaniAnimKeyListener
+	u8 _2C4[0x60];                    // _2C4, some unknown struct with a ctor (system12 related)
 	OdoMeter mOdometer;                   // _2BC
 	PathFinder::Buffer* mPathBuffers;     // _2CC
 	u32 mRouteHandle;                     // _2D0

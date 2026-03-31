@@ -149,6 +149,7 @@ public:
 	// _2B8-_2BC = PaniAnimKeyListener
 	// _2BC-_2C4 = PelletView
 	OdoMeter mOdoMeter;                   // _2C4
+	u8 _2DC[0x88];                          // _2DC, unknown, new in Wii version
 	zen::particleGenerator* mDamageEfxA;  // _2D4
 	zen::particleGenerator* mDamageEfxB;  // _2D8
 	zen::particleGenerator* mDamageEfxC;  // _2DC
@@ -178,6 +179,7 @@ public:
 	f32 mCursorNaviDist;                  // _6E0, how far is the cursor from us?
 	Vector3f mCursorTargetPosition;       // _6E4, where we want cursor to be
 	Vector3f mCursorWorldPos;             // _6F0, also cursor related?
+	Vector3f _78C;            			  // 
 	int mPendingLowerMotionId;            // _6FC
 	int mLowerMotionCooldown;             // _700
 	f32 mFlickIntensity;                  // _704
@@ -189,7 +191,7 @@ public:
 	bool mRearrangePending;               // _719
 	int mFormationBand;                   // _71C
 	int _720;                             // _720, functionally unused
-	bool mIsCStickNeutral;                // _724
+	bool mIsCStickNeutral;                // _724,
 	u8 _725[0x72C - 0x725];               // _725, TODO: work out members
 	u32 _72C;                             // _72C, functionally unused
 	u32 _730;                             // _730, functionally unknown

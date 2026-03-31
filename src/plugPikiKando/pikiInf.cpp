@@ -248,8 +248,8 @@ void BPikiInf::doRestore(Creature* piki)
 	if (piki->mObjType != OBJTYPE_Pikihead) {
 		ERROR("mail to teppe2\n");
 	}
-	static_cast<Piki*>(piki)->mPikiAnimMgr.mLowerAnimator.mStartKeyIndex = mPikiColour;
-	static_cast<Piki*>(piki)->mPikiAnimMgr.mLowerAnimator.mEndKeyIndex   = mNextKeyIndex;
+	static_cast<PikiHeadItem*>(piki)->mSeedColor = mPikiColour;
+	static_cast<PikiHeadItem*>(piki)->mFlowerStage   = mNextKeyIndex;
 }
 
 /**
