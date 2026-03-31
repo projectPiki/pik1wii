@@ -3185,20 +3185,26 @@ egg/gfx/eggCamera.cpp:
 	extab       start:0x800066A8 end:0x80006710
 	extabindex  start:0x80006BBC end:0x80006C10
 	.text       start:0x802758FC end:0x80275DB4
+	.rodata     start:0x8030D4B0 end:0x8030D4D8
 	.data       start:0x8034FB18 end:0x8034FB58
-	.sdata      start:0x8049DED8 end:0x8049DEF0
+	.sdata      start:0x8049DED8 end:0x8049DEE8
 
 egg/gfx/eggDrawHelper.cpp:
 	extab       start:0x80006710 end:0x800067A8
 	extabindex  start:0x80006C10 end:0x80006C40
-	.text       start:0x80275DB4 end:0x80276658
+	.text       start:0x80275DB4 end:0x8027661C
 	.ctors      start:0x802F62E8 end:0x802F62EC
 	.sbss       start:0x8049EF68 end:0x8049EF70
+	.sdata2     start:0x804A38F0 end:0x804A3900
+
+egg/gfx/eggGUI.cpp:
+	.text       start:0x8027661C end:0x80276658
 
 egg/gfx/eggTexture.cpp:
 	extab       start:0x800067A8 end:0x800067E0
 	extabindex  start:0x80006C40 end:0x80006C7C
 	.text       start:0x80276658 end:0x80276C14
+	.sdata2     start:0x804A3900 end:0x804A3918
 
 egg/gfx/eggPalette.cpp:
 	extab       start:0x800067E0 end:0x800067E8
@@ -3209,19 +3215,23 @@ egg/gfx/eggProjection.cpp:
 	extab       start:0x800067E8 end:0x800068A8
 	extabindex  start:0x80006C88 end:0x80006D0C
 	.text       start:0x80276C7C end:0x80277A24
+	.rodata     start:0x8030D4D8 end:0x8030D518
 	.data       start:0x8034FB58 end:0x8034FBD8
-	.sdata      start:0x8049DEF0 end:0x8049DF08
+	.sdata      start:0x8049DEE8 end:0x8049DF08
 	.sbss       start:0x8049EF70 end:0x8049EF78
+	.sdata2     start:0x804A3918 end:0x804A3958
 
 egg/gfx/eggViewport.cpp:
 	extab       start:0x800068A8 end:0x800068C0
 	extabindex  start:0x80006D0C end:0x80006D30
 	.text       start:0x80277A24 end:0x80277C10
+	.sdata2     start:0x804A3958 end:0x804A3968
 
 egg/prim/eggAssert.cpp:
 	extab       start:0x800068C0 end:0x800068D0
 	extabindex  start:0x80006D30 end:0x80006D48
 	.text       start:0x80277C10 end:0x802780F8
+	.rodata     start:0x8030D518 end:0x8030D588
 	.bss        start:0x8046F1E8 end:0x804719E8
 	.sbss       start:0x8049EF78 end:0x8049EF80
 
@@ -3232,38 +3242,45 @@ egg/math/eggMath.cpp:
 	extab       start:0x800068D0 end:0x800068F8
 	extabindex  start:0x80006D48 end:0x80006D84
 	.text       start:0x80278148 end:0x802782FC
+	.sdata2     start:0x804A3968 end:0x804A3970
 
 egg/math/eggMatrix.cpp:
 	extab       start:0x800068F8 end:0x80006920
 	extabindex  start:0x80006D84 end:0x80006DA8
 	.text       start:0x802782FC end:0x802786C8
 	.ctors      start:0x802F62EC end:0x802F62F0
-	.bss        start:0x804719E8 end:0x80471A48
+	.bss        start:0x804719E8 end:0x80471A18
+	.sdata2     start:0x804A3970 end:0x804A3978
 
 egg/math/eggVector.cpp:
 	extab       start:0x80006920 end:0x80006928
 	extabindex  start:0x80006DA8 end:0x80006DB4
 	.text       start:0x802786C8 end:0x80278860
 	.ctors      start:0x802F62F0 end:0x802F62F4
-	.bss        start:0x80471A48 end:0x80471AA0
+	.bss        start:0x80471A18 end:0x80471AA0
 	.sbss       start:0x8049EF80 end:0x8049EF98
+	.sdata2     start:0x804A3978 end:0x804A3980
 
 egg/math/eggBoundBox.cpp:
 	.text       start:0x80278860 end:0x802788D4
+	.sdata2     start:0x804A3980 end:0x804A3988
 
 egg/core/eggExpHeap.cpp:
 	.text       start:0x802788D4 end:0x80278C78
+	.rodata     start:0x8030D588 end:0x8030D5A8
 	.data       start:0x8034FBD8 end:0x8034FC08
 
 egg/core/eggHeap.cpp:
 	.text       start:0x80278C78 end:0x8027944C
+	.rodata     start:0x8030D5A8 end:0x8030D688
 	.data       start:0x8034FC08 end:0x8034FC38
 	.bss        start:0x80471AA0 end:0x80471AC8
 	.sbss       start:0x8049EF98 end:0x8049EFC0
+	.sdata2     start:0x804A3988 end:0x804A39A0
 
 egg/core/eggAllocator.cpp:
 	.text       start:0x8027944C end:0x8027950C
-	.data       start:0x8034FC38 end:0x8034FCC0
+	.data       start:0x8034FC38 end:0x8034FC50
 
 egg/core/eggThread.cpp:
 	.text       start:0x8027950C end:0x80279570
@@ -3271,18 +3288,22 @@ egg/core/eggThread.cpp:
 
 egg/core/eggSystem.cpp:
 	.text       start:0x80279570 end:0x80279960
+	.rodata     start:0x8030D688 end:0x8030D6B8
 	.sbss       start:0x8049EFC0 end:0x8049EFC8
 
 egg/core/eggController.cpp:
 	.text       start:0x80279960 end:0x8027B74C
 	.ctors      start:0x802F62F4 end:0x802F62F8
-	.data       start:0x8034FCC0 end:0x8034FDF0
+	.rodata     start:0x8030D6B8 end:0x8030D6E8
+	.data       start:0x8034FC50 end:0x8034FDF0
 	.bss        start:0x80471AD8 end:0x80472480
 	.sdata      start:0x8049DF08 end:0x8049DF10
 	.sbss       start:0x8049EFC8 end:0x8049EFE8
+	.sdata2     start:0x804A39A0 end:0x804A3A20
 
 egg/core/eggStream.cpp:
 	.text       start:0x8027B74C end:0x8027D4CC
+	.rodata     start:0x8030D6E8 end:0x8030D760
 	.data       start:0x8034FDF0 end:0x8034FE18
 	.bss        start:0x80472480 end:0x80472880
 
@@ -3314,7 +3335,8 @@ egg/core/eggDecomp.cpp:
 	.text       start:0x8027DF08 end:0x8027E23C
 
 egg/util/eggSaveBanner.cpp:
-	.text       start:0x8027E23C end:0x8027E670
+	.text       start:0x8027E23C end:0x8027E570
+	.rodata     start:0x8030D760 end:0x8030D780
 	.data       start:0x8034FE60 end:0x8034FE70
 	.sdata      start:0x8049DF18 end:0x8049DF20
 	.sbss       start:0x8049F000 end:0x8049F008

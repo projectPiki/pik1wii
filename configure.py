@@ -1391,7 +1391,7 @@ config.libs = [
     {
         "lib": "egg_gfx",
         "cflags": [*cflags_egg, "-Cpp_exceptions on"],
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "egg",
         "objects": [
             Object(
@@ -1413,7 +1413,7 @@ config.libs = [
     {
         "lib": "egg_prim",
         "cflags": [*cflags_egg, "-Cpp_exceptions on"],
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/prim/eggAssert.cpp"),
@@ -1423,7 +1423,7 @@ config.libs = [
     {
         "lib": "egg_math",
         "cflags": [*cflags_egg, "-Cpp_exceptions on"],
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/math/eggMath.cpp"),
@@ -1435,7 +1435,7 @@ config.libs = [
     {
         "lib": "egg_core",
         "cflags": cflags_egg,
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/core/eggExpHeap.cpp"),
@@ -1456,7 +1456,7 @@ config.libs = [
     {
         "lib": "egg_util",
         "cflags": cflags_egg,
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/util/eggSaveBanner.cpp"),
@@ -1466,7 +1466,7 @@ config.libs = [
     {
         "lib": "nw4r_ut",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(NonMatching, "nw4r/ut/ut_list.cpp"),
@@ -1486,7 +1486,7 @@ config.libs = [
     {
         "lib": "nw4r_math",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(NonMatching, "nw4r/math/math_arithmetic.cpp"),
@@ -1498,7 +1498,7 @@ config.libs = [
     {
         "lib": "nw4r_db",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(NonMatching, "nw4r/db/db_directPrint.cpp"),
@@ -1509,7 +1509,7 @@ config.libs = [
     {
         "lib": "nw4r_g3d",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(NonMatching, "nw4r/g3d/g3d_rescommon.cpp"),
@@ -1565,7 +1565,7 @@ config.libs = [
     {
         "lib": "nw4r_lyt",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(NonMatching, "nw4r/lyt/lyt_pane.cpp"),
@@ -1583,7 +1583,6 @@ config.libs = [
             Object(NonMatching, "nw4r/lyt/lyt_arcResourceAccessor.cpp"),
             Object(NonMatching, "nw4r/lyt/lyt_common.cpp"),
             Object(NonMatching, "nw4r/lyt/lyt_util.cpp"),
-            Object(NonMatching, "nw4r/lyt/lyt_u.cpp"),
         ],
     },
     {
