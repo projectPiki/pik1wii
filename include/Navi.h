@@ -191,7 +191,7 @@ public:
 	bool mRearrangePending;               // _719
 	int mFormationBand;                   // _71C
 	int _720;                             // _720, functionally unused
-	bool mIsCStickNeutral;                // _724, 7c0
+	bool mIsCStickNeutral;                // _724,
 	u8 _725[0x72C - 0x725];               // _725, TODO: work out members
 	u32 _72C;                             // _72C, functionally unused
 	u32 _730;                             // _730, functionally unknown
