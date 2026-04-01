@@ -919,7 +919,7 @@ config.libs = [
     {
         "lib": "sysCommon",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "sysCommon/atx.cpp"),
@@ -948,7 +948,7 @@ config.libs = [
     {
         "lib": "sysDolphin",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "sysDolphin/dgxGraphics.cpp"),
@@ -962,7 +962,7 @@ config.libs = [
     {
         "lib": "plugPikiColin",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiColin/animMgr.cpp"),
@@ -1005,7 +1005,7 @@ config.libs = [
     {
         "lib": "plugPikiKando",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiKando/testSoundSection.cpp"),
@@ -1148,7 +1148,7 @@ config.libs = [
     {
         "lib": "plugPikiNakata",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
             Object(NonMatching, "plugPikiNakata/taijudgementactions.cpp"),
