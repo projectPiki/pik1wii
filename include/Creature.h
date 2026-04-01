@@ -122,9 +122,9 @@ public:
 	virtual Vector3f getBoundingSphereCentre();                         // _60
 	virtual f32 getBoundingSphereRadius();                              // _64
 	virtual Vector3f getShadowPos() { return mSRT.t; }                  // _68 (weak)
-	virtual void unk_6C();                  							// _6C, unknown
-	virtual void setCentre(immut Vector3f& centre) { mSRT.t = centre; } // _70 (weak)
-	virtual f32 getShadowSize();                                        // _74
+	virtual void setCentre(immut Vector3f& centre) { mSRT.t = centre; } // _6C (weak)
+	virtual f32 getShadowSize();                                        // _70
+	virtual void unk_74();                  							// _74, unknown
 	virtual bool isVisible() { return true; }                           // _78
 	virtual bool isOrganic() { return true; }                           // _7C (weak)
 	virtual bool isTerrible();                                          // _80
@@ -137,7 +137,7 @@ public:
 	virtual bool ignoreAtari(Creature*) { return false; }               // _9C (weak)
 	virtual bool isFree() { return isCreatureFlag(CF_Free) != 0; }      // _A0 (weak)
 	virtual bool stimulate(immut Interaction&);                         // _A4
-	virtual void unk_A8();                  							// _A8, unknown
+	virtual bool unk_A8(immut Interaction&);                  							// _A8, unknown
 	virtual void sendMsg(Msg*) { }                                      // _AC (weak)
 	virtual void collisionCallback(immut CollEvent&) { }                // _B0 (weak)
 	virtual void bounceCallback() { }                                   // _B4 (weak)

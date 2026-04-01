@@ -1427,13 +1427,16 @@ plugPikiColin/memoryCard.cpp:
 plugPikiColin/moviePlayer.cpp:
 	.text       start:0x800FC658 end:0x800FD788
 	.ctors      start:0x802F5E34 end:0x802F5E38
-	.data       start:0x80337D28 end:0x803381C8
+	.rodata     start:0x80300728 end:0x80300DD0
+	.data       start:0x80337D28 end:0x803381B0
+	.sdata      start:0x80498680 end:0x804986D0
+	.sdata2     start:0x804A01C0 end:0x804A01E0
 
 plugPikiColin/movSample.cpp:
 	.text       start:0x800FD788 end:0x800FDC9C
 	.ctors      start:0x802F5E38 end:0x802F5E3C
 	.rodata     start:0x80300DD0 end:0x80300FA8
-	.data       start:0x803381C8 end:0x80338250
+	.data       start:0x803381B0 end:0x80338250
 
 plugPikiColin/newPikiGame.cpp:
 	.text       start:0x800FDC9C end:0x8010276C
@@ -1497,11 +1500,14 @@ plugPikiKando/uteffect.cpp:
 	.text       start:0x8010A4C4 end:0x8010C854
 	.ctors      start:0x802F5E60 end:0x802F5E64
 	.data       start:0x80338B88 end:0x80338F88
+	.sdata      start:0x80498A68 end:0x80498AF8
 	.sbss       start:0x8049ECC8 end:0x8049ECD0
+	.sdata2     start:0x804A0358 end:0x804A0398
 
 plugPikiKando/utkando.cpp:
 	.text       start:0x8010C854 end:0x8010DAD0
 	.ctors      start:0x802F5E64 end:0x802F5E68
+	.sdata      start:0x80498AF8 end:0x80498B38
 
 plugPikiKando/viewPiki.cpp:
 	.text       start:0x8010DAD0 end:0x801106B8

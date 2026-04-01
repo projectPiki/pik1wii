@@ -489,6 +489,8 @@ HinderRock::HinderRock(Shape* shape)
 	mEfxA                  = 0;
 	mEfxC                  = 0;
 	mEfxB                  = 0;
+	mLifeGauge.mColor.set(112, 216, 216, 255);
+	mLifeGauge.mUseColor = true;
 }
 
 /**
@@ -1262,11 +1264,13 @@ void Bridge::flatten()
  */
 void Bridge::dump()
 {
+#ifdef DEVELOP
 	for (int i = 0; i < mStageCount; i++) {
 		const char* a = mBuildShape->mJointVisibility[mStageJoints[i * 2 + 1]->mIndex] ? "|" : "x";
 		const char* b = mBuildShape->mJointVisibility[mStageJoints[i * 2]->mIndex] ? "|" : "x";
 		PRINT_GLOBAL("brd %d : %d%%(w%s:p%s)\n", i, (int)(mStageProgressList[i] / mMaxHealth * 100.0f), a, b);
 	}
+#endif
 }
 
 /**
