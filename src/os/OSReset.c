@@ -2,30 +2,34 @@
 #include "RevoSDK/os.h"
 #include <stddef.h>
 
-static OSResetQueue ResetFunctionQueue;
+static OSShutdownFunctionQueue ShutdownFunctionQueue;
+static u32 bootThisDol = 0;
+volatile BOOL __OSIsReturnToIdle = FALSE;
+
+static void KillThreads(void);
 
 /**
  * @TODO: Documentation
  */
-void OSRegisterResetFunction(OSResetFunctionInfo* info)
+void OSRegisterShutdownFunction(OSShutdownFunctionInfo* info)
 {
-	OSResetFunctionInfo* tmp;
-	OSResetFunctionInfo* iter;
+	OSShutdownFunctionInfo* tmp;
+	OSShutdownFunctionInfo* iter;
 
-	for (iter = ResetFunctionQueue.head; iter && iter->priority <= info->priority; iter = iter->next) {
+	for (iter = ShutdownFunctionQueue.head; iter && iter->priority <= info->priority; iter = iter->next) {
 		;
 	}
 
 	if (iter == NULL) {
-		tmp = ResetFunctionQueue.tail;
+		tmp = ShutdownFunctionQueue.tail;
 		if (tmp == NULL) {
-			ResetFunctionQueue.head = info;
+			ShutdownFunctionQueue.head = info;
 		} else {
 			tmp->next = info;
 		}
 		info->prev              = tmp;
 		info->next              = NULL;
-		ResetFunctionQueue.tail = info;
+		ShutdownFunctionQueue.tail = info;
 		return;
 	}
 
@@ -34,7 +38,7 @@ void OSRegisterResetFunction(OSResetFunctionInfo* info)
 	iter->prev = info;
 	info->prev = tmp;
 	if (tmp == NULL) {
-		ResetFunctionQueue.head = info;
+		ShutdownFunctionQueue.head = info;
 		return;
 	}
 	tmp->next = info;
@@ -44,7 +48,7 @@ void OSRegisterResetFunction(OSResetFunctionInfo* info)
  * @TODO: Documentation
  * @note UNUSED Size: 000038
  */
-void OSUnregisterResetFunction(OSResetFunctionInfo*)
+void OSUnregisterShutdownFunction(OSShutdownFunctionInfo*)
 {
 	// UNUSED FUNCTION
 }
@@ -53,77 +57,80 @@ void OSUnregisterResetFunction(OSResetFunctionInfo*)
  * @TODO: Documentation
  * @note UNUSED Size: 00008C
  */
-BOOL CallResetFunctions(BOOL final)
+int __OSCallShutdownFunctions(BOOL final, u32 event)
 {
-	OSResetFunctionInfo* iter;
-	BOOL retCode = FALSE;
+	OSShutdownFunctionInfo* info;
+    int err;
+    u32 priority;
 
-	for (iter = ResetFunctionQueue.head; (iter != NULL); iter = iter->next) {
-		retCode |= !iter->func(final);
-	}
+    priority = 0;
+    err = 0;
 
-	retCode |= !__OSSyncSram();
+    for (info = ShutdownFunctionQueue.head; info != 0;) {
+        if (err != 0 && priority != info->priority)
+            break;
+        err |= !info->func(final, event);
+        priority = info->priority;
+        info = info->next;
+    }
 
-	if (retCode) {
-		return FALSE;
-	}
-	return TRUE;
+    err |= !__OSSyncSram();
+    return err ? FALSE : TRUE;
 	// UNUSED FUNCTION
 }
 
-/**
- * @TODO: Documentation
- */
-static void ASM Reset(register s32 resetCode)
-{
-#ifdef __MWERKS__ // clang-format off
-	nofralloc
-	b _jump1
+void __OSShutdownDevices(u32 event) {
+    BOOL rc, disableRecalibration, doRecal;
 
-_begin:
-	mfspr r8, HID0
-	ori r8, r8, 8
-	mtspr HID0, r8
-	isync
-	sync
-	nop
-	b _preloop
+    switch(event) {
+      case 0:
+      case 5:
+      case 6:
+        doRecal = FALSE;
+        break;
+      case 2:
+      case 3:
+      case 4:
+      case 1:
+      default:
+        doRecal = TRUE;
+        break;
+    }
 
-_jump1:
-	b _jump2
+    __OSStopAudioSystem();
 
-_preloop:
-	mftb r5, 268
-_loop:
-	mftb r6, 268
-	subf r7, r5, r6
-	cmplwi r7, 0x1124
-	blt _loop
-	nop
-	b _setPIReg
+    if (!doRecal) {
+        disableRecalibration = __PADDisableRecalibration(TRUE);
+    }
 
-_jump2:
-	b _jump3
+    while (!__OSCallShutdownFunctions(FALSE, event));
 
-_setPIReg:
-	lis r8, 0xCC003000@h
-	ori r8, r8, 0xCC003000@l
-	li r4, 3
-	stw r4, 0x24(r8)
-	stw r3, 0x24(r8)
-	nop
-	b _noptrap
+    while (!__OSSyncSram());
 
-_jump3:
-	b _jump4
+    OSDisableInterrupts();
+    rc = __OSCallShutdownFunctions(TRUE, event);
+    OSAssertLine(491, rc);
+    LCDisable();
 
-_noptrap:
-	nop
-	b _noptrap
+    if (!doRecal) {
+        __PADDisableRecalibration(disableRecalibration);
+    }
 
-_jump4:
-	b _begin
-#endif // clang-format on
+    KillThreads();
+}
+
+u8 __OSGetDiscState(u8 last) {
+    u32 flags;
+
+    if (__DVDGetCoverStatus() != 2) {
+        return 3;
+    } else {
+        if ((last == 1) && (__OSGetRTCFlags(&flags) && !flags)) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
 }
 
 /**
@@ -165,95 +172,5 @@ void __OSDoHotReset(s32 code)
  */
 void OSResetSystem(int reset, u32 resetCode, BOOL forceMenu)
 {
-	BOOL rc;
-	BOOL disableRecalibration;
-	BOOL enabled;
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	int stack, stack2;
-#endif
-	OSDisableScheduler();
-	__OSStopAudioSystem();
-
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	if (reset == OS_RESET_SHUTDOWN) {
-		disableRecalibration = __PADDisableRecalibration(TRUE);
-	}
-#endif
-
-	while (!CallResetFunctions(FALSE)) {
-		;
-	}
-
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	if (reset == OS_RESET_HOTRESET && forceMenu) {
-#else
-	if (reset && forceMenu) {
-#endif
-		OSSram* sram;
-
-		sram = __OSLockSram();
-		sram->flags |= 0x40;
-		__OSUnlockSram(TRUE);
-
-		while (!__OSSyncSram()) {
-			;
-		}
-	}
-
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	OSDisableInterrupts();
-#else
-	enabled = OSDisableInterrupts();
-#endif
-	CallResetFunctions(TRUE);
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	LCDisable();
-#endif
-	if (reset == OS_RESET_HOTRESET) {
-		__OSDoHotReset(resetCode);
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	} else if (reset == OS_RESET_RESTART) {
-#else
-	} else {
-#endif
-		KillThreads();
-		OSEnableScheduler();
-		__OSReboot(resetCode, forceMenu);
-	}
-
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-	KillThreads();
-	memset(OSPhysicalToCached(0x40), 0, 0xcc - 0x40);
-	memset(OSPhysicalToCached(0xd4), 0, 0xe8 - 0xd4);
-	memset(OSPhysicalToCached(0xf4), 0, 0xf8 - 0xf4);
-	memset(OSPhysicalToCached(0x3000), 0, 0xc0);
-	memset(OSPhysicalToCached(0x30c8), 0, 0xd4 - 0xc8);
-	// memset(OSPhysicalToCached(0x30e2), 0, 1);
-	__PADDisableRecalibration(disableRecalibration);
-#else
-	OSRestoreInterrupts(enabled);
-	OSEnableScheduler();
-#endif
+    OSErrorLine(1130,"OSResetSystem() is obsoleted. It doesn't work any longer.\n");
 }
-
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIP01_00)
-volatile u8 DAT_800030e2 : 0x800030e2;
-typedef struct Unk {
-	u8 pad[0x24];
-	u32 resetCode;
-} Unk;
-volatile Unk DAT_cc003000 : 0xcc003000;
-
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 000030
- */
-u32 OSGetResetCode(void)
-{
-	if (DAT_800030e2 != 0) {
-		return 0x80000000;
-	}
-	return ((DAT_cc003000.resetCode & ~7) >> 3);
-	// UNUSED FUNCTION
-}
-#endif

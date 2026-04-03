@@ -837,9 +837,14 @@ os/__ppc_eabi_init.c:
 
 pad/Padclamp.c:
 	.text       start:0x8005B740 end:0x8005B944
+	.sdata2     start:0x8049FB10 end:0x8049FB18
 
 pad/Pad.c:
 	.text       start:0x8005B944 end:0x8005D1E0
+	.data       start:0x8032B678 end:0x8032B6D0
+	.bss        start:0x8040A650 end:0x8040A6D0
+	.sdata      start:0x80497668 end:0x80497688
+	.sbss       start:0x8049E788 end:0x8049E7B8
 
 si/SIBios.c:
 	.text       start:0x8005D1E0 end:0x8005E81C
@@ -1156,20 +1161,32 @@ mem/mem_list.c:
 
 nand/nand.c:
 	.text       start:0x800B15AC end:0x800B2608
+	.sdata      start:0x80497850 end:0x80497858
 
 nand/NANDOpenClose.c:
 	.text       start:0x800B2608 end:0x800B2AEC
 
 nand/NANDCore.c:
-	.text       start:0x800B2AEC end:0x800B38FC
+	.text       start:0x800B2AEC end:0x800B3844
+	.data       start:0x80335060 end:0x803351B0
 	.bss        start:0x804466C0 end:0x80446700
+	.sdata      start:0x80497858 end:0x80497880
+	.sbss       start:0x8049EB18 end:0x8049EB20
+
+nand/NANDSecret.c:
+	.text       start:0x800B3844 end:0x800B38FC
 
 nand/NANDCheck.c:
 	.text       start:0x800B38FC end:0x800B3AC0
+	.data       start:0x803351B0 end:0x80335260
+	.sdata      start:0x80497880 end:0x80497890
 
 nand/NANDLogging.c:
 	.text       start:0x800B3AC0 end:0x800B4090
+	.data       start:0x80335260 end:0x803352A8
 	.bss        start:0x80446700 end:0x80446A00
+	.sdata      start:0x80497890 end:0x80497894
+	.sbss       start:0x8049EB20 end:0x8049EB28
 
 sc/scsystem.c:
 	.text       start:0x800B4090 end:0x800B59F4
@@ -3766,11 +3783,13 @@ System12/sys12GamePointer.cpp:
 System12/sys12NANDMgr.cpp:
 	.text       start:0x802B91DC end:0x802B9F60
 	.ctors      start:0x802F6318 end:0x802F631C
-	.data       start:0x80351090 end:0x803510B0
+	.rodata     start:0x8030F318 end:0x8030FA68
+	.data       start:0x80351090 end:0x803510A0
 	.sbss       start:0x8049F0E8 end:0x8049F0F0
 
 System12/sys12SDMgr.cpp:
 	.text       start:0x802B9F60 end:0x802BA098
+	.data       start:0x803510A0 end:0x803510B0
 	.sbss       start:0x8049F0F0 end:0x8049F0F8
 
 System12/sys12TagParms.cpp:

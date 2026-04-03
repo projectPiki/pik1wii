@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <string.h>
 
+const char* __PADVersion = "<< RVL_SDK - PAD \trelease build: Oct  3 2007 01:00:54 (0x4199_60831) >>";
+
 #define LATENCY 8
 
 #define PAD_ALL                                                                                                                          \
@@ -13,6 +15,7 @@
 #define RES_WIRELESS_LITE 0x40000
 
 u16 __OSWirelessPadFixMode AT_ADDRESS(OS_BASE_CACHED | 0x30E0);
+extern u8 GameChoice AT_ADDRESS(OS_BASE_CACHED | 0x30E3);
 
 static int Initialized;     // size: 0x4, address: 0x0
 static u32 EnabledBits;     // size: 0x4, address: 0x4
@@ -23,11 +26,9 @@ static u32 WaitingBits;     // size: 0x4, address: 0x14
 static u32 CheckingBits;    // size: 0x4, address: 0x18
 static u32 cmdTypeAndStatus;
 
-static u32 PADType[PAD_MAX_CONTROLLERS];             // size: 0x10, address: 0x0
-static u32 Type[PAD_MAX_CONTROLLERS];                // size: 0x10, address: 0x0
-static struct PADStatus Origin[PAD_MAX_CONTROLLERS]; // size: 0x30, address: 0x10
-static u32 cmdProbeDevice[PAD_MAX_CONTROLLERS];
-static u32 cmdFixDevice[PAD_MAX_CONTROLLERS];
+static u32 Type[SI_MAX_CHAN];
+static PADStatus Origin[SI_MAX_CHAN];
+static u32 CmdProbeDevice[SI_MAX_CHAN];
 
 // functions
 static u16 GetWirelessID(s32 chan);
@@ -39,9 +40,10 @@ static void PADProbeCallback(s32 chan, u32 error, OSContext* context);
 static void PADDisable(s32 chan);
 static void UpdateOrigin(s32 chan);
 static void PADOriginCallback(s32 chan, u32 error, OSContext* context);
+static void PADTypeAndStatusCallback(s32 chan, u32 type);
 static void PADFixCallback(s32 unused, u32 error, struct OSContext* context);
 static void PADResetCallback(s32 unused, u32 error, struct OSContext* context);
-int PADReset(u32 mask);
+BOOL PADReset(u32 mask);
 BOOL PADRecalibrate(u32 mask);
 BOOL PADInit();
 static void PADReceiveCheckCallback(s32 chan, u32 error, OSContext* arg2);
@@ -60,7 +62,7 @@ static void SPEC2_MakeStatus(s32 chan, PADStatus* status, u32 data[2]);
 int PADGetType(s32 chan, u32* type);
 BOOL PADSync(void);
 void PADSetAnalogMode(u32 mode);
-static BOOL OnReset(BOOL f);
+static BOOL OnShutdown(BOOL f, u32 event);
 
 static s32 ResettingChan                                = 0x00000020; // size: 0x4, address: 0x0
 static u32 XPatchBits                                   = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT;
@@ -69,12 +71,17 @@ static u32 Spec                                         = 0x00000005;       // s
 static void (*MakeStatus)(s32, struct PADStatus*, u32*) = SPEC2_MakeStatus; // size: 0x4, address: 0xC
 static u32 cmdReadOrigin                                = 0x41000000;
 static u32 cmdCalibrate                                 = 0x42000000;
+static u32 PendingBits;
+static u32 BarrelBits;
 
-static OSResetFunctionInfo ResetFunctionInfo = {
-	OnReset,
+static u32 CmdReadOrigin = 0x41 << 24;
+static u32 CmdCalibrate  = 0x42 << 24;
+
+static OSShutdownFunctionInfo ShutdownFunctionInfo = {
+	OnShutdown,
 	127,
 	NULL,
-	NULL,
+    NULL,
 };
 
 /**
@@ -113,24 +120,20 @@ static void SetWirelessID(s32 chan, u16 id)
  */
 static int DoReset(void)
 {
-	int rc;
 	u32 chanBit;
 
-	rc            = 1;
 	ResettingChan = __cntlzw(ResettingBits);
-	if ((ResettingChan >= 0) && (ResettingChan < 4)) {
-		memset(&Origin[ResettingChan], 0, 0xC);
-		Type[ResettingChan]    = 0;
-		PADType[ResettingChan] = 0;
-		rc                     = SITransfer(ResettingChan, &cmdTypeAndStatus, 1, &Type[ResettingChan], 3, PADResetCallback, 0);
-		chanBit                = (0x80000000 >> ResettingChan);
-		ResettingBits &= ~chanBit;
-		if (rc == 0) {
-			ResettingChan = 0x20;
-			ResettingBits = 0;
-		}
+	if (ResettingChan == 32) {
+		return;
 	}
-	return rc;
+
+	OSAssertLine(0x589, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
+
+	chanBit = PAD_CHAN0_BIT >> ResettingChan;
+	ResettingBits &= ~chanBit;
+
+	memset(&Origin[ResettingChan], 0, sizeof(PADStatus));
+	SIGetTypeAsync(ResettingChan, (SITypeAndStatusCallback)PADTypeAndStatusCallback);
 }
 
 /**
@@ -156,66 +159,20 @@ static void PADEnable(s32 chan)
  * @TODO: Documentation
  * @note UNUSED Size: 0000C0
  */
-static void ProbeWireless(s32 chan)
-{
-	u32 cmd;
-	u32 chanBit;
-	u32 type;
-	u32 data[2];
-
-	chanBit = 0x80000000 >> chan;
-	EnabledBits |= chanBit;
-	ProbingBits |= chanBit;
-	SIGetResponse(chan, &data);
-	type = Type[chan];
-	if (!(type & 0x02000000)) {
-		cmd = (chan << 0xE) | 0x4D0000 | (__OSWirelessPadFixMode & 0x3FFF);
-	} else if (((type & 0xC0000) + 0xFFFC0000) == 0) {
-		cmd = 0x500000;
-	} else {
-		cmd = (type & 0x70000) + 0x440000;
-	}
-	SISetCommand(chan, cmd);
-	SIEnablePolling(EnabledBits);
-}
-
-/**
- * @TODO: Documentation
- */
-static void PADProbeCallback(s32 chan, u32 error, OSContext* context)
-{
-	OSAssertLine(0x1F5, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
-	OSAssertLine(0x1F6, chan == ResettingChan);
-	if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION))) {
-		u32 type;
-		type = Type[chan];
-		if (!(type & 0x80000) && !(type & 0x40000)) {
-			PADEnable(ResettingChan);
-			WaitingBits |= PAD_CHAN0_BIT >> ResettingChan;
-		} else {
-			ProbeWireless(ResettingChan);
-		}
-	}
-	DoReset();
-}
-
-/**
- * @TODO: Documentation
- * @note UNUSED Size: 0000C0
- */
 static void PADDisable(s32 chan)
 {
-	int enabled;
+	BOOL enabled;
 	u32 chanBit;
 
 	enabled = OSDisableInterrupts();
 	chanBit = 0x80000000 >> chan;
 	SIDisablePolling(chanBit);
 	EnabledBits &= ~chanBit;
-	WaitingBits &= ~chanBit;
-	CheckingBits &= ~chanBit;
-	ProbingBits &= ~chanBit;
-	SetWirelessID(chan, 0);
+    WaitingBits &= ~chanBit;
+    CheckingBits &= ~chanBit;
+    PendingBits &= ~chanBit;
+    BarrelBits &= ~chanBit;
+	OSSetWirelessID(chan, 0);
 	OSRestoreInterrupts(enabled);
 	// UNUSED FUNCTION
 }
@@ -226,9 +183,8 @@ static void PADDisable(s32 chan)
 static void UpdateOrigin(s32 chan)
 {
 	PADStatus* origin;
-	u32 chanBit;
+	u32 chanBit = PAD_CHAN0_BIT >> chan;
 
-	chanBit = 0x80000000 >> chan;
 	origin  = &Origin[chan];
 	switch (AnalogMode & 0x00000700u) {
 	case 0x00000000u:
@@ -273,8 +229,10 @@ static void UpdateOrigin(s32 chan)
 	origin->substickX -= 128;
 	origin->substickY -= 128;
 
-	if ((XPatchBits & chanBit) != 0 && origin->stickX > 64 && (Type[chan] & 0xFFFF0000) == SI_GC_CONTROLLER) {
-		origin->stickX = 0;
+	if (XPatchBits & chanBit) {
+		if (64 < origin->stickX && (SIGetType(chan) & 0xffff0000) == SI_GC_CONTROLLER) {
+			origin->stickX = 0;
+		}
 	}
 }
 
@@ -302,146 +260,137 @@ static void PADOriginUpdateCallback(s32 chan, u32 error, OSContext* context)
 		return;
 	if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION)))
 		UpdateOrigin(chan);
+	if (error & SI_ERROR_NO_RESPONSE)
+		PADDisable(chan);
 }
 
-/**
- * @TODO: Documentation
- */
-static void PADFixCallback(s32 unused, u32 error, struct OSContext* context)
+static void PADProbeCallback(s32 chan, u32 error, OSContext* context)
 {
-	u32 type;
-	u32 id;
-	u32 frame;
-
-	OSAssertLine(0x2A9, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
-
-	if (!(error & 0xF)) {
-		type = Type[ResettingChan];
-		id   = (GetWirelessID(ResettingChan) << 8);
-		if (!(type & 0x100000) || ((id & 0xCFFF00u) != (type & 0xCFFF00))) {
-			DoReset();
-			return;
-		}
-		if ((type & 0x40000000) && !(type & 0x80000) && !(type & 0x40000)) {
-			SITransfer(ResettingChan, &cmdReadOrigin, 1, &Origin[ResettingChan], 0xA, PADOriginCallback, 0);
-			return;
-		}
-		frame = (ResettingChan << 0x16) | 0x4D000000 | (__OSWirelessPadFixMode << 8) & 0x3FFF00u;
-		SITransfer(ResettingChan, &cmdProbeDevice[ResettingChan], 3, &Origin[ResettingChan], 8, PADProbeCallback, 0);
-		return;
+	OSAssertLine(740, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
+	OSAssertLine(741, chan == ResettingChan);
+	OSAssertLine(743, (Type[chan] & SI_WIRELESS_CONT_MASK) == SI_WIRELESS_CONT && !(Type[chan] & SI_WIRELESS_LITE));
+	if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION))) {
+		PADEnable(ResettingChan);
+		WaitingBits |= PAD_CHAN0_BIT >> ResettingChan;
 	}
 	DoReset();
 }
 
-u32 __PADFixBits; // size: 0x4, address: 0x24
-
 /**
  * @TODO: Documentation
  */
-static void PADResetCallback(s32 unused, u32 error, struct OSContext* context)
+static void PADTypeAndStatusCallback(s32 chan, u32 type)
 {
-	u32 type;
-	u32 id;
-	u32 recalibrate;
 	u32 chanBit;
-	int fix;
+	u32 recalibrate;
+	BOOL rc = TRUE;
+	u32 error;
 
-	OSAssertLine(0x2E9, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
+	OSAssertLine(0x746, 0 <= ResettingChan && ResettingChan < SI_MAX_CHAN);
+	OSAssertLine(0x747, chan == ResettingChan);
 
-	if (error & 0xF) {
-		Type[ResettingChan] = 0;
-	}
-
-	PADType[ResettingChan] = type = Type[ResettingChan];
-	chanBit                       = 0x80000000 >> ResettingChan;
-	recalibrate                   = RecalibrateBits & chanBit;
+	chanBit     = PAD_CHAN0_BIT >> ResettingChan;
+	error       = type & 0xFF;
+	recalibrate = RecalibrateBits & chanBit;
 	RecalibrateBits &= ~chanBit;
-	fix = __PADFixBits & chanBit;
-	__PADFixBits &= ~chanBit;
-	if ((error & 0xF) || (((type & 0x18000000) + 0xF8000000) != 0)) {
-		SetWirelessID(ResettingChan, 0);
+
+	if (error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION)) {
 		DoReset();
 		return;
 	}
-	if (Spec < 2) {
+
+	type &= ~0xFF;
+
+	Type[ResettingChan] = type;
+
+	if ((type & SI_TYPE_MASK) != SI_TYPE_GC || !(type & SI_GC_STANDARD)) {
+		DoReset();
+		return;
+	}
+
+	if (Spec < PAD_SPEC_2) {
 		PADEnable(ResettingChan);
 		DoReset();
 		return;
 	}
-	if (!(type & 0x80000000) || (type & 0x04000000)) {
-		SetWirelessID(ResettingChan, 0);
-		if (!(type & 0x01000000)) {
-			DoReset();
-			return;
+
+	if (!(type & SI_GC_WIRELESS) || (type & SI_WIRELESS_IR)) {
+		if (recalibrate) {
+			rc = SITransfer(ResettingChan, &CmdCalibrate, 3, &Origin[ResettingChan], 10, (SICallback)PADOriginCallback, 0);
+		} else {
+			rc = SITransfer(ResettingChan, &CmdReadOrigin, 1, &Origin[ResettingChan], 10, (SICallback)PADOriginCallback, 0);
 		}
-		if (recalibrate != 0) {
-			SITransfer(ResettingChan, &cmdCalibrate, 3, &Origin[ResettingChan], 0xA, PADOriginCallback, 0);
-			return;
+	} else if ((type & SI_WIRELESS_FIX_ID) && (type & SI_WIRELESS_CONT_MASK) == SI_WIRELESS_CONT && !(type & SI_WIRELESS_LITE)) {
+		if (type & SI_WIRELESS_RECEIVED) {
+			rc = SITransfer(ResettingChan, &CmdReadOrigin, 1, &Origin[ResettingChan], 10, (SICallback)PADOriginCallback, 0);
+		} else {
+			rc = SITransfer(ResettingChan, &CmdProbeDevice[ResettingChan], 3, &Origin[ResettingChan], 8, (SICallback)PADProbeCallback, 0);
 		}
-		SITransfer(ResettingChan, &cmdReadOrigin, 1, &Origin[ResettingChan], 0xA, PADOriginCallback, 0);
+	}
+	if (!rc) {
+		PendingBits |= chanBit;
+		DoReset();
 		return;
 	}
-	id = (GetWirelessID(ResettingChan) << 8);
-	if ((fix != 0) && (id & 0x100000)) {
-		cmdFixDevice[ResettingChan] = (id & 0xCFFF00) | 0x4E000000 | 0x100000;
-		SITransfer(ResettingChan, &cmdFixDevice[ResettingChan], 3, &Type[ResettingChan], 3, PADFixCallback, 0);
-		return;
-	}
-	if (type & 0x100000) {
-		if ((id & 0xCFFF00) != (type & 0xCFFF00)) {
-			if (!(id & 0x100000)) {
-				id = (type & 0xCFFF00);
-				id |= 0x100000;
-				SetWirelessID(ResettingChan, (u16)(id >> 8) & 0xFFFFFF);
-			}
-			cmdFixDevice[ResettingChan] = id | 0x4E000000;
-			SITransfer(ResettingChan, &cmdFixDevice[ResettingChan], 3, &Type[ResettingChan], 3, PADFixCallback, 0);
-			return;
-		}
-		if ((type & 0x40000000) && !(type & 0x80000) && !(type & 0x40000)) {
-			SITransfer(ResettingChan, &cmdReadOrigin, 1, &Origin[ResettingChan], 0xA, PADOriginCallback, 0);
-			return;
-		}
-		SITransfer(ResettingChan, &cmdProbeDevice[ResettingChan], 3, &Origin[ResettingChan], 8, PADProbeCallback, 0);
-		return;
-	}
-	if (type & 0x40000000) {
-		u32 id = (type & 0xCFFF00);
-		id |= 0x100000;
-		SetWirelessID(ResettingChan, (u16)(id >> 8) & 0xFFFFFF);
-		cmdFixDevice[ResettingChan] = id | 0x4E000000;
-		SITransfer(ResettingChan, &cmdFixDevice[ResettingChan], 3, &Type[ResettingChan], 3, PADFixCallback, 0);
-		return;
-	}
-	SetWirelessID(ResettingChan, 0);
-	ProbeWireless(ResettingChan);
-	DoReset();
 }
 
 /**
  * @TODO: Documentation
  */
-int PADReset(u32 mask)
+static void PADReceiveCheckCallback(s32 chan, u32 type, OSContext* arg2)
 {
-	int enabled;
-	int rc;
+	u32 error;
+	u32 chanBit;
+	
+	chanBit = PAD_CHAN0_BIT >> chan;
+	if (!(EnabledBits & chanBit)) {
+		return;
+	}
 
-	rc = 0;
+	error = type & 0xFF;
+	type &= ~0xFF;
+	
+	WaitingBits &= ~chanBit;
+	CheckingBits &= ~chanBit;
+	
+	if (!(error & (SI_ERROR_UNDER_RUN | SI_ERROR_OVER_RUN | SI_ERROR_NO_RESPONSE | SI_ERROR_COLLISION)) && (type & SI_GC_WIRELESS)
+	    && (type & SI_WIRELESS_FIX_ID) && (type & SI_WIRELESS_RECEIVED) && !(type & SI_WIRELESS_IR)
+	    && (type & SI_WIRELESS_CONT_MASK) == SI_WIRELESS_CONT && !(type & SI_WIRELESS_LITE)) {
+		SITransfer(chan, &CmdReadOrigin, 1, &Origin[chan], 10, (SICallback)PADOriginUpdateCallback, 0);
+	} else {
+		PADDisable(chan);
+	}
+}
+
+/**
+ * @TODO: Documentation
+ */
+BOOL PADReset(u32 mask)
+{
+	BOOL enabled;
+	u32 diableBits;
+
 	OSAssertMsgLine(0x392, !(mask & 0x0FFFFFFF), "PADReset(): invalid mask");
 	enabled = OSDisableInterrupts();
-	mask    = mask & ~(CheckingBits | (ProbingBits | WaitingBits));
+	mask |= PendingBits;
+	PendingBits = 0;
+	mask &= ~(WaitingBits | CheckingBits);
 	ResettingBits |= mask;
+	diableBits = ResettingBits & EnabledBits;
 	EnabledBits &= ~mask;
-	WaitingBits &= ~mask;
-	if (Spec == 4) {
+	BarrelBits &= ~mask;
+
+	if (Spec == PAD_SPEC_4) {
 		RecalibrateBits |= mask;
 	}
-	SIDisablePolling(ResettingBits);
-	if (ResettingChan == 0x20) {
-		rc = DoReset();
+
+	SIDisablePolling(diableBits);
+
+	if (ResettingChan == 32) {
+		DoReset();
 	}
 	OSRestoreInterrupts(enabled);
-	return rc;
+	return TRUE;
 }
 
 /**
@@ -449,21 +398,30 @@ int PADReset(u32 mask)
  */
 BOOL PADRecalibrate(u32 mask)
 {
-	BOOL intrEnabled;
-	BOOL ret;
+	BOOL enabled;
+	u32 disableBits;
 
-	ret = FALSE;
 	OSAssertMsgLine(0x3BD, !(mask & 0x0FFFFFFF), "PADReset(): invalid mask");
-	intrEnabled = OSDisableInterrupts();
-	mask &= ~(CheckingBits | (ProbingBits | WaitingBits));
+	enabled = OSDisableInterrupts();
+	
+	mask |= PendingBits;
+	PendingBits = 0;
+	mask &= ~(WaitingBits | CheckingBits);
 	ResettingBits |= mask;
+	disableBits = ResettingBits & EnabledBits;
 	EnabledBits &= ~mask;
-	RecalibrateBits |= mask;
-	SIDisablePolling(ResettingBits);
-	if ((s32)ResettingChan == 32)
-		ret = DoReset();
-	OSRestoreInterrupts(intrEnabled);
-	return ret;
+	BarrelBits &= ~mask;
+
+	if (!(GameChoice & 0x40)) {
+		RecalibrateBits |= mask;
+	}
+
+	SIDisablePolling(disableBits);
+	if (ResettingChan == 32) {
+		DoReset();
+	}
+	OSRestoreInterrupts(enabled);
+	return TRUE;
 }
 
 u32 __PADSpec; // size: 0x4, address: 0x20
@@ -474,49 +432,32 @@ u32 __PADSpec; // size: 0x4, address: 0x20
 BOOL PADInit()
 {
 	s32 chan;
-	OSTime time;
-
-	if (!Initialized) {
-		if (__PADSpec) {
-			PADSetSpec(__PADSpec);
-		}
-
-		if (__PADFixBits == -1) {
-			time = OSGetTime();
-			__OSWirelessPadFixMode
-			    = (u16)((((time) & 0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff)) & 0x3fffu);
-		}
-
-		for (chan = 0; chan < SI_MAX_CHAN; chan++) {
-			cmdProbeDevice[chan] = 0x4D000000 | (chan << 22) | (__OSWirelessPadFixMode & 0x3FFF) << 8;
-		}
-
-		Initialized = TRUE;
-		PADSetSamplingRate(0);
-		OSRegisterResetFunction(&ResetFunctionInfo);
+	if (Initialized) {
+		return TRUE;
 	}
+
+	OSRegisterVersion(__PADVersion);
+
+	if (__PADSpec) {
+		PADSetSpec(__PADSpec);
+	}
+
+	Initialized = TRUE;
+
+	if (__PADFixBits != 0) {
+		OSTime time = OSGetTime();
+		__OSWirelessPadFixMode
+			   = (u16)((((time) & 0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff)) & 0x3fffu);
+		RecalibrateBits = PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT;
+	}
+
+	for (chan = 0; chan < SI_MAX_CHAN; chan++) {
+		CmdProbeDevice[chan] = 0x4D000000 | (chan << 22) | (__OSWirelessPadFixMode & 0x3FFF) << 8;
+	}
+		
+	SIRefreshSamplingRate();
+	OSRegisterShutdownFunction(&ShutdownFunctionInfo);
 	return PADReset(PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT);
-}
-
-/**
- * @TODO: Documentation
- */
-static void PADReceiveCheckCallback(s32 chan, u32 error, OSContext* arg2)
-{
-	u32 type;
-	u32 chanBit;
-
-	type    = Type[chan];
-	chanBit = 0x80000000 >> chan;
-	WaitingBits &= ~chanBit;
-	CheckingBits &= ~chanBit;
-	if (EnabledBits & chanBit) {
-		if (!(error & 0xF) && (type & 0x80000000) && (type & 0x02000000) && (type & 0x40000000) && !(type & 0x04000000)) {
-			SITransfer(chan, &cmdReadOrigin, 1, &Origin[chan], 0xA, PADOriginUpdateCallback, 0);
-			return;
-		}
-		PADDisable(chan);
-	}
 }
 
 /**
@@ -524,119 +465,146 @@ static void PADReceiveCheckCallback(s32 chan, u32 error, OSContext* arg2)
  */
 u32 PADRead(PADStatus* status)
 {
+	BOOL enabled;
 	s32 chan;
 	u32 data[2];
 	u32 chanBit;
 	u32 sr;
-	int chanShift;
-	int enabled;
+	s32 chanShift;
 	u32 motor;
+	static PADStatus pre_status[4];
+	int threshold;
+
+    threshold = 3;
+	
+	enabled = OSDisableInterrupts();
 
 	motor = 0;
 
 	for (chan = 0; chan < 4; chan++, status++) {
-		chanBit   = 0x80000000 >> chan;
-		chanShift = (3 - chan) * 8;
-		if ((ResettingBits & chanBit) || (ResettingChan == chan)) {
-			status->err = -2;
-			memset(status, 0, 0xA);
-		} else if (!(EnabledBits & chanBit)) {
-			status->err = -1;
-			memset(status, 0, 0xA);
-		} else {
-			sr = SIGetStatus(3 - chan);
-			if (sr & (8 << chanShift)) {
-				if (WaitingBits & chanBit) {
-					status->err = 0;
-					memset(status, 0, 0xA);
-					if (!(CheckingBits & chanBit)) {
-						enabled = OSDisableInterrupts();
-						if (SITransfer(chan, &cmdTypeAndStatus, 1, &Type[chan], 3, PADReceiveCheckCallback, 0) != 0) {
-							CheckingBits |= chanBit;
-						}
-						OSRestoreInterrupts(enabled);
-					}
-				} else {
-					PADDisable(chan);
-					status->err = -1;
-					memset(status, 0, 0xA);
-				}
-			} else {
-				if (!(ProbingBits & chanBit) && !(Type[chan] & SI_GC_NOMOTOR)) {
-					motor |= chanBit;
-				}
-				if (!(sr & (0x20 << chanShift))) {
-					status->err = -3;
-					memset(status, 0, 0xA);
-				} else {
-					SIGetResponse(chan, &data);
-					if (data[0] & 0x80000000) {
-						status->err = -3;
-						memset(status, 0, 0xA);
-					} else if (ProbingBits & chanBit) {
-						status->err = -1;
-						memset(status, 0, 0xA);
-					} else {
-						MakeStatus(chan, status, data);
-						if (status->button & 0x2000) {
-							status->err = -3;
-							memset(status, 0, 0xA);
-							SITransfer(chan, &cmdReadOrigin, 1, &Origin[chan], 0xA, PADOriginUpdateCallback, 0);
-						} else {
-							status->err = 0;
-							status->button &= 0xFFFFFF7F;
-						}
-					}
-				}
-			}
+		chanBit   = PAD_CHAN0_BIT >> chan;
+		chanShift = 8 * (SI_MAX_CHAN - 1 - chan);
+
+		if (PendingBits & chanBit) {
+			PADReset(0);
+			status->err = PAD_ERR_NOT_READY;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
 		}
+
+		if ((ResettingBits & chanBit) || ResettingChan == chan) {
+			status->err = PAD_ERR_NOT_READY;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
+		}
+
+		if (!(EnabledBits & chanBit)) {
+			status->err = (s8)PAD_ERR_NO_CONTROLLER;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
+		}
+
+		if (SIIsChanBusy(chan)) {
+			status->err = PAD_ERR_TRANSFER;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
+		}
+
+		sr = SIGetStatus(chan);
+		if (sr & SI_ERROR_NO_RESPONSE) {
+			SIGetResponse(chan, data);
+
+			if (WaitingBits & chanBit) {
+				status->err = (s8)PAD_ERR_NONE;
+				memset(status, 0, offsetof(PADStatus, err));
+
+				if (!(CheckingBits & chanBit)) {
+					CheckingBits |= chanBit;
+					SIGetTypeAsync(chan, (SITypeAndStatusCallback)PADReceiveCheckCallback);
+				}
+				continue;
+			}
+
+			PADDisable(chan);
+
+			status->err = (s8)PAD_ERR_NO_CONTROLLER;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
+		}
+
+		if (!(SIGetType(chan) & SI_GC_NOMOTOR)) {
+			motor |= chanBit;
+		}
+
+		if (!SIGetResponse(chan, data)) {
+			status->err = PAD_ERR_TRANSFER;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
+		}
+
+		if (data[0] & 0x80000000) {
+			status->err = PAD_ERR_TRANSFER;
+			memset(status, 0, offsetof(PADStatus, err));
+			continue;
+		}
+
+		MakeStatus(chan, status, data);
+		
+		if (((Type[chan] & (0xFFFF0000)) == SI_GC_CONTROLLER) && ((status->button & 0x80) ^ 0x80)) {
+            threshold = 10;
+        } else {
+            threshold = 3;
+        }
+		
+		#ifdef __MWERKS__
+        #define abs(x) __abs(x)
+        #else
+        #define abs(x) __builtin_abs(x)
+        #endif
+		
+		if (abs(abs(status->stickX) - abs(pre_status[chan].stickX)) >= threshold ||
+                        abs(abs(status->stickY) - abs(pre_status[chan].stickY)) >= threshold ||
+                        abs(abs(status->substickX) - abs(pre_status[chan].substickX)) >= threshold ||
+                        abs(abs(status->substickY) - abs(pre_status[chan].substickY)) >= threshold ||
+                        abs(abs(status->triggerLeft) - abs(pre_status[chan].triggerLeft)) >= threshold ||
+                        abs(abs(status->triggerRight) - abs(pre_status[chan].triggerRight)) >= threshold ||
+                        pre_status[chan].button != status->button)
+        {
+            __VIResetSIIdle();
+        }
+		
+		#undef abs
+
+        memcpy(&pre_status[chan], status, sizeof(PADStatus));
+
+		// Check and clear PAD_ORIGIN bit
+		if (status->button & 0x2000) {
+			status->err = PAD_ERR_TRANSFER;
+			memset(status, 0, offsetof(PADStatus, err));
+
+			// Get origin. It is okay if the following transfer fails
+			// since the PAD_ORIGIN bit remains until the read origin
+			// command complete.
+			SITransfer(chan, &CmdReadOrigin, 1, &Origin[chan], 10, (SICallback)PADOriginUpdateCallback, 0);
+			continue;
+		}
+
+		status->err = PAD_ERR_NONE;
+
+		// Clear PAD_INTERFERE bit
+		status->button &= ~0x0080;
 	}
+
+	OSRestoreInterrupts(enabled);
 	return motor;
 }
-
-typedef struct XY {
-	/* 0x00 */ u8 line;
-	/* 0x01 */ u8 count;
-} XY;
-
-static XY XYNTSC[12] = { { 0xF7, 0x02 }, { 0x0E, 0x13 }, { 0x1D, 0x09 }, { 0x25, 0x07 }, { 0x34, 0x05 }, { 0x41, 0x04 },
-	                     { 0x57, 0x03 }, { 0x57, 0x03 }, { 0x57, 0x03 }, { 0x83, 0x02 }, { 0x83, 0x02 }, { 0x83, 0x02 } };
-
-static XY XYPAL[12] = { { 0x94, 0x03 }, { 0x0D, 0x18 }, { 0x1A, 0x0C }, { 0x27, 0x08 }, { 0x34, 0x06 }, { 0x3E, 0x05 },
-	                    { 0x4E, 0x04 }, { 0x68, 0x03 }, { 0x68, 0x03 }, { 0x68, 0x03 }, { 0x68, 0x03 }, { 0x9C, 0x02 } };
 
 /**
  * @TODO: Documentation
  */
 void PADSetSamplingRate(u32 msec)
 {
-	u32 tv;
-	XY* xy;
-
-	OSAssertMsgLine(0x4CE, (msec <= 0xB), "PADSetSamplingRate(): out of rage (0 <= msec <= 11)");
-	if (msec > 0xB) {
-		msec = 0xB;
-	}
-	tv = VIGetTvFormat();
-	switch (tv) {
-	case VI_NTSC:
-	case VI_MPAL:
-	{
-		xy = XYNTSC;
-		break;
-	}
-	case VI_PAL:
-	{
-		xy = XYPAL;
-		break;
-	}
-	default:
-	{
-		OSErrorLine(1296, "PADSetSamplingRate: unknown TV format");
-	}
-	}
-	SISetXY(xy[msec].line, xy[msec].count);
-	SIEnablePolling(EnabledBits);
+	SISetSamplingRate(msec);
 }
 
 /**
@@ -831,6 +799,7 @@ static u8 ClampU8(u8 var, u8 org)
 static void SPEC2_MakeStatus(s32 chan, PADStatus* status, u32 data[2])
 {
 	PADStatus* origin;
+	u32 type;
 
 	status->button = (u16)((data[0] >> 16) & PAD_ALL);
 	status->stickX = (s8)(data[0] >> 8);
@@ -896,6 +865,19 @@ static void SPEC2_MakeStatus(s32 chan, PADStatus* status, u32 data[2])
 	status->stickY -= 128;
 	status->substickX -= 128;
 	status->substickY -= 128;
+	
+	type = Type[chan];
+	
+	if (((Type[chan] & 0xffff0000) == SI_GC_CONTROLLER) && ((status->button & 0x80) ^ 0x80)) {
+		BarrelBits |= (PAD_CHAN0_BIT >> chan);
+		status->stickX    = 0;
+		status->stickY    = 0;
+		status->substickX = 0;
+		status->substickY = 0;
+		return;
+	} else {
+		BarrelBits &= ~(PAD_CHAN0_BIT >> chan);
+	}
 
 	origin               = &Origin[chan];
 	status->stickX       = ClampS8(status->stickX, origin->stickX);
@@ -957,13 +939,19 @@ void PADSetAnalogMode(u32 mode)
 	// UNUSED FUNCTION
 }
 
+static void (*SamplingCallback)(void);
+
 /**
  * @TODO: Documentation
  */
-static BOOL OnReset(BOOL f)
+static BOOL OnShutdown(BOOL f, u32 event)
 {
-	BOOL sync;
 	static BOOL recalibrated = FALSE;
+	BOOL sync;
+
+	if (SamplingCallback) {
+		PADSetSamplingCallback(NULL);
+	}
 
 	if (!f) {
 		sync = PADSync();
@@ -972,8 +960,9 @@ static BOOL OnReset(BOOL f)
 			return FALSE;
 		}
 		return sync;
-	} else
+	} else {
 		recalibrated = FALSE;
+	}
 
 	return TRUE;
 }
@@ -985,4 +974,55 @@ static BOOL OnReset(BOOL f)
 void __PADDisableXPatch(void)
 {
 	XPatchBits = 0;
+}
+
+/**
+ * @TODO: Documentation
+ */
+static void SamplingHandler(__OSInterrupt interrupt, OSContext* context)
+{
+	OSContext exceptionContext;
+
+	if (SamplingCallback) {
+		OSClearContext(&exceptionContext);
+		OSSetCurrentContext(&exceptionContext);
+		SamplingCallback();
+		OSClearContext(&exceptionContext);
+		OSSetCurrentContext(context);
+	}
+}
+
+/**
+ * @TODO: Documentation
+ */
+PADSamplingCallback PADSetSamplingCallback(PADSamplingCallback callback)
+{
+	PADSamplingCallback prev;
+
+	prev             = SamplingCallback;
+	SamplingCallback = callback;
+	if (callback) {
+		SIRegisterPollingHandler(SamplingHandler);
+	} else {
+		SIUnregisterPollingHandler(SamplingHandler);
+	}
+	return prev;
+}
+
+/**
+ * @TODO: Documentation
+ */
+BOOL __PADDisableRecalibration(BOOL disable)
+{
+	BOOL enabled;
+	BOOL prev;
+
+	enabled = OSDisableInterrupts();
+	prev    = (GameChoice & 0x40) ? TRUE : FALSE;
+	GameChoice &= ~0x40;
+	if (disable) {
+		GameChoice |= 0x40;
+	}
+	OSRestoreInterrupts(enabled);
+	return prev;
 }

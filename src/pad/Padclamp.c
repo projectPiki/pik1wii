@@ -10,9 +10,11 @@ typedef struct PADClampRegion {
 	s8 minSubstick;
 	s8 maxSubstick;
 	s8 xySubstick;
+	s8 radStick;
+	s8 radSubstick;
 } PADClampRegion;
 
-static PADClampRegion ClampRegion = {
+static const PADClampRegion ClampRegion = {
 	// Triggers
 	30,
 	180,
@@ -26,7 +28,12 @@ static PADClampRegion ClampRegion = {
 	15,
 	59,
 	31,
+
+	// Stick radii
+	56,
+	44,
 };
+
 
 /**
  * @TODO: Documentation
@@ -89,17 +96,54 @@ static void ClampStick(s8* px, s8* py, s8 max, s8 xy, s8 min)
 
 /**
  * @TODO: Documentation
+ */
+static void ClampCircle(s8* px, s8* py, s8 radius, s8 min)
+{
+	int x = *px;
+	int y = *py;
+	int squared;
+	int length;
+
+	if (-min < x && x < min) {
+		x = 0;
+	} else if (0 < x) {
+		x -= min;
+	} else {
+		x += min;
+	}
+
+	if (-min < y && y < min) {
+		y = 0;
+	} else if (0 < y) {
+		y -= min;
+	} else {
+		y += min;
+	}
+
+	squared = x * x + y * y;
+	if (radius * radius < squared) {
+		length = sqrtf(squared);
+		x      = (x * radius) / length;
+		y      = (y * radius) / length;
+	}
+
+	*px = x;
+	*py = y;
+}
+
+/**
+ * @TODO: Documentation
  * @note UNUSED Size: 000044
  */
-static void ClampTrigger(u8* trigger)
+static void ClampTrigger(u8* trigger, u8 min, u8 max)
 {
-	if (*trigger <= ClampRegion.minTrigger) {
+	if (*trigger <= min) {
 		*trigger = 0;
 	} else {
-		if (ClampRegion.maxTrigger < *trigger) {
-			*trigger = ClampRegion.maxTrigger;
+		if (max < *trigger) {
+			*trigger = max;
 		}
-		*trigger -= ClampRegion.minTrigger;
+		*trigger -= min;
 	}
 }
 
@@ -116,7 +160,25 @@ void PADClamp(PADStatus* status)
 
 		ClampStick(&status->stickX, &status->stickY, ClampRegion.maxStick, ClampRegion.xyStick, ClampRegion.minStick);
 		ClampStick(&status->substickX, &status->substickY, ClampRegion.maxSubstick, ClampRegion.xySubstick, ClampRegion.minSubstick);
-		ClampTrigger(&status->triggerLeft);
-		ClampTrigger(&status->triggerRight);
+		ClampTrigger(&status->triggerLeft, ClampRegion.minTrigger, ClampRegion.maxTrigger);
+		ClampTrigger(&status->triggerRight, ClampRegion.minTrigger, ClampRegion.maxTrigger);
+	}
+}
+
+/**
+ * @TODO: Documentation
+ */
+void PADClampCircle(PADStatus* status)
+{
+	int i;
+	for (i = 0; i < 4; ++i, status++) {
+		if (status->err != PAD_ERR_NONE) {
+			continue;
+		}
+
+		ClampCircle(&status->stickX, &status->stickY, ClampRegion.radStick, ClampRegion.minStick);
+		ClampCircle(&status->substickX, &status->substickY, ClampRegion.radSubstick, ClampRegion.minSubstick);
+		ClampTrigger(&status->triggerLeft, ClampRegion.minTrigger, ClampRegion.maxTrigger);
+		ClampTrigger(&status->triggerRight, ClampRegion.minTrigger, ClampRegion.maxTrigger);
 	}
 }

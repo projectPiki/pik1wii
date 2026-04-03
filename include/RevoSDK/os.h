@@ -49,6 +49,7 @@ void OSInit();
 
 // Other OS functions.
 void OSRegisterVersion(const char*);
+const char* OSGetAppGamename(void);
 #define OS_CONSOLE_RETAIL4     0x00000004
 #define OS_CONSOLE_RETAIL3     0x00000003
 #define OS_CONSOLE_RETAIL2     0x00000002

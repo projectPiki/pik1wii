@@ -81,6 +81,10 @@ static inline f32 ldexpf(f32 x, int x2)
 }
 f64 modf(f64, f64*);
 f64 sqrt(f64);
+static inline f32 sqrtf(f32 x)
+{
+	return sqrt(x);
+}
 f64 pow(f64, f64);
 static inline f32 powf(f32 x, f32 x2)
 {
@@ -159,7 +163,7 @@ inline f128 fabsl(f128 x)
 {
 	return __fabs((f64)x);
 }
-
+/*
 inline f32 sqrtf(f32 x)
 {
 	// // these REALLY don't have to be static.
@@ -185,7 +189,7 @@ inline f32 sqrtf(f32 x)
 	}
 	return x;
 }
-
+*/
 END_SCOPE_EXTERN_C
 
 #ifdef __cplusplus
