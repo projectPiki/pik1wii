@@ -23,13 +23,13 @@ DEFINE_ERROR(__LINE__) // Never used in the DLL
 DEFINE_PRINT("OgSubSection");
 
 namespace zen {
-static char workString[0x400];
 
 static char wkstr[0x400]      = {};
 static char numStrBuf[0x100]  = {};
 static char formatStr[0x100]  = {};
 static int SpecialNumber[100] = {};
 
+static char workString[0x400];
 /**
  * @todo: Documentation
  */
@@ -985,10 +985,10 @@ void cnvSpecialNumberHyphen(char* str)
 	strcpy(formatStr, "%d");
 
 	while (true) {
-		char a = tmp[0];
-		char b = tmp[1];
-		char c = tmp[2];
-		char d = tmp[3];
+		unsigned char a = tmp[0];
+		unsigned char b = tmp[1];
+		unsigned char c = tmp[2];
+		unsigned char d = tmp[3];
 
 		if (a == 0) {
 			break;
@@ -1019,13 +1019,8 @@ void cnvSpecialNumberHyphen(char* str)
 							sprintf(numStrBuf, formatStr, num2);
 						} else {
 							char buf[PATH_MAX];
-							STACK_PAD_VAR(1);
 							for (int i = 0; i < num; i++) {
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-								buf[i] = '-';
-#else
 								buf[i] = '*';
-#endif
 							}
 							buf[num] = 0;
 							sprintf(work, "%s", buf);
@@ -1041,11 +1036,7 @@ void cnvSpecialNumberHyphen(char* str)
 						} else {
 							char buf[PATH_MAX];
 							for (int i = 0; i < num; i++) {
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-								buf[i] = '-';
-#else
 								buf[i] = '*';
-#endif
 							}
 							buf[num] = 0;
 							sprintf(work, "%s", buf);

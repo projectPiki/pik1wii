@@ -755,15 +755,10 @@ int Font::stringWidth(immut char* str)
 	int width = 0;
 	while (*str) {
 		int idx;
-#if defined(VERSION_GPIP01_00)
-		STACK_PAD_VAR(4);
 		if (*str >= 0xa0) {
 			idx = *str - 0x20;
 			str++;
 		} else if (*str & 0x80) {
-#else
-		if (*str & 0x80) {
-#endif
 			u16 c = (str[0] << 8) | (str[1] & 0xFF);
 			idx   = charToIndex(c);
 			str += 2;
