@@ -3931,7 +3931,7 @@ homebuttonLib/HBMAxSound.cpp:
 	.text       start:0x802D8BE4 end:0x802D96F8
 	.rodata     start:0x80311D18 end:0x80311D58
 
-homebuttonLib/HBMCommon.c:
+homebuttonLib/HBMCommon.cpp:
 	.text       start:0x802D96F8 end:0x802D9A38
 
 homebuttonLib/HBMBase.cpp:
@@ -4016,31 +4016,31 @@ homebuttonLib/nw4hbm/ut/ut_TextWriterBase.cpp:
 	.text       start:0x802F03AC end:0x802F1E3C
 	.ctors      start:0x802F634C end:0x802F6350
 
-homebuttonLib/sound/mix.c:
+homebuttonLib/sound/mix.cpp:
 	.text       start:0x802F1E3C end:0x802F375C
 
-homebuttonLib/sound/syn.c:
+homebuttonLib/sound/syn.cpp:
 	.text       start:0x802F375C end:0x802F3BD0
 
-homebuttonLib/sound/synctrl.c:
+homebuttonLib/sound/synctrl.cpp:
 	.text       start:0x802F3BD0 end:0x802F4068
 
-homebuttonLib/sound/synenv.c:
+homebuttonLib/sound/synenv.cpp:
 	.text       start:0x802F4068 end:0x802F444C
 
-homebuttonLib/sound/synmix.c:
+homebuttonLib/sound/synmix.cpp:
 	.text       start:0x802F444C end:0x802F4564
 
-homebuttonLib/sound/synpitch.c:
+homebuttonLib/sound/synpitch.cpp:
 	.text       start:0x802F4564 end:0x802F47D4
 
-homebuttonLib/sound/synsample.c:
+homebuttonLib/sound/synsample.cpp:
 	.text       start:0x802F47D4 end:0x802F4C44
 
-homebuttonLib/sound/synvoice.c:
+homebuttonLib/sound/synvoice.cpp:
 	.text       start:0x802F4C44 end:0x802F4DE4
 
-homebuttonLib/sound/seq.c:
+homebuttonLib/sound/seq.cpp:
 	.text       start:0x802F4DE4 end:0x802F56A4
 
 esp/esp.c:
