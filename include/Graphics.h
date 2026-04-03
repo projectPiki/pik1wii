@@ -137,38 +137,58 @@ struct Graphics {
 	virtual void clearBuffer(int, bool)                       = 0;                                                        // _38
 	virtual void setPerspective(Mtx, f32, f32, f32, f32, f32) = 0;                                                        // _3C
 	virtual void setOrthogonal(Mtx, immut RectArea&)          = 0;                                                        // _40
-	virtual void setLightcam(LightCamera* cam) { mLightCam = cam; }                                                       // _44
-	virtual void setViewport(immut RectArea&)       = 0;                                                                  // _48
-	virtual void setViewportOffset(immut RectArea&) = 0;                                                                  // _4C
-	virtual void setScissor(immut RectArea&)        = 0;                                                                  // _50
-	virtual void setBlendMode(u8 blendFactor, u8 zMode, u8 blendMode) { }                                                 // _54
-	virtual int setCullFront(int)                                                                                    = 0; // _58
-	virtual u8 setDepth(bool)                                                                                        = 0; // _5C
-	virtual int setCBlending(int)                                                                                    = 0; // _60
-	virtual void setPointSize(f32)                                                                                   = 0; // _64
-	virtual f32 setLineWidth(f32)                                                                                    = 0; // _68
-	virtual void setCamera(Camera*)                                                                                  = 0; // _6C
-	virtual void calcViewMatrix(immut Matrix4f& modelMtx, Matrix4f& viewMtx)                                         = 0; // _70
-	virtual void useMatrix(immut Matrix4f&, int)                                                                     = 0; // _74
-	virtual void setClippingPlane(bool, Plane*)                                                                      = 0; // _78
-	virtual void initMesh(Shape*)                                                                                    = 0; // _7C
-	virtual void drawSingleMatpoly(Shape*, Joint::MatPoly*)                                                          = 0; // _80
-	virtual void drawMeshes(Camera&, Shape*)                                                                         = 0; // _84
-	virtual bool initParticle(bool)                                                                                  = 0; // _88
-	virtual void drawParticle(Camera&, immut Vector3f&, f32)                                                         = 0; // _8C
-	virtual void drawRotParticle(Camera&, immut Vector3f&, u16, f32)                                                 = 0; // _90
-	virtual void drawCamParticle(Camera&, immut Vector3f&, immut Vector2f&, immut Vector2f&, immut Vector2f&)        = 0; // _94
-	virtual void drawLine(immut Vector3f&, immut Vector3f&)                                                          = 0; // _98
-	virtual void drawPoints(immut Vector3f*, int)                                                                    = 0; // _9C
-	virtual void drawOneTri(immut Vector3f* vertices, immut Vector3f* normals, immut Vector2f* texCoords, int count) = 0; // _A0
-	virtual void drawOneStrip(immut Vector3f*, immut Vector3f*, immut Vector2f*, int)                                = 0; // _A4
-	virtual void setColour(immut Colour&, bool)                                                                      = 0; // _A8
-	virtual void setAuxColour(immut Colour&)                                                                         = 0; // _AC
-	virtual void setPrimEnv(immut Colour* primColor, immut Colour* envColor)                                         = 0; // _B0
-	virtual void setClearColour(immut Colour&)                                                                       = 0; // _B4
-	virtual void setFog(bool) /* For whatever reason, these `setFog` overloads are swapped in the DLL */             = 0; // _B8
-	virtual void setFog(bool, immut Colour&, f32, f32, f32)                                                          = 0; // _BC
-	virtual void setMatHandler(MaterialHandler* handler)                                                                  // _C0
+	virtual void unk44(Mtx mtx, immut RectArea& area) { setOrthogonal(mtx, area); }                                 	  // _44
+	virtual void setLightcam(LightCamera* cam) { mLightCam = cam; }                                                       // _48
+	virtual void setViewport(immut RectArea&)       = 0;                                                                  // _4C
+	virtual void setViewportOffset(immut RectArea&) = 0;                                                                  // _50
+	virtual void setScissor(immut RectArea&)        = 0;                                                                  // _54
+	virtual void unk54(immut RectArea& area) { setViewport(area); }           											  // _58
+	virtual void unk58(immut RectArea& area) { setViewportOffset(area); }                    							  // _5C
+	virtual void unk5C(immut RectArea& area) { setScissor(area); }                                  					  // _60
+	virtual void setBlendMode(u8 blendFactor, u8 zMode, u8 blendMode) { }                                                 // _64
+	virtual int setCullFront(int)                                                                                    = 0; // _68
+	virtual u8 setDepth(bool)                                                                                        = 0; // _6C
+	virtual int setCBlending(int)                                                                                    = 0; // _70
+	virtual void setPointSize(f32)                                                                                   = 0; // _74
+	virtual f32 setLineWidth(f32)                                                                                    = 0; // _78
+	virtual void setCamera(Camera*)                                                                                  = 0; // _7C
+	virtual void calcViewMatrix(immut Matrix4f& modelMtx, Matrix4f& viewMtx)                                         = 0; // _80
+	virtual void useMatrix(immut Matrix4f&, int)                                                                     = 0; // _84
+	virtual void setClippingPlane(bool, Plane*)                                                                      = 0; // _88
+	virtual void initMesh(Shape*)                                                                                    = 0; // _8C
+	virtual void drawSingleMatpoly(Shape*, Joint::MatPoly*)                                                          = 0; // _90
+	virtual void drawMeshes(Camera&, Shape*)                                                                         = 0; // _94
+	virtual bool initParticle(bool)                                                                                  = 0; // _98
+	virtual void drawParticle(Camera&, immut Vector3f&, f32)                                                         = 0; // _9C
+	virtual void unkA0(Camera& cam, immut Vector3f& pos, f32 size) 														  // _A0
+	{ 
+		drawParticle(cam, pos, size); 
+	}                             												 
+	virtual void drawRotParticle(Camera&, immut Vector3f&, u16, f32)                                                 = 0; // _A4
+	virtual void unkA8(Camera& cam, immut Vector3f& pos, u16 angle, f32 radius) 										  // _A8
+	{ 
+		drawRotParticle(cam, pos, angle, radius); 
+	} 																								  
+	virtual void drawCamParticle(Camera&, immut Vector3f&, immut Vector2f&, immut Vector2f&, immut Vector2f&)        = 0; // _AC
+	virtual void drawLine(immut Vector3f&, immut Vector3f&)                                                          = 0; // _B0
+	virtual void drawPoints(immut Vector3f*, int)                                                                    = 0; // _B4
+	virtual void drawOneTri(immut Vector3f* vertices, immut Vector3f* normals, immut Vector2f* texCoords, int count) = 0; // _B8
+	virtual void drawOneStrip(immut Vector3f*, immut Vector3f*, immut Vector2f*, int)                                = 0; // _BC
+	virtual void unkC0(immut Vector3f& start, immut Vector3f& end)  { drawLine(start, end); } 			 				  // _C0
+	virtual void setColour(immut Colour&, bool)                                                                      = 0; // _C4
+	virtual void setAuxColour(immut Colour&)                                                                         = 0; // _C8
+	virtual void unkCC(immut Colour& color, bool set) { setColour(color, set); }										  // _CC
+	virtual void unkD0(immut Colour& color) { setAuxColour(color); }													  // _D0
+	virtual void unkD4(immut Colour& color) { setClearColour(color); }													  // _D4
+	virtual void setPrimEnv(immut Colour* primColor, immut Colour* envColor)                                         = 0; // _D8
+	virtual void setClearColour(immut Colour&)                                                                       = 0; // _DC
+	virtual void setFog(bool) /* For whatever reason, these `setFog` overloads are swapped in the DLL */             = 0; // _E0
+	virtual void setFog(bool, immut Colour&, f32, f32, f32)                                                          = 0; // _E4
+	virtual void unkE8(bool set, immut Colour& color, f32 density, f32 start, f32 end)             						  // _E8
+	{
+		setFog(set, color, density, start, end);
+	}
+	virtual void setMatHandler(MaterialHandler* handler)                                                                  // _EC
 	{
 		if (mCurrentMaterialHandler && !handler) {
 			mCurrentMaterialHandler->setMaterial(nullptr);
@@ -177,18 +197,26 @@ struct Graphics {
 		mCurrentMaterialHandler       = (handler) ? handler : mDefaultMaterialHandler;
 		mCurrentMaterialHandler->mGfx = this;
 	}
-	virtual void setMaterial(Material*, bool) = 0;                                         // _C4
-	virtual void useMaterial(Material* mat) { mCurrentMaterialHandler->setMaterial(mat); } // _C8
-	virtual void useTexture(Texture*, int)                                        = 0;     // _CC
-	virtual void drawRectangle(immut RectArea&, immut RectArea&, immut Vector3f*) = 0;     // _D0
-	virtual void fillRectangle(immut RectArea&)                                   = 0;     // _D4
-	virtual void blatRectangle(immut RectArea&)                                   = 0;     // _D8
-	virtual void lineRectangle(immut RectArea&)                                   = 0;     // _DC
-	virtual void testRectangle(immut RectArea&) { }                                        // _E0
-	virtual void initProjTex(bool, LightCamera*)                                  = 0;     // _E4
-	virtual void initReflectTex(bool)                                             = 0;     // _E8
-	virtual void texturePrintf(Font* font, int x, int y, immut char* format, ...) = 0;     // _EC
-	virtual void perspPrintf(Font*, immut Vector3f&, int, int, immut char*, ...);          // _F0
+	virtual void setMaterial(Material*, bool) = 0;                                         								 // _F0
+	virtual void useMaterial(Material* mat) { mCurrentMaterialHandler->setMaterial(mat); } 								 // _F4
+	virtual void useTexture(Texture*, int)                                        								= 0;     // _F8
+	virtual void drawRectangle(immut RectArea&, immut RectArea&, immut Vector3f*) 								= 0;     // _FC
+	virtual void fillRectangle(immut RectArea&)                             							        = 0;     // _100
+	virtual void blatRectangle(immut RectArea&)                                  							    = 0;     // _104
+	virtual void lineRectangle(immut RectArea&)                                 							    = 0;     // _108
+	virtual void unk10C(immut RectArea& bounds, immut RectArea& texCoords, immut Vector3f* offset)                       // _10C
+	{
+		drawRectangle(bounds, texCoords, offset);
+	}
+	virtual void unk110(immut RectArea& rect)   { fillRectangle(rect); }                                    			 // _110
+	virtual void unk114(immut RectArea& rect)   { blatRectangle(rect); }                                     			 // _114
+	virtual void unk118(immut RectArea& rect)   { lineRectangle(rect); }                                   				 // _118
+	virtual void testRectangle(immut RectArea&) { }                                        								 // _11C
+	virtual void unk120(immut RectArea& rect)   { testRectangle(rect); }                                      		     // _120
+	virtual void initProjTex(bool, LightCamera*)                               								    = 0;     // _124
+	virtual void initReflectTex(bool)                                            							    = 0;     // _128
+	virtual void texturePrintf(Font* font, int x, int y, immut char* format, ...) 								= 0;     // _12C
+	virtual void perspPrintf(Font*, immut Vector3f&, int, int, immut char*, ...);    							         // _130
 };
 
 /**
