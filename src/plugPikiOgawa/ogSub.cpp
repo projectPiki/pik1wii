@@ -717,10 +717,10 @@ void cnvSpecialNumber(char* str)
 	strcpy(formatStr, "%d");
 
 	while (true) {
-		char a = tmp[0];
-		char b = tmp[1];
-		char c = tmp[2];
-		char d = tmp[3];
+		unsigned char a = tmp[0];
+		unsigned char b = tmp[1];
+		unsigned char c = tmp[2];
+		unsigned char d = tmp[3];
 
 		if (a == 0) {
 			break;
@@ -839,17 +839,9 @@ ogMsgCtrlTagMgr::ogMsgCtrlTagMgr()
 
 	P2DTextBox* onesBox = (P2DTextBox*)screen->search('maru', true);
 	P2DTextBox* tensBox = (P2DTextBox*)screen->search('ten', true);
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
-	P2DTextBox* hundredsBox = (P2DTextBox*)screen->search('han', true);
-#endif
 
 	strcpy(mOnesWaitChar, onesBox->getString());
 	strcpy(mTensWaitChar, tensBox->getString());
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
-	strcpy(mHankakuWaitChars, hundredsBox->getString());
-#endif
 }
 
 /**
@@ -857,19 +849,11 @@ ogMsgCtrlTagMgr::ogMsgCtrlTagMgr()
  */
 bool ogMsgCtrlTagMgr::CheckCtrlTag(immut char* text, s16* indexPtr, f32* waitTimePtr)
 {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
 	char ch;
 	int charIndex      = *indexPtr;
 	const char* cursor = &text[*indexPtr];
 	ch                 = *cursor;
 	*waitTimePtr       = 0.0f;
-#else
-	STACK_PAD_VAR(1);
-	int charIndex      = *indexPtr;
-	const char* cursor = &text[*indexPtr];
-	char ch            = *cursor;
-	*waitTimePtr       = 0.0f;
-#endif
 
 	if (ch == 0) {
 		return true;
