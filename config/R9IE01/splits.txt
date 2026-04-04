@@ -1349,13 +1349,13 @@ plugPikiColin/cardutil.cpp:
 plugPikiColin/cinePlayer.cpp:
 	.text       start:0x800E0DD8 end:0x800E502C
 	.ctors      start:0x802F5DF4 end:0x802F5DF8
-	.data       start:0x80336BD0 end:0x80336CF8
+	.data       start:0x80336BD0 end:0x80336CC8
 	.bss        start:0x8045FD30 end:0x80460130
 
 plugPikiColin/dayMgr.cpp:
 	.text       start:0x800E502C end:0x800EAB38
 	.ctors      start:0x802F5DF8 end:0x802F5DFC
-	.data       start:0x80336CF8 end:0x80337390
+	.data       start:0x80336CC8 end:0x80337390
 	.sdata      start:0x80498200 end:0x80498210
 
 plugPikiColin/dynsimulator.cpp:
