@@ -11,6 +11,7 @@
 #include "sysNew.h"
 #include "teki.h"
 #include "timers.h"
+#include "TAI/Beatle.h"
 
 /**
  * @todo: Documentation
@@ -155,6 +156,9 @@ TekiMgr::TekiMgr()
 			mTekiParams[i]->load("", buf, 1);
 		}
 	}
+	mTekiParams[TEKI_Beatle]->mParameters->setF(TPF_LifeRecoverRate, 0.0f);
+	mTekiParams[TEKI_Beatle]->mParameters->setF(TAIbeatleFloatParms::Unk2, 35.0f);
+	mTekiParams[TEKI_Beatle]->mParameters->setF(TAIbeatleFloatParms::SuctionAngle, 70.0f);
 
 	setUsingTypeTable(false);
 	setVisibleTypeTable(true);
@@ -168,8 +172,10 @@ TekiMgr::TekiMgr()
 	memStat->end("tekis");
 
 	int tekiHeapEndSize = NSystem::getFreeHeap();
+#ifdef DEVELOP
 	PRINT("TekiMgr:manager uses %.2f[KB],%d tekis use %.2f[KB]\n", (heapStartSize - heapEndSize) / 1024.0f, 80,
 	      (tekisHeapStartSize - tekiHeapEndSize) / 1024.0f);
+#endif
 	PRINT_NAKATA("TekiMgr<\n");
 }
 
@@ -201,12 +207,16 @@ void TekiMgr::startStage()
 			int animHeapStartSize = NSystem::getFreeHeap();
 			sprintf(filename, "tekikeys/%s.key", typeNames[i]);
 			mTekiShapes[i]->mAnimMgr->loadAnims(filename, nullptr);
+#ifdef DEVELOP
 			PRINT_NAKATA("startStage:%d:%d\n", i, mTekiShapes[i]->mAnimMgr->countAnims());
+#endif
 			memStat->end(typeNames[i]);
 			int tekiHeapEndSize = NSystem::getFreeHeap();
 			add(mTekiShapes[i]->mAnimMgr);
+#ifdef DEVELOP
 			PRINT("startStage:%s uses %.2f[KB](model:%.2f,animation:%.2f)\n", typeNames[i], (tekiHeapStartSize - tekiHeapEndSize) / 1024.0f,
 			      (tekiHeapStartSize - modelHeapEndSize) / 1024.0f, (animHeapStartSize - tekiHeapEndSize) / 1024.0f);
+#endif
 		}
 	}
 

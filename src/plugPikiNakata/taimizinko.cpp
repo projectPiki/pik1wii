@@ -540,7 +540,9 @@ bool TaiMizinkoCryTimerAction::act(Teki& teki)
  */
 void TaiMizinkoMovingTimerAction::start(Teki& teki)
 {
-	mTimerLength = teki.getPersonalityF(TekiPersonality::FLT_TerritoryRange) / teki.getParameterF(TPF_WalkVelocity);
+	f32 p1 = teki.getPersonalityF(TekiPersonality::FLT_TerritoryRange);
+    f32 p2 = teki.getParameterF(TPF_WalkVelocity);
+	mTimerLength = p1 / p2;
 	resetTimer(teki);
 }
 
@@ -549,7 +551,9 @@ void TaiMizinkoMovingTimerAction::start(Teki& teki)
  */
 bool TaiMizinkoFadingAction::act(Teki& teki)
 {
-	f32 travelTime = teki.getPersonalityF(TekiPersonality::FLT_TerritoryRange) / teki.getParameterF(TPF_WalkVelocity);
+	f32 p1 = teki.getPersonalityF(TekiPersonality::FLT_TerritoryRange);
+    f32 p2 = teki.getParameterF(TPF_WalkVelocity);
+	f32 travelTime = p1 / p2;
 	f32 timeLeft   = teki.mTimers[0];
 	f32 fadePeriod = teki.getParameterF(MIZINKOPF_FadePeriod);
 

@@ -92,10 +92,16 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 		teki.flickUpper();
 		Vector3f center;
 		teki.outputHitCenter(center);
-
-		TekiAndCondition andCond1(&TekiRecognitionCondition(&teki), &TekiNotCondition(&TekiStickerCondition(&teki)));
-		TekiAndCondition andCond2(&andCond1, &TekiNotCondition(&TekiPikiStateCondition(PIKISTATE_Flick)));
-		TekiAndCondition andCond3(&andCond2, &TekiPositionSphereDistanceCondition(center, teki.getAttackHitRange()));
+		
+		TekiRecognitionCondition recCond(&teki);
+		TekiNotCondition notCond(&TekiStickerCondition(&teki));
+		TekiAndCondition andCond1(&recCond, &notCond);
+		
+		TekiNotCondition notFlickCond(&TekiPikiStateCondition(PIKISTATE_Flick));
+		TekiAndCondition andCond2(&andCond1, &notFlickCond);
+		
+		TekiPositionSphereDistanceCondition posSphereCond(center, teki.getAttackHitRange());
+		TekiAndCondition andCond3(&andCond2, &posSphereCond);
 
 		int swallowPikiNum = 0;
 		int numSlots       = 0;
@@ -106,7 +112,7 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 			numSlots = mouth->getChildCount();
 		}
 
-		InteractKill NRef kill = InteractKill(&teki, 0);
+		Interaction NRef kill = Interaction(&teki);
 		bool check1            = false;
 		Navi* navi             = naviMgr->getNavi();
 
@@ -183,14 +189,6 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 	}
 
 	return false;
-
-	// whatever man.
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiNotCondition(nullptr);
-	TekiNotCondition(nullptr);
-	TekiNotCondition(nullptr);
 }
 
 /**

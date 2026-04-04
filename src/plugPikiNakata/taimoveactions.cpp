@@ -444,7 +444,10 @@ bool TaiTraceTurningAction::act(Teki& teki)
 		return false;
 	}
 
-	if (teki.calcTargetAngle(target->getPosition()) <= NMathF::d2r(teki.getParameterF(TPF_TraceAngle) / 2.0f)) {
+	f32 p1 = teki.calcTargetAngle(target->getPosition());
+    f32 p2 = NMathF::d2r(teki.getParameterF(TPF_TraceAngle) / 2.0f);
+
+	if (p1 <= p2) {
 		return true;
 	}
 
@@ -467,8 +470,11 @@ bool TaiOutOfTraceAngleAction::act(Teki& teki)
 	if (!recogCond.satisfy(target)) {
 		return false;
 	}
+	
+	f32 p1 = teki.calcTargetAngle(target->getPosition());
+    f32 p2 = NMathF::d2r(teki.getParameterF(TPF_TraceAngle) / 2.0f);
 
-	if (teki.calcTargetAngle(target->getPosition()) <= NMathF::d2r(teki.getParameterF(TPF_TraceAngle) / 2.0f)) {
+	if (p1 <= p2) {
 		return false;
 	}
 
@@ -490,7 +496,10 @@ bool TaiTurningToTargetPositionAction::act(Teki& teki)
 		return false;
 	}
 
-	if (teki.calcTargetAngle(teki.mTargetPosition) <= NMathF::d2r(teki.getParameterF(TPF_TraceAngle) / 2.0f)) {
+	f32 p1 = teki.calcTargetAngle(teki.mTargetPosition);
+    f32 p2 = NMathF::d2r(teki.getParameterF(TPF_TraceAngle) / 2.0f);
+
+	if (p1 <= p2) {
 		return true;
 	}
 

@@ -215,7 +215,8 @@ bool TaiTargetNearestCollisionAction::actByEvent(immut TekiEvent& event)
 		return false;
 	}
 	Creature* target = event.mOther;
-	TekiAndCondition cond(&TekiRecognitionCondition(event.mTeki), &TekiNaviPikiCondition());
+	TekiRecognitionCondition recCond(event.mTeki);
+	TekiAndCondition cond(&recCond, &TekiNaviPikiCondition());
 	if (!cond.satisfy(target)) {
 		return false;
 	}
@@ -223,9 +224,6 @@ bool TaiTargetNearestCollisionAction::actByEvent(immut TekiEvent& event)
 		teki->setCreaturePointer(0, target);
 	}
 	return true;
-
-	TekiRecognitionCondition(nullptr);
-	TekiRecognitionCondition(nullptr);
 }
 
 /**

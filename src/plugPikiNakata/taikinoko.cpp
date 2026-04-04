@@ -533,17 +533,15 @@ bool TaiKinokoDischargingSporesAction::act(Teki& teki)
 			teki.flickUpper();
 		} else if (teki.getAnimationKeyOption(BTeki::ANIMATION_KEY_OPTION_ACTION_2)) {
 			PRINT_NAKATA("TaiKinokoDischargingSporesAction:act:%08x:ACTION_2:\n", &teki);
-			InteractSpore NRef spore = InteractSpore(&teki);
-			TekiAndCondition andCond(&TekiRecognitionCondition(&teki), &TekiDistanceCondition(&teki, teki.getAttackRange()));
+			InteractSpore spore = InteractSpore(&teki);
+			TekiRecognitionCondition recCond(&teki);
+			TekiDistanceCondition disCond(&teki, teki.getAttackRange());
+			TekiAndCondition andCond(&recCond, &disCond);
 			teki.interactNaviPiki(spore, andCond);
 			rumbleMgr->start(RUMBLE_Unk6, 0, teki.getPosition());
 		}
 	}
 	return false;
-
-	// sigh
-	TekiAndCondition(nullptr, nullptr);
-	TekiDistanceCondition(nullptr, 0.0f);
 }
 
 /**
