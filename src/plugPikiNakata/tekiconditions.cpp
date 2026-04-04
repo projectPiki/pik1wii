@@ -213,9 +213,10 @@ bool TekiVisibleHeightCondition::satisfy(Creature* target) immut
  */
 bool TekiLowerCondition::satisfy(Creature* target) immut
 {
-	// fucking amazing work nakata.
-	return TekiAndCondition(&TekiLowerRangeCondition(mTeki), &TekiNotCondition(&TekiStickerCondition(mTeki))).satisfy(target);
-	return TekiAndCondition(&TekiLowerRangeCondition(mTeki), &TekiNotCondition(&TekiStickerCondition(mTeki))).satisfy(target);
+	TekiLowerRangeCondition lowerRangeCond(mTeki);
+	TekiNotCondition notCond(&TekiStickerCondition(mTeki));
+	TekiAndCondition andCond(&lowerRangeCond, &notCond);
+	return andCond.satisfy(target);
 }
 
 /**

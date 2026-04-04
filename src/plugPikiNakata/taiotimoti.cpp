@@ -860,8 +860,8 @@ bool TaiOtimotiJumpingAction::act(Teki& teki)
 void TaiOtimotiAirWaitingAction::start(Teki& teki)
 {
 	NVector3f pos(teki.getPosition());
-	teki.mPositionIO.input(pos);
 	NVector3f vel(teki.mActionVelocity);
+	teki.mPositionIO.input(pos);
 	teki.mVelocityIO.input(vel);
 	NVector3f accel(teki.mActionVelocity);
 	accel.normalizeCheck();
@@ -971,9 +971,12 @@ bool TaiOtimotiPressingAction::actByEvent(immut TekiEvent& event)
 		Teki* teki = event.mTeki;
 
 		InteractPress NRef press = InteractPress(teki, teki->getParameterF(TPF_AttackPower));
-		TekiAndCondition NRef cond
-		    = TekiAndCondition(&TekiRecognitionCondition(teki), &TekiAndCondition(&TekiDistanceCondition(teki, teki->getAttackRange()),
-		                                                                          &TekiNotCondition(&TekiStickerCondition(teki))));
+		TekiRecognitionCondition recCond(teki);
+		TekiDistanceCondition disCond(teki, teki->getAttackRange());
+		TekiStickerCondition stickCond(teki);
+		TekiNotCondition notCond(&stickCond);
+		TekiAndCondition andCond(&disCond, &notCond);
+		TekiAndCondition NRef cond = TekiAndCondition(&recCond, &andCond);
 		teki->interactNaviPiki(press, cond);
 		teki->flickUpper();
 		teki->mDamageCount = 0.0f;
@@ -983,12 +986,6 @@ bool TaiOtimotiPressingAction::actByEvent(immut TekiEvent& event)
 	}
 
 	return false;
-
-	// lol.
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
 }
 
 /**

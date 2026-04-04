@@ -357,9 +357,6 @@ bool TaiShellNaviPikiInsideAction::act(Teki& teki)
 
 	TekiPositionDistanceCondition NRef distCond = TekiPositionDistanceCondition(spawnPos, teki.getAttackableRange());
 	return teki.checkNaviPiki(distCond);
-
-	// idk man.
-	TekiNotCondition(nullptr);
 }
 
 /**
@@ -367,18 +364,17 @@ bool TaiShellNaviPikiInsideAction::act(Teki& teki)
  */
 bool TaiShellEatAction::act(Teki& teki)
 {
-	TekiAndCondition andCond(&TekiRecognitionCondition(&teki), &TekiNotCondition(&TekiStickerCondition(&teki)));
+	TekiRecognitionCondition recCond(&teki);
+	TekiStickerCondition stickCond(&teki);
+	TekiNotCondition notCond(&stickCond);
+	TekiAndCondition andCond(&recCond, &notCond);
 
 	NVector3f spawnPos;
 	teki.outputSpawnPosition(spawnPos);
-	TekiAndCondition posDistAndAnd(&andCond, &TekiPositionDistanceCondition(spawnPos, teki.getAttackableRange()));
+	TekiPositionDistanceCondition posDistCond(spawnPos, teki.getAttackableRange());
+	TekiAndCondition posDistAndAnd(&andCond, &posDistCond);
 	InteractSwallow swallow(&teki, nullptr, 0);
 	return teki.interactNaviPiki(swallow, posDistAndAnd);
-
-	// i am not proud of what this project has required of me spiritually
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiNotCondition(nullptr);
 }
 
 /**

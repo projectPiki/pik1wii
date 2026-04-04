@@ -981,10 +981,17 @@ bool TaiCollecTargetPelletAction::act(Teki& teki)
 {
 	Creature* target = teki.getCreaturePointer(3);
 	int carryPower   = teki.getParameterI(COLLECPI_CarryPower);
-	Pellet* nearest  = (Pellet*)pelletMgr->findClosest(
-        teki.getPosition(),
-        &TekiAndCondition(&TekiAndCondition(&TekiVisibleCondition(&teki), &TekiCollecTargetPelletCondition(&teki, carryPower)),
-	                       &TekiNotCondition(&TekiCreaturePointerCondition(target))));
+	
+	TekiVisibleCondition visCond(&teki);
+	TekiCollecTargetPelletCondition targetPelletCond(&teki, carryPower);
+	TekiAndCondition andCond(&visCond, &targetPelletCond);
+	TekiCreaturePointerCondition pointCond(target);
+	TekiNotCondition notCond(&pointCond);
+	
+	TekiAndCondition cond(&andCond, &notCond);
+						   
+						   
+	Pellet* nearest  = (Pellet*)pelletMgr->findClosest(teki.getPosition(), &cond);
 	if (!nearest) {
 		return false;
 	}
@@ -992,11 +999,6 @@ bool TaiCollecTargetPelletAction::act(Teki& teki)
 	teki.setCreaturePointer(0, nearest);
 	PRINT_NAKATA("TaiCollecTargetPelletAction::act:%08x,%08x,%08x\n", &teki, target, nearest);
 	return true;
-
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
 }
 
 /**
@@ -1043,18 +1045,19 @@ bool TaiCollecPelletLostAction::act(Teki& teki)
 		PRINT_NAKATA("TaiCollecPelletLostAction::act:target==null:%08x\n", &teki);
 		return true;
 	}
+	
+	int carrypower = teki.getParameterI(COLLECPI_CarryPower);
+	
+	TekiVisibleCondition visCond(&teki);
+	TekiCollecTargetPelletCondition targetPelletCond(&teki, carrypower);
 
-	TekiAndCondition NRef cond
-	    = TekiAndCondition(&TekiVisibleCondition(&teki), &TekiCollecTargetPelletCondition(&teki, teki.getParameterI(COLLECPI_CarryPower)));
+	TekiAndCondition NRef cond = TekiAndCondition(&visCond, &targetPelletCond);
 	if (!cond.satisfy(target)) {
 		teki.clearCreaturePointer(0);
 		return true;
 	}
 
 	return false;
-
-	TekiAndCondition(nullptr, nullptr);
-	TekiVisibleCondition(nullptr);
 }
 
 /**

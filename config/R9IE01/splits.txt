@@ -2465,12 +2465,12 @@ plugPikiNakata/taiattackactions.cpp:
 plugPikiNakata/taibasicactions.cpp:
 	.text       start:0x801CC0C4 end:0x801CC1E4
 	.ctors      start:0x802F60D8 end:0x802F60DC
-	.data       start:0x80345F10 end:0x80345FC0
+	.data       start:0x80345F10 end:0x80345FA0
 
 plugPikiNakata/taichappy.cpp:
 	.text       start:0x801CC1E4 end:0x801CE0D4
 	.ctors      start:0x802F60DC end:0x802F60E0
-	.data       start:0x80345FC0 end:0x803460C0
+	.data       start:0x80345FA0 end:0x803460C0
 
 plugPikiNakata/taicollec.cpp:
 	.text       start:0x801CE0D4 end:0x801D1288

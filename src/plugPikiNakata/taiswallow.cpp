@@ -718,7 +718,9 @@ bool TaiSwallowTurningAction::act(Teki& teki)
 		return true;
 	}
 
-	TekiAndCondition NRef cond = TekiAndCondition(&TekiRecognitionCondition(&teki), &TekiLowerCondition(&teki));
+	TekiRecognitionCondition recCond(&teki);
+	TekiLowerCondition lowerCond(&teki);
+	TekiAndCondition NRef cond = TekiAndCondition(&recCond, &lowerCond);
 	int pikiCount              = teki.countPikis(cond);
 	f32 linFuncValues[2];
 	NClampLinearFunction linFunc(linFuncValues);
@@ -774,15 +776,16 @@ void TaiSwallowFlickingAction::flick(Teki& teki)
 	teki.flickUpper();
 	InteractFlick NRef flick
 	    = InteractFlick(&teki, teki.getParameterF(TPF_LowerFlickPower), teki.getParameterF(TPF_LowerAttackPower), FLICK_BACKWARDS_ANGLE);
-	TekiAndCondition NRef cond
-	    = TekiAndCondition(&TekiAndCondition(&TekiRecognitionCondition(&teki), &TekiNotCondition(&TekiStickingCondition())),
-	                       &TekiAndCondition(&TekiDistanceCondition(&teki, teki.getLowerRange()),
-	                                         &TekiAngleCondition(&teki, teki.getParameterF(SWALLOWPF_FlickLowerAngle))));
+	
+	TekiRecognitionCondition recCond(&teki);
+	TekiNotCondition notCond(&TekiStickingCondition());
+	TekiAndCondition recAndNotCond(&recCond, &notCond);
+	TekiDistanceCondition distCond(&teki, teki.getLowerRange());
+	TekiAngleCondition angCond(&teki, teki.getParameterF(SWALLOWPF_FlickLowerAngle));
+	TekiAndCondition distAndAngCond(&distCond, &angCond);
+	
+	TekiAndCondition NRef cond = TekiAndCondition(&recAndNotCond, &distAndAngCond);
 	teki.interactNaviPiki(flick, cond);
-
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiNotCondition(nullptr);
 }
 
 /**
@@ -800,13 +803,6 @@ bool TaiSwallowSwallowingFlickAction::act(Teki& teki)
 		teki.interactNaviPiki(flick, cond);
 	}
 	return false;
-
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiNotCondition(nullptr);
 }
 
 /**
@@ -841,8 +837,6 @@ bool TaiSwallowNoticeAction::act(Teki& teki)
 	PRINT_NAKATA("TaiSwallowNoticeAction::act:%08x\n", &teki);
 	teki.setCreaturePointer(0, naviPiki);
 	return true;
-
-	TekiRecognitionCondition(nullptr);
 }
 
 /**

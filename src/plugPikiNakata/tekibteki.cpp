@@ -355,8 +355,10 @@ void BTeki::reset()
 
 	prepareEffects();
 	stopMove();
-
+	
+#ifdef DEVELOP
 	PRINT_NAKATA("NNNNNreset:%08x:%d:%s:%f\n", this, mTekiType, TekiMgr::getTypeName(mTekiType), getCentreSize());
+#endif
 }
 
 /**
@@ -432,7 +434,8 @@ void BTeki::update()
 		if (mHealth > 0.0f) {
 			f32 max = getParameterF(TPF_Life);
 			f32 inc = getParameterF(TPF_LifeRecoverRate);
-			mHealth += NSystem::getFrameTime() * (max * inc);
+			f32 rate = NSystem::getFrameTime() * (max * inc);
+			mHealth += rate;
 
 			if (mHealth >= max) {
 				mHealth = max;
@@ -1525,22 +1528,17 @@ void BTeki::flickLower()
 	flickLower(flick);
 }
 
-// this is to get TekiAndCondition and TekiNotCondition vtables to spawn in the right order.
-// probably related to whatever the hell is happening in flickLower but w/e
-static void fakeFunc()
-{
-	TekiAndCondition andCond(nullptr, nullptr);
-	andCond.satisfy(nullptr);
-}
-
 /**
  * @todo: Documentation
  */
 void BTeki::flickLower(InteractFlick& flick)
 {
-	TekiAndCondition andCond(
-	    &TekiAndCondition(&TekiRecognitionCondition(static_cast<Teki*>(this)), &TekiNotCondition(&TekiStickingCondition())),
-	    &TekiDistanceCondition(static_cast<Teki*>(this), getLowerRange()));
+	TekiRecognitionCondition recCond(static_cast<Teki*>(this));
+	TekiNotCondition notCond(&TekiStickingCondition());
+	TekiAndCondition recAndNotCond(&recCond, &notCond);
+	TekiDistanceCondition distCond(static_cast<Teki*>(this), getLowerRange());
+	
+	TekiAndCondition andCond(&recAndNotCond, &distCond);
 	interactNavi(flick, andCond);
 	flick.mDamage = 0.0f;
 
