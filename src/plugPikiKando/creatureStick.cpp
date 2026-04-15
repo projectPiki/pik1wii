@@ -232,7 +232,8 @@ void Creature::startStickObject(Creature* obj, CollPart* stickPart, int slot, f3
 {
 	mCollNormal = nullptr;
 	if (obj->mObjType == OBJTYPE_Pellet && slot != -1) {
-		startStickObjectPellet(static_cast<Pellet*>(obj), slot, p4);
+		Pellet* pellet = static_cast<Pellet*>(obj);
+		startStickObjectPellet(pellet, slot, p4);
 		if (mPelletStickSlot != -1 && startStick(obj, nullptr)) {
 			resetCreatureFlag(CF_StuckToMouth);
 			setCreatureFlag(CF_StuckToObject);
@@ -299,9 +300,9 @@ bool Creature::startStick(Creature* stickTarget, CollPart* stickPart)
 		PRINT("already stick to something !\n");
 		return false;
 	}
-
+#ifdef DEVELOP
 	PRINT_KANDO("piki%x :::: stick ! : standType = %s\n", this, _standType[getStandType()]);
-
+#endif
 	mStickTarget = stickTarget;
 	if (!stickTarget->mStickListHead) {
 		stickTarget->mStickListHead = this;
@@ -569,11 +570,12 @@ void Creature::updateStickNonPlatform()
 		updateStickTube();
 		return;
 	}
-
+#ifdef DEVELOP
 	PRINT("flag is %x\n", mStickPart->mPartType);
 	PRINT("%s : %s\n", mStickPart->getID().mStringID, mStickPart->getCode().mStringID);
 	ERROR(" mail to partol : flag is %x\n", mStickPart->mPartType);
 	ERROR("mail to m\n");
+#endif
 }
 
 /**

@@ -1825,7 +1825,10 @@ plugPikiKando/creatureMove.cpp:
 plugPikiKando/creatureStick.cpp:
 	.text       start:0x801420B0 end:0x80144454
 	.ctors      start:0x802F5F3C end:0x802F5F40
+	.rodata     start:0x80301E40 end:0x80301E90
 	.data       start:0x8033B5F0 end:0x8033B608
+	.sdata      start:0x80499C18 end:0x80499C88
+	.sdata2     start:0x804A0C78 end:0x804A0C90
 
 plugPikiKando/demoEvent.cpp:
 	.text       start:0x80144454 end:0x801448A4
