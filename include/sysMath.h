@@ -35,7 +35,7 @@ static inline f32 u32ToFloat(u32 a)
 
 inline f32 absF(f32 val)
 {
-	return (f32)fabsf(val);
+	return (f32)fabs((f64)val);;
 }
 
 // TODO: probably change this to zen::abs in some zenMath library later
