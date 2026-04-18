@@ -138,11 +138,20 @@ public:
 		UpdateVertexColor();
 	}
 
-	f32 GetScaleH() const { return mScale.x; }
-	f32 GetScaleV() const { return mScale.y; }
+	f32 GetScaleH() const 
+	{
+        NW4R_ASSERT_PTR(this, 184);
+        return mScale.x;
+    }
+    f32 GetScaleV() const 
+	{
+        NW4R_ASSERT_PTR(this, 189);
+        return mScale.y;
+    }
 
 	void SetScale(f32 x, f32 y)
 	{
+		NW4R_ASSERT_PTR(this, 171);
 		mScale.x = x;
 		mScale.y = y;
 	}
@@ -153,11 +162,12 @@ public:
 	f32 GetCursorY() const { return mCursorPos.y; }
 	void SetCursorY(f32 y) { mCursorPos.y = y; }
 
-	void SetCursor(f32 x, f32 y)
+	void SetCursor(f32 x, f32 y) 
 	{
-		mCursorPos.x = x;
-		mCursorPos.y = y;
-	}
+        NW4R_ASSERT_PTR(this, 249);
+        mCursorPos.x = x;
+        mCursorPos.y = y;
+    }
 	void SetCursor(f32 x, f32 y, f32 z)
 	{
 		mCursorPos.x = x;
@@ -165,7 +175,11 @@ public:
 		mCursorPos.z = z;
 	}
 
-	void MoveCursorX(f32 dx) { mCursorPos.x += dx; }
+	void MoveCursorX(f32 dx) 
+	{
+        NW4R_ASSERT_PTR(this, 301);
+        mCursorPos.x += dx;
+    }
 	void MoveCursorY(f32 dy) { mCursorPos.y += dy; }
 
 	void SetAlpha(u8 alpha)
@@ -181,7 +195,13 @@ public:
 	void SetFixedWidth(f32 width) { mFixedWidth = width; }
 	f32 GetFixedWidth() const { return mFixedWidth; }
 
-	void SetFont(const Font& rFont) { mFont = &rFont; }
+	void SetFont(const Font& font) 
+	{
+        NW4R_ASSERT_PTR(this, 65);
+        NW4R_ASSERT_PTR(& font, 66);
+        mFont = &font;
+    }
+	
 	const Font* GetFont() const { return mFont; }
 
 	void SetFontSize(f32 width, f32 height);

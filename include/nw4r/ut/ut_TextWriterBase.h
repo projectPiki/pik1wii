@@ -61,23 +61,35 @@ public:
 	void SetWidthLimit(f32 limit) { mWidthLimit = limit; }
 	void ResetWidthLimit() { mWidthLimit = NW4R_MATH_FLT_MAX; }
 
-	f32 GetCharSpace() const { return mCharSpace; }
-	void SetCharSpace(f32 space) { mCharSpace = space; }
+	f32 GetCharSpace() const {
+        NW4R_ASSERT_PTR(this, 108);
+        return mCharSpace;
+    }
+	void SetCharSpace(f32 space) {
+        NW4R_ASSERT_PTR(this, 98);
+        mCharSpace = space;
+    }
 
 	f32 GetLineSpace() const { return mLineSpace; }
-	void SetLineSpace(f32 space) { mLineSpace = space; }
+	void SetLineSpace(f32 space) {
+        NW4R_ASSERT_PTR(this, 93);
+        mLineSpace = space;
+    }
 
 	int GetTabWidth() const { return mTabWidth; }
 	void SetTabWidth(int width) { mTabWidth = width; }
 
 	u32 GetDrawFlag() const { return mDrawFlag; }
-	void SetDrawFlag(u32 flag) { mDrawFlag = flag; }
+	void SetDrawFlag(u32 flag) {
+        NW4R_ASSERT_PTR(this, 139);
+        mDrawFlag = flag;
+    }
 
 	TagProcessorBase<T>* GetTagProcessor() const { return mTagProcessor; }
 	void SetTagProcessor(TagProcessorBase<T>* pProcessor) 
 	{ 
-		NW4R_ASSERT_PTR(this, 150);
 		NW4R_ASSERT_PTR(this, 151);
+		NW4R_ASSERT_PTR(&pProcessor, 152);
 		//NW4R_ASSERT_PTR(pProcessor, 151);
 		mTagProcessor = pProcessor; 
 	}
