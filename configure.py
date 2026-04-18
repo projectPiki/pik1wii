@@ -1588,7 +1588,7 @@ config.libs = [
     },
     {
         "lib": "System12",
-        "cflags": cflags_base,
+        "cflags": [*cflags_pikmin, "-common on", "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sys12",
         "objects": [

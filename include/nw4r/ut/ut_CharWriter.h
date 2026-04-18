@@ -5,6 +5,7 @@
 #include <nw4r/ut/ut_Color.h>
 
 #include <nw4r/math.h>
+#include <nw4r/db/db_assert.h>
 
 #include <RevoSDK/gx.h>
 

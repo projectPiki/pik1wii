@@ -3,7 +3,7 @@
 
 #include <egg/egg_types.h>
 
-#include <egg/prim/eggBitFlag.h>
+#include <egg/core/eggBitFlag.h>
 
 namespace EGG {
 
@@ -66,6 +66,9 @@ public:
     bool isSpace(char ch);
     bool isCRLF(char ch);
     bool isUpperSJIS(char ch);
+	
+	bool isBeginGroup();
+    bool isEndGroup();
 
     void setTextMode() {
         mFlags.setBit(BIT_TEXT_MODE);

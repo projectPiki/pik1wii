@@ -3861,55 +3861,39 @@ System12/sys12ControllerBatteryMgr.cpp:
 
 System12/system12DvdLoader.cpp:
 	.text       start:0x802BF298 end:0x802BF524
-	.rodata     start:0x803101C0 end:0x80310278
 
 System12/system12FrameCounter.cpp:
 	.text       start:0x802BF524 end:0x802BFB70
-	.rodata     start:0x80310278 end:0x803102F0
 	.data       start:0x80351538 end:0x80351568
-	.sdata2     start:0x804A3F60 end:0x804A3F68
 
 System12/system12Layout.cpp:
 	.text       start:0x802BFB70 end:0x802C2CC4
 	.ctors      start:0x802F6320 end:0x802F6324
-	.rodata     start:0x803102F0 end:0x803105B8
 	.data       start:0x80351568 end:0x80351910
-	.bss        start:0x8048FF20 end:0x8048FF38
-	.sdata2     start:0x804A3F68 end:0x804A3F78
 
 System12/sys12THPPlayer.cpp:
 	.text       start:0x802C334C end:0x802C4724
 	.sbss       start:0x8049F130 end:0x8049F140
-	.sdata2     start:0x804A3F78 end:0x804A3FC8
 
 System12/sys12DebugDrawer.cpp:
 	.text       start:0x802C4724 end:0x802C48C8
-	.rodata     start:0x803105B8 end:0x80310620
 	.sbss       start:0x8049F140 end:0x8049F148
 
 System12/system12WPMessage.cpp:
 	.text       start:0x802C48C8 end:0x802C56D0
-	.rodata     start:0x80310620 end:0x803108B0
-	.data       start:0x80351938 end:0x803519C0
+	.rodata     start:0x80310620 end:0x80311D18
+	.data       start:0x80351938 end:0x80351C00
 	.sbss       start:0x8049F148 end:0x8049F150
-	.sdata2     start:0x804A3FC8 end:0x804A3FD0
 
 System12/system12WPTagProcessor.cpp:
 	.text       start:0x802C56D0 end:0x802C7494
 	.ctors      start:0x802F6324 end:0x802F6328
-	.rodata     start:0x803108B0 end:0x803109A0
-	.data       start:0x803519C0 end:0x80351C00
-	.bss        start:0x8048FF38 end:0x8048FFA8
-	.sdata2     start:0x804A3FD0 end:0x804A3FF0
 
 System12/system12WPWideTextWriter.cpp:
 	.text       start:0x802C7494 end:0x802C7D68
 	.ctors      start:0x802F6328 end:0x802F632C
-	.rodata     start:0x803109A0 end:0x80310A00
 	.data       start:0x80351C00 end:0x80351C20
-	.bss        start:0x8048FFA8 end:0x8048FFB8
 	.sbss       start:0x8049F150 end:0x8049F158
-	.sdata2     start:0x804A3FF0 end:0x804A3FF8
 
 System12/sys12CursorMgr.cpp:
 	.text       start:0x802C7D68 end:0x802CA9D0
@@ -3947,25 +3931,19 @@ System12/eggSafeString.cpp:
 
 System12/PSSpkSystem.cpp:
 	.text       start:0x802D251C end:0x802D2E6C
-	.rodata     start:0x80311970 end:0x803119C8
 	.sbss       start:0x8049F198 end:0x8049F1C0
 
 System12/SpkData.cpp:
 	.text       start:0x802D2E6C end:0x802D302C
-	.rodata     start:0x803119C8 end:0x80311A08
 
 System12/SpkGadget.cpp:
 	.text       start:0x802D302C end:0x802D34E4
-	.rodata     start:0x80311A08 end:0x80311A78
 
 System12/SpkMixingBuffer.cpp:
 	.text       start:0x802D34E4 end:0x802D3890
-	.rodata     start:0x80311A78 end:0x80311B00
 
 System12/SpkSound.cpp:
 	.text       start:0x802D3890 end:0x802D4968
-	.rodata     start:0x80311B00 end:0x80311BF8
-	.data       start:0x803522F8 end:0x80352380
 
 System12/SpkSpeakerCtrl.cpp:
 	.text       start:0x802D4968 end:0x802D52F8
@@ -3974,15 +3952,12 @@ System12/SpkSpeakerCtrl.cpp:
 
 System12/SpkSystem.cpp:
 	.text       start:0x802D52F8 end:0x802D5968
-	.rodata     start:0x80311BF8 end:0x80311CB0
-	.data       start:0x80352380 end:0x803523A0
 
 System12/SpkTable.cpp:
 	.text       start:0x802D5968 end:0x802D59F0
 
 System12/SpkWave.cpp:
 	.text       start:0x802D59F0 end:0x802D5E6C
-	.rodata     start:0x80311CB0 end:0x80311CF0
 
 homebuttonLib/HBMFrameController.cpp:
 	.text       start:0x802D5E6C end:0x802D6014

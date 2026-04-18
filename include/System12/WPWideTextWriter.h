@@ -13,10 +13,10 @@ public:
 	
 	
 	virtual ~WPWideTextWriter();											// _0C
-	virtual void calc(f32);											// _10
-	virtual f32 printWithPos(f32, f32, const wchar_t*);				// _14
-	virtual void calcBBox(EGG::BoundBox2f*, const wchar_t*);		// _18
-	virtual void calcBBoxFullText(EGG::BoundBox2f*, const wchar_t*, int);								// _1C
+	virtual void calc(f32);													// _10
+	virtual f32 printWithPos(f32, f32, const wchar_t*);						// _14
+	virtual void calcBBox(EGG::BoundBox2f*, const wchar_t*);				// _18
+	virtual void calcBBoxFullText(EGG::BoundBox2f*, const wchar_t*, int);	// _1C
 	
 	static void Initialize();
 	void reset();
@@ -24,15 +24,13 @@ public:
 	void setPrintOneStrokeMode(bool);
 	
 	// unused/inlined:
-	//void setRPSysTagProcessor(System12::WPTagProcessor*);
-	
+
 	void setRPSysTagProcessor(System12::WPTagProcessor* processor)
 	{
 		mTagProcessor2 = processor;
 		nw4r::ut::TextWriterBase<wchar_t>::SetTagProcessor(processor);
 	}
-	
-	
+
 	u32 getPageIdx();
 	void init();
 	void start();
