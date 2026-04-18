@@ -103,35 +103,39 @@ public:
 	virtual f32 getiMass();                                    // _38
 	virtual f32 getSize();                                     // _3C
 	virtual Vector3f getShadowPos() { return mShadowPos; }     // _68
-	virtual bool isVisible();                                  // _74
-	virtual bool isBuried();                                   // _80
-	virtual bool isAtari();                                    // _84
-	virtual bool isAlive();                                    // _88
-	virtual bool isFixed();                                    // _8C
-	virtual bool needShadow();                                 // _90
-	virtual bool needFlick(Creature*);                         // _94
-	virtual bool ignoreAtari(Creature*);                       // _98
-	virtual bool stimulate(immut Interaction&);                // _A0
-	virtual void sendMsg(Msg*);                                // _A4
-	virtual void collisionCallback(immut CollEvent&);          // _A8
-	virtual void bounceCallback();                             // _AC
-	virtual void jumpCallback();                               // _B0
-	virtual void wallCallback(immut Plane&, DynCollObject*);   // _B4
-	virtual void offwallCallback(DynCollObject*);              // _B8
-	virtual void stickToCallback(Creature*);                   // _C4
-	virtual void dump();                                       // _C8
-	virtual bool isRopable();                                  // _D4
-	virtual bool mayIstick();                                  // _D8
-	virtual int getFormationPri();                             // _DC
-	virtual Vector3f getCatchPos(Creature*);                   // _100
-	virtual void doAI();                                       // _104
-	virtual void doAnimation();                                // _108
-	virtual bool isKinoko() = 0;                               // _120
-	virtual void animationKeyUpdated(immut PaniAnimKeyEvent&); // _124
-	virtual void initBirth() { }                               // _128
-	virtual void changeShape(int) { }                          // _12C
-	virtual void setFlower(int) { }                            // _130
-	virtual void setLeaves(int) { }                            // _134
+	virtual bool isVisible();                                  // _78
+	virtual bool isBuried();                                   // _84
+	virtual bool isAtari();                                    // _88
+	virtual bool isAlive();                                    // _8C
+	virtual bool isFixed();                                    // _90
+	virtual bool needShadow();                                 // _94
+	virtual bool needFlick(Creature*);                         // _98
+	virtual bool ignoreAtari(Creature*);                       // _9C
+	virtual bool stimulate(immut Interaction&);                // _A4
+	virtual bool stimulate(const Interaction& act) 		   	   // _A8
+	{ 
+		return stimulate(const_cast<Interaction&>(act)); 
+	}               
+	virtual void sendMsg(Msg*);                                // _AC
+	virtual void collisionCallback(immut CollEvent&);          // _B0
+	virtual void bounceCallback();                             // _B4
+	virtual void jumpCallback();                               // _B8
+	virtual void wallCallback(immut Plane&, DynCollObject*);   // _BC
+	virtual void offwallCallback(DynCollObject*);              // _C0
+	virtual void stickToCallback(Creature*);                   // _CC
+	virtual void dump();                                       // _D0
+	virtual bool isRopable();                                  // _DC
+	virtual bool mayIstick();                                  // _E0
+	virtual int getFormationPri();                             // _E4
+	virtual Vector3f getCatchPos(Creature*);                   // _108
+	virtual void doAI();                                       // _10C
+	virtual void doAnimation();                                // _110
+	virtual bool isKinoko() = 0;                               // _128
+	virtual void animationKeyUpdated(immut PaniAnimKeyEvent&); // _12C
+	virtual void initBirth() { }                               // _130
+	virtual void changeShape(int) { }                          // _134
+	virtual void setFlower(int) { }                            // _138
+	virtual void setLeaves(int) { }                            // _13C
 
 	f32 getSpeed(f32);
 	void setSpeed(f32, immut Vector3f&);
@@ -242,7 +246,7 @@ public:
 	// _00      = VTBL
 	// _00-_2B8 = Creature
 	// _2B8     = PaniAnimKeyListener
-	u8 _2C4[0x60];                    // _2C4, some unknown struct with a ctor (system12 related)
+	u8 _2C4[0x60];                    	  // _2C4, some unknown struct with a ctor (system12 related)
 	OdoMeter mOdometer;                   // _2BC
 	PathFinder::Buffer* mPathBuffers;     // _2CC
 	u32 mRouteHandle;                     // _2D0

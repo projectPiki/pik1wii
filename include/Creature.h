@@ -136,8 +136,11 @@ public:
 	virtual bool needFlick(Creature*) { return true; }                  // _98 (weak)
 	virtual bool ignoreAtari(Creature*) { return false; }               // _9C (weak)
 	virtual bool isFree() { return isCreatureFlag(CF_Free) != 0; }      // _A0 (weak)
-	virtual bool stimulate(immut Interaction&);                         // _A4
-	virtual bool unk_A8(immut Interaction&);                  							// _A8, unknown
+	virtual bool stimulate(Interaction&);                         		// _A4
+	virtual bool stimulate(const Interaction& act) 					    // _A8 (weak)
+	{ 
+		return stimulate(const_cast<Interaction&>(act)); 
+	}     					
 	virtual void sendMsg(Msg*) { }                                      // _AC (weak)
 	virtual void collisionCallback(immut CollEvent&) { }                // _B0 (weak)
 	virtual void bounceCallback() { }                                   // _B4 (weak)

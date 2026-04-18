@@ -51,28 +51,32 @@ public:
 	virtual void viewStartTrembleMotion(f32);                  // _164
 	virtual f32 getiMass();                                    // _38
 	virtual f32 getSize();                                     // _3C
-	virtual bool isVisible();                                  // _74
-	virtual bool isBuried();                                   // _80
-	virtual bool isAtari();                                    // _84
-	virtual bool ignoreAtari(Creature*);                       // _98
-	virtual bool stimulate(immut Interaction&);                // _A0
-	virtual void sendMsg(Msg*);                                // _A4
-	virtual void collisionCallback(immut CollEvent&);          // _A8
-	virtual void bounceCallback();                             // _AC
-	virtual void jumpCallback();                               // _B0
-	virtual void wallCallback(immut Plane&, DynCollObject*);   // _B4
-	virtual void offwallCallback(DynCollObject*);              // _B8
-	virtual void dump();                                       // _C8
-	virtual bool isRopable();                                  // _D4
-	virtual void update();                                     // _E0
-	virtual void postUpdate(int unused, f32 deltaTime);        // _E4
-	virtual void refresh(Graphics&);                           // _EC
-	virtual void refresh2d(Graphics&);                         // _F0
-	virtual void demoDraw(Graphics&, immut Matrix4f*);         // _FC
-	virtual void doAI();                                       // _104
-	virtual void doKill();                                     // _10C
-	virtual void animationKeyUpdated(immut PaniAnimKeyEvent&); // _168
-	virtual bool mayIstick() { return false; }                 // _D8 (weak)
+	virtual bool isVisible();                                  // _78
+	virtual bool isBuried();                                   // _84
+	virtual bool isAtari();                                    // _88
+	virtual bool ignoreAtari(Creature*);                       // _9C
+	virtual bool stimulate(Interaction&);                	   // _A4
+	virtual bool stimulate(const Interaction& act) 			   // _A8
+	{ 
+		return stimulate(const_cast<Interaction&>(act)); 
+	}                
+	virtual void sendMsg(Msg*);                                // _AC
+	virtual void collisionCallback(immut CollEvent&);          // _B0
+	virtual void bounceCallback();                             // _B4
+	virtual void jumpCallback();                               // _B8
+	virtual void wallCallback(immut Plane&, DynCollObject*);   // _BC
+	virtual void offwallCallback(DynCollObject*);              // _C0
+	virtual void dump();                                       // _D0
+	virtual bool isRopable();                                  // _DC
+	virtual void update();                                     // _E8
+	virtual void postUpdate(int unused, f32 deltaTime);        // _EC
+	virtual void refresh(Graphics&);                           // _F4
+	virtual void refresh2d(Graphics&);                         // _F8
+	virtual void demoDraw(Graphics&, immut Matrix4f*);         // _104
+	virtual void doAI();                                       // _10C
+	virtual void doKill();                                     // _114
+	virtual void animationKeyUpdated(immut PaniAnimKeyEvent&); // _170
+	virtual bool mayIstick() { return false; }                 // _E0 (weak)
 	virtual f32 getShadowSize() { return 20.0f; }              // _70 (weak)
 
 	bool demoCheck();
@@ -149,7 +153,7 @@ public:
 	// _2B8-_2BC = PaniAnimKeyListener
 	// _2BC-_2C4 = PelletView
 	OdoMeter mOdoMeter;                   // _2C4
-	u8 _2DC[0x88];                          // _2DC, unknown, new in Wii version
+	u8 _2DC[0x88];                         // _2DC, unknown, new in Wii version
 	zen::particleGenerator* mDamageEfxA;  // _2D4
 	zen::particleGenerator* mDamageEfxB;  // _2D8
 	zen::particleGenerator* mDamageEfxC;  // _2DC

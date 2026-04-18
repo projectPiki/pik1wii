@@ -136,15 +136,15 @@ struct Graphics {
 	virtual void setLight(Light*, int)                        = 0;                                                        // _34
 	virtual void clearBuffer(int, bool)                       = 0;                                                        // _38
 	virtual void setPerspective(Mtx, f32, f32, f32, f32, f32) = 0;                                                        // _3C
-	virtual void setOrthogonal(Mtx, immut RectArea&)          = 0;                                                        // _40
-	virtual void unk44(Mtx mtx, immut RectArea& area) { setOrthogonal(mtx, area); }                                 	  // _44
+	virtual void setOrthogonal(Mtx, RectArea&)          = 0;                                                        	  // _40
+	virtual void setOrthogonal(Mtx mtx, const RectArea& area) { setOrthogonal(mtx, const_cast<RectArea&>(area)); }        // _44
 	virtual void setLightcam(LightCamera* cam) { mLightCam = cam; }                                                       // _48
-	virtual void setViewport(immut RectArea&)       = 0;                                                                  // _4C
-	virtual void setViewportOffset(immut RectArea&) = 0;                                                                  // _50
-	virtual void setScissor(immut RectArea&)        = 0;                                                                  // _54
-	virtual void unk54(immut RectArea& area) { setViewport(area); }           											  // _58
-	virtual void unk58(immut RectArea& area) { setViewportOffset(area); }                    							  // _5C
-	virtual void unk5C(immut RectArea& area) { setScissor(area); }                                  					  // _60
+	virtual void setViewport(RectArea&)       = 0;                                                                  	  // _4C
+	virtual void setViewportOffset(RectArea&) = 0;                                                                  	  // _50
+	virtual void setScissor(RectArea&)        = 0;                                                                 	 	  // _54
+	virtual void setViewport(const RectArea& area) { setViewport(const_cast<RectArea&>(area)); }           				  // _58
+	virtual void setViewportOffset(const RectArea& area) { setViewportOffset(const_cast<RectArea&>(area)); }          	  // _5C
+	virtual void setScissor(const RectArea& area) { setScissor(const_cast<RectArea&>(area)); }                       	  // _60
 	virtual void setBlendMode(u8 blendFactor, u8 zMode, u8 blendMode) { }                                                 // _64
 	virtual int setCullFront(int)                                                                                    = 0; // _68
 	virtual u8 setDepth(bool)                                                                                        = 0; // _6C
@@ -159,34 +159,37 @@ struct Graphics {
 	virtual void drawSingleMatpoly(Shape*, Joint::MatPoly*)                                                          = 0; // _90
 	virtual void drawMeshes(Camera&, Shape*)                                                                         = 0; // _94
 	virtual bool initParticle(bool)                                                                                  = 0; // _98
-	virtual void drawParticle(Camera&, immut Vector3f&, f32)                                                         = 0; // _9C
-	virtual void unkA0(Camera& cam, immut Vector3f& pos, f32 size) 														  // _A0
+	virtual void drawParticle(Camera&, Vector3f&, f32)                                                         		 = 0; // _9C
+	virtual void drawParticle(Camera& cam, const Vector3f& pos, f32 size) 												  // _A0
 	{ 
-		drawParticle(cam, pos, size); 
+		drawParticle(cam, const_cast<Vector3f&>(pos), size); 
 	}                             												 
-	virtual void drawRotParticle(Camera&, immut Vector3f&, u16, f32)                                                 = 0; // _A4
-	virtual void unkA8(Camera& cam, immut Vector3f& pos, u16 angle, f32 radius) 										  // _A8
+	virtual void drawRotParticle(Camera&, Vector3f&, u16, f32)                                                		 = 0; // _A4
+	virtual void drawRotParticle(Camera& cam, const Vector3f& pos, u16 angle, f32 radius) 								  // _A8
 	{ 
-		drawRotParticle(cam, pos, angle, radius); 
+		drawRotParticle(cam,  const_cast<Vector3f&>(pos), angle, radius); 
 	} 																								  
 	virtual void drawCamParticle(Camera&, immut Vector3f&, immut Vector2f&, immut Vector2f&, immut Vector2f&)        = 0; // _AC
-	virtual void drawLine(immut Vector3f&, immut Vector3f&)                                                          = 0; // _B0
+	virtual void drawLine(Vector3f&, Vector3f&)                                                         			 = 0; // _B0
 	virtual void drawPoints(immut Vector3f*, int)                                                                    = 0; // _B4
 	virtual void drawOneTri(immut Vector3f* vertices, immut Vector3f* normals, immut Vector2f* texCoords, int count) = 0; // _B8
 	virtual void drawOneStrip(immut Vector3f*, immut Vector3f*, immut Vector2f*, int)                                = 0; // _BC
-	virtual void unkC0(immut Vector3f& start, immut Vector3f& end)  { drawLine(start, end); } 			 				  // _C0
-	virtual void setColour(immut Colour&, bool)                                                                      = 0; // _C4
-	virtual void setAuxColour(immut Colour&)                                                                         = 0; // _C8
-	virtual void unkCC(immut Colour& color, bool set) { setColour(color, set); }										  // _CC
-	virtual void unkD0(immut Colour& color) { setAuxColour(color); }													  // _D0
-	virtual void unkD4(immut Colour& color) { setClearColour(color); }													  // _D4
+	virtual void drawLine(const Vector3f& start, const Vector3f& end) 													  // _C0
+	{ 
+		drawLine(const_cast<Vector3f&>(start), const_cast<Vector3f&>(end)); 
+	} 			 				 
+	virtual void setColour(Colour&, bool)                                                                     		 = 0; // _C4
+	virtual void setAuxColour(Colour&)                                                                         		 = 0; // _C8
+	virtual void setColour(const Colour& colour, bool set) { setColour(const_cast<Colour&>(colour), set); }				  // _CC
+	virtual void setAuxColour(const Colour& colour) { setAuxColour(const_cast<Colour&>(colour)); }						  // _D0
+	virtual void setClearColour(const Colour& colour) { setClearColour(const_cast<Colour&>(colour)); }					  // _D4
 	virtual void setPrimEnv(immut Colour* primColor, immut Colour* envColor)                                         = 0; // _D8
-	virtual void setClearColour(immut Colour&)                                                                       = 0; // _DC
+	virtual void setClearColour(Colour&)                                                                      		 = 0; // _DC
 	virtual void setFog(bool) /* For whatever reason, these `setFog` overloads are swapped in the DLL */             = 0; // _E0
-	virtual void setFog(bool, immut Colour&, f32, f32, f32)                                                          = 0; // _E4
-	virtual void unkE8(bool set, immut Colour& color, f32 density, f32 start, f32 end)             						  // _E8
+	virtual void setFog(bool, Colour&, f32, f32, f32)                                                          		 = 0; // _E4
+	virtual void setFog(bool set, const Colour& colour, f32 density, f32 start, f32 end)             					  // _E8
 	{
-		setFog(set, color, density, start, end);
+		setFog(set, const_cast<Colour&>(colour), density, start, end);
 	}
 	virtual void setMatHandler(MaterialHandler* handler)                                                                  // _EC
 	{
@@ -200,19 +203,19 @@ struct Graphics {
 	virtual void setMaterial(Material*, bool) = 0;                                         								 // _F0
 	virtual void useMaterial(Material* mat) { mCurrentMaterialHandler->setMaterial(mat); } 								 // _F4
 	virtual void useTexture(Texture*, int)                                        								= 0;     // _F8
-	virtual void drawRectangle(immut RectArea&, immut RectArea&, immut Vector3f*) 								= 0;     // _FC
-	virtual void fillRectangle(immut RectArea&)                             							        = 0;     // _100
-	virtual void blatRectangle(immut RectArea&)                                  							    = 0;     // _104
-	virtual void lineRectangle(immut RectArea&)                                 							    = 0;     // _108
-	virtual void unk10C(immut RectArea& bounds, immut RectArea& texCoords, immut Vector3f* offset)                       // _10C
+	virtual void drawRectangle(RectArea&, RectArea&, Vector3f*) 												= 0;     // _FC
+	virtual void fillRectangle(RectArea&)                             							        		= 0;     // _100
+	virtual void blatRectangle(RectArea&)                                  							   			= 0;     // _104
+	virtual void lineRectangle(RectArea&)                                 							    		= 0;     // _108
+	virtual void drawRectangle(const RectArea& bounds, const RectArea& texCoords, const Vector3f* offset)                // _10C
 	{
-		drawRectangle(bounds, texCoords, offset);
+		drawRectangle(const_cast<RectArea&>(bounds), const_cast<RectArea&>(texCoords), const_cast<Vector3f*>(offset));
 	}
-	virtual void unk110(immut RectArea& rect)   { fillRectangle(rect); }                                    			 // _110
-	virtual void unk114(immut RectArea& rect)   { blatRectangle(rect); }                                     			 // _114
-	virtual void unk118(immut RectArea& rect)   { lineRectangle(rect); }                                   				 // _118
-	virtual void testRectangle(immut RectArea&) { }                                        								 // _11C
-	virtual void unk120(immut RectArea& rect)   { testRectangle(rect); }                                      		     // _120
+	virtual void fillRectangle(const RectArea& rect)   { fillRectangle(const_cast<RectArea&>(rect)); }                	 // _110
+	virtual void blatRectangle(const RectArea& rect)   { blatRectangle(const_cast<RectArea&>(rect)); }                   // _114
+	virtual void lineRectangle(const RectArea& rect)   { lineRectangle(const_cast<RectArea&>(rect)); }                 	 // _118
+	virtual void testRectangle(RectArea&) { }                                        									 // _11C
+	virtual void testRectangle(const RectArea& rect)   { testRectangle(const_cast<RectArea&>(rect)); }                   // _120
 	virtual void initProjTex(bool, LightCamera*)                               								    = 0;     // _124
 	virtual void initReflectTex(bool)                                            							    = 0;     // _128
 	virtual void texturePrintf(Font* font, int x, int y, immut char* format, ...) 								= 0;     // _12C
