@@ -426,7 +426,7 @@ struct MessageModeState : public ModeState {
 	{
 		Matrix4f orthoMtx;
 		if (gameoverWindow) {
-			RectArea area(AREA_FULL_SCREEN(gfx));
+			const RectArea area(AREA_FULL_SCREEN(gfx));
 			gfx.setOrthogonal(orthoMtx.mMtx, area);
 			gameoverWindow->draw(gfx);
 		}
@@ -523,14 +523,14 @@ struct DayOverModeState : public ModeState {
 		Matrix4f orthoMtx;
 		// if we have text open, handle that
 		if (tutorialWindow) {
-			RectArea area1(AREA_FULL_SCREEN(gfx));
+			const RectArea area1(AREA_FULL_SCREEN(gfx));
 			gfx.setOrthogonal(orthoMtx.mMtx, area1);
 			tutorialWindow->draw(gfx);
 		}
 
 		// if we have a game over text overlay, handle that
 		if (gameoverWindow) {
-			RectArea area2(AREA_FULL_SCREEN(gfx));
+			const RectArea area2(AREA_FULL_SCREEN(gfx));
 			gfx.setOrthogonal(orthoMtx.mMtx, area2);
 			gameoverWindow->draw(gfx);
 		}
@@ -763,7 +763,7 @@ BaseGameSection::BaseGameSection()
 void BaseGameSection::draw(Graphics& gfx)
 {
 	Matrix4f orthoMtx;
-	RectArea area1(AREA_FULL_SCREEN(gfx));
+	const RectArea area1(AREA_FULL_SCREEN(gfx));
 	gfx.setOrthogonal(orthoMtx.mMtx, area1);
 
 	// Update fade transition - fade of 1 = black screen, fade of 0 = no fade
@@ -790,12 +790,12 @@ void BaseGameSection::draw(Graphics& gfx)
 			fade = 1.0f;
 		}
 
-		Colour colour1(0, 0, 0, (int)((1.0f - fade) * 255.0f));
+		const Colour colour1(0, 0, 0, (int)((1.0f - fade) * 255.0f));
 		gfx.setColour(colour1, true);
-		Colour colour2(0, 0, 0, (int)((1.0f - fade) * 255.0f));
+		const Colour colour2(0, 0, 0, (int)((1.0f - fade) * 255.0f));
 		gfx.setAuxColour(colour2);
-		RectArea area2(AREA_FULL_SCREEN(gfx));
-		gfx.fillRectangle(area2);
+		const RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.lineRectangle(area2);
 	}
 
 	// draw level banner, if active
@@ -866,10 +866,7 @@ ModeState* RunningModeState::update(u32& result)
 	// trigger day end when time expires
 	if (!gameflow.mIsDayEndActive && !gameflow.mMoviePlayer->mIsActive
 	    && gameflow.mWorldClock.mTimeOfDay >= gameflow.mParameters->mEndHour()) {
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 		gameflow.mIsPauseAllowed = FALSE;
-#endif
 		gameflow.mIsDayEndTriggered = TRUE;
 	}
 
@@ -913,16 +910,9 @@ ModeState* RunningModeState::update(u32& result)
 		}
 		// I added a bugfix to prevent the OgRader screen from opening in the background when the debug menu is active.  Many
 		// debug menus also use the Y button, and both being open at the same time can even cause crashes in the Movie Player.
-#if defined(VERSION_G98E01_PIKIDEMO)
-		else if (mController->keyClick(KBBTN_Y)
-		         && gameflow.mWorldClock.mTimeOfDay < gameflow.mParameters->mEndHour() - MAP_MENU_SUNSET_LOCKOUT
-		         && !gameflow.mIsUIOverlayActive && !mesgsPending && TERNARY_BUGFIX(!mParentSection->mActiveMenu, true))
-		// in the demo, you can open the map/controls menu in challenge mode...
-#else
 		else if (!gameflow.mIsChallengeMode && mController->keyClick(KBBTN_Y)
 		         && gameflow.mWorldClock.mTimeOfDay < gameflow.mParameters->mEndHour() - MAP_MENU_SUNSET_LOCKOUT
 		         && !gameflow.mIsUIOverlayActive && !mesgsPending && TERNARY_BUGFIX(!mParentSection->mActiveMenu, true))
-#endif
 		{
 			// also can't open the map/controls menu in the very last ~8s of gameplay before sunset
 			gameflow.mGameInterface->message(MOVIECMD_CreateMenuWindow, 0);
@@ -941,10 +931,8 @@ ModeState* RunningModeState::update(u32& result)
 	if (flowCont.mGameEndFlag != GAMEEND_None) {
 		if (flowCont.mGameEndFlag == GAMEEND_NaviDown) {
 			// you killed your captain!
-#if defined(VERSION_GPIP01_00)
-			// can't skip the end of day cutscene in PAL if you kill your captain - shame! shame! shame!
+			// can't skip the end of day cutscene if you kill your captain - shame! shame! shame!
 			flowCont.mIsDayEndSkippable = FALSE;
-#endif
 			mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_NewPikiGame;
 			// start OLIMAR DOWN ! state
 			return new MessageModeState(mParentSection, false);
@@ -952,10 +940,8 @@ ModeState* RunningModeState::update(u32& result)
 
 		if (flowCont.mGameEndFlag == GAMEEND_PikminExtinction) {
 			// you killed all your pikmin!
-#if defined(VERSION_GPIP01_00)
-			// can't skip the end of day cutscene in PAL if you kill all your pikmin - shame! shame! shame!
+			// can't skip the end of day cutscene if you kill all your pikmin - shame! shame! shame!
 			flowCont.mIsDayEndSkippable = FALSE;
-#endif
 			mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_NewPikiGame;
 			// start PIKMIN EXTINCTION state
 			return new MessageModeState(mParentSection, true);
@@ -991,19 +977,12 @@ ModeState* RunningModeState::update(u32& result)
 	} else if (state == zen::ogScrPauseMgr::PAUSE_ExitToSunset) {
 		// go to sunset selected - end the day
 		gamecore->forceDayEnd();
-#if defined(VERSION_G98E01_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 		gameflow.mIsPauseAllowed = FALSE;
-#endif
 		gameflow.mIsDayEndTriggered = TRUE;
 		gameflow.mIsUIOverlayActive = mIsOverlayCached;
 
 	} else if (state == zen::ogScrPauseMgr::PAUSE_ExitToTitle) {
 		// continue from last save/quit challenge mode selected
-#if defined(VERSION_G98E01_PIKIDEMO)
-		// demo creates a fresh bootup, very dramatic
-		gsys->forceHardReset();
-#else
 		// take us back to card select
 		// (this ends up as file select for story mode, or a quick transit to map select for challenge mode)
 		mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_CardSelect;
@@ -1011,7 +990,6 @@ ModeState* RunningModeState::update(u32& result)
 		// transit to quitter
 		return new QuittingGameModeState(mParentSection);
 
-#endif
 	} else if (state == zen::ogScrPauseMgr::PAUSE_ExitToGameplay) {
 		// close the menu - re-enable the HUD and restore any overlays
 		showFrame(true, 0.5f);
@@ -1035,7 +1013,7 @@ void IntroGameModeState::postRender(Graphics& gfx)
 	Matrix4f orthoMtx;
 	if (tutorialWindow) {
 		// render the text window over the top
-		RectArea area(AREA_FULL_SCREEN(gfx));
+		const RectArea area(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area);
 		tutorialWindow->draw(gfx);
 	}
@@ -1061,7 +1039,7 @@ void RunningModeState::postRender(Graphics& gfx)
 
 	if (!menuOn) {
 		// no map menu open, draw any other 2D screen objects (enemy health gauges, debug text, etc)
-		RectArea area1(AREA_FULL_SCREEN(gfx));
+		const RectArea area1(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area1);
 		gamecore->draw1D(gfx);
 	}
@@ -1086,25 +1064,25 @@ void RunningModeState::postRender(Graphics& gfx)
 
 	// draw text screens if any are active
 	if (tutorialWindow) {
-		RectArea area2(AREA_FULL_SCREEN(gfx));
+		const RectArea area2(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area2);
 		tutorialWindow->draw(gfx);
 	}
 
 	// draw the HUD, onion menus, results screens, etc
-	RectArea area3(AREA_FULL_SCREEN(gfx));
+	const RectArea area3(AREA_FULL_SCREEN(gfx));
 	gfx.setOrthogonal(orthoMtx.mMtx, area3);
 	gamecore->draw2D(gfx);
 
 	// draw any game over text if required
 	if (gameoverWindow) {
-		RectArea area4(AREA_FULL_SCREEN(gfx));
+		const RectArea area4(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area4);
 		gameoverWindow->draw(gfx);
 	}
 
 	// draw the pause menu if active
-	RectArea area5(AREA_FULL_SCREEN(gfx));
+	const RectArea area5(AREA_FULL_SCREEN(gfx));
 	gfx.setOrthogonal(orthoMtx.mMtx, area5);
 	pauseWindow->draw(gfx);
 }
@@ -1215,9 +1193,7 @@ ModeState* DayOverModeState::update(u32& result)
 	// handle any text windows we might have open, such as during endings
 	handleTutorialWindow(result, mParentSection->mController);
 
-#if defined(VERSION_GPIP01_00)
-
-	// PAL-exclusive day end cutscene skipping code!
+	// day end cutscene skipping code!
 	bool skipped = false;
 	// if the end of day is skippable (not from navi down or something) and we're not at a literal game ending, we can skip
 	if (flowCont.mIsDayEndSkippable && playerState->getCurrParts() != MAX_UFO_PARTS && gameflow.mWorldClock.mCurrentDay < MAX_DAYS) {
@@ -1236,47 +1212,36 @@ ModeState* DayOverModeState::update(u32& result)
 	}
 
 	if (!gameflow.mMoviePlayer->mIsActive || skipped)
-#else
-	if (!gameflow.mMoviePlayer->mIsActive)
-#endif
 	{
 		// once the current cutscene is finished, handle transition to the next phase
 		ModeState* nextState = nullptr;
 		switch (mState) {
 		case STATE_PhaseZero:
 		{
-#if defined(VERSION_GPIP01_00)
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE ONE!!!!\n");
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE ONE!!!!\n");
-#endif
 			nextState = initialisePhaseOne();
 			break;
 		}
 		case STATE_PhaseOne:
 		{
-#if defined(VERSION_GPIP01_00)
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE TWO!!!!\n");
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE TWO!!!!\n");
-#endif
 			nextState = initialisePhaseTwo();
 			break;
 		}
 		case STATE_PhaseTwo:
 		{
-#if defined(VERSION_GPIP01_00)
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE THREE!!!!\n");
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE THREE!!!!\n");
-#endif
 			// in reality, we only end up here if none of the below checks transit us to a QuittingGameModeState
 			nextState = initialisePhaseThree();
 			break;
 		}
 		case STATE_PhaseThree:
 		{
-#if defined(VERSION_GPIP01_00)
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE FOUR!!!!\n");
 			OSReport("!!!!!!!!!!!!!! INITIALISE PHASE FOUR!!!!\n");
-#endif
 			nextState = initialisePhaseFour();
 			break;
 		}
@@ -1317,26 +1282,19 @@ ModeState* DayOverModeState::update(u32& result)
 			gsys->setHeap(heapIdx);
 			gsys->endLoading();
 
-#if defined(VERSION_G98E01_PIKIDEMO)
-			// demo doesn't interact with the memory card
-#else
 			if (!memcardWindow) {
-#endif
-			// if we don't have a memory card window open, check if we went back to last save, or continued
-			if (stat == 8) {
-				// return to last save
-				mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_CardSelect;
-			} else {
-				// map select for a new day
-				mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_MapSelect;
+				// if we don't have a memory card window open, check if we went back to last save, or continued
+				if (stat == 8) {
+					// return to last save
+					mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_CardSelect;
+				} else {
+					// map select for a new day
+					mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_MapSelect;
+				}
+				// transit to quitter to handle changing subsection
+				gsys->setFade(0.0f);
+				return new QuittingGameModeState(mParentSection);
 			}
-			// transit to quitter to handle changing subsection
-			gsys->setFade(0.0f);
-			return new QuittingGameModeState(mParentSection);
-#if defined(VERSION_G98E01_PIKIDEMO)
-#else
-			}
-#endif
 		}
 	}
 
@@ -1354,10 +1312,6 @@ ModeState* DayOverModeState::update(u32& result)
 			return new QuittingGameModeState(mParentSection);
 		}
 	}
-
-#if defined(VERSION_G98E01_PIKIDEMO)
-	// no memory card screens in demo
-#else
 
 	// handle what happens if we have a memory card-related screen open
 	if (memcardWindow) {
@@ -1385,7 +1339,6 @@ ModeState* DayOverModeState::update(u32& result)
 			return new QuittingGameModeState(mParentSection);
 		}
 	}
-#endif
 
 	return this;
 }
@@ -1513,12 +1466,12 @@ ModeState* DayOverModeState::initialisePhaseOne()
 					ADD_ACTOR_PIKMIN_TYPE(dayEndObjFlags, i);
 				}
 			}
-			if (dayEndObjFlags == 0) {
-				// no dead pikmin! use correct (frustrated/neutral) animation
-				dayEndObjFlags |= CAF_DayEndEnemyNoDeaths;
-			} else {
+			if (dayEndObjFlags != 0) {
 				// dead pikmin :( use killing animation
 				dayEndObjFlags |= CAF_DayEndEnemyAttack;
+			} else {
+				// no dead pikmin! use correct (frustrated/neutral) animation
+				dayEndObjFlags |= CAF_DayEndEnemyNoDeaths;
 			}
 			gameflow.mMoviePlayer->startMovie(DEMOID_TakeOff, 0, nullptr, nullptr, nullptr, dayEndObjFlags | ~CAF_AllObjMasks, true);
 		}
@@ -1548,14 +1501,6 @@ ModeState* DayOverModeState::initialisePhaseTwo()
 
 	// calc our final pikmin totals
 	gamecore->exitDayEnd();
-
-#if defined(VERSION_PIKIDEMO)
-	// demo ends when the day ends. *hard* exit.
-	gsys->forceHardReset();
-	while (true) { }
-
-	return nullptr;
-#else
 
 	// clean up all our lingering cutscenes
 	gameflow.mMoviePlayer->fixMovieList();
@@ -1651,7 +1596,6 @@ ModeState* DayOverModeState::initialisePhaseTwo()
 	// move to next phase
 	mState = STATE_PhaseTwo;
 	return nullptr;
-#endif
 }
 
 /**
@@ -1799,9 +1743,6 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		gameflow.mIsDayEndTriggered = FALSE;
 		_44                         = 0; // unused
 
-		// set up unused player 2 controller (!!)
-		mPlayer2Controller = new Controller(2);
-
 		mNextModeState = nullptr;
 
 		gameInfoIn = false;
@@ -1941,7 +1882,9 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 
 		bool old           = gsys->mTogglePrint != FALSE;
 		gsys->mTogglePrint = TRUE;
+#ifdef DEVELOP
 		PRINT("tekiHeap has %d bytes free\n", gsys->getHeap(SYSHEAP_Teki)->getFree());
+#endif
 		gsys->mTogglePrint = old;
 
 		if (playerState->isTutorial()) {
@@ -1951,7 +1894,6 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 			// landing cutscene if we have a valid stage!
 			gameflow.mMoviePlayer->startMovie(DEMOID_Landing, 0, nullptr, nullptr, nullptr, CAF_AllVisibleMask, true);
 		}
-		gsys->setFade(1.0f);
 	}
 
 	/// Opens the debug menu.
@@ -1976,9 +1918,8 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 			}
 		}
 
-		// update both player 1 and player 2 (!) controllers
+		// update player 1 controller
 		mController->update();
-		mPlayer2Controller->update();
 
 		if (!mIsInitialSetup) {
 			// handle any pending mode state transitions
@@ -2025,35 +1966,6 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 				f32 camFov   = cameraMgr->mCamera->getFov();
 				f32 movieFov = gameflow.mMoviePlayer->mTargetFov;
 
-#if defined(VERSION_G98E01_PIKIDEMO)
-				Vector3f camViewPt(cameraMgr->mCamera->getViewpoint());
-				Vector3f movieViewPt(gameflow.mMoviePlayer->mTargetViewpoint);
-				Vector3f camWatchPt(cameraMgr->mCamera->getWatchpoint());
-				Vector3f movieWatchPt(gameflow.mMoviePlayer->mLookAtPos);
-
-				// unsure why you'd do this vs just a straight lerp factor but okay
-				f32 tCompFov = sinf(HALF_PI * tComp);
-				tCompFov     = sinf(HALF_PI * tCompFov);
-				tCompFov     = sinf(HALF_PI * tCompFov);
-				tCompFov     = sinf(HALF_PI * tCompFov);
-
-				// lerp the field of view from movie to gameplay camera
-				gfx.mCamera->mFov = movieFov + (camFov - movieFov) * tCompFov;
-
-				// lerp the camera's position from movie to gameplay camera
-				gfx.mCamera->mPosition.x = movieViewPt.x + (camViewPt.x - movieViewPt.x) * tComp;
-				gfx.mCamera->mPosition.y = movieViewPt.y + (camViewPt.y - movieViewPt.y) * tComp;
-				gfx.mCamera->mPosition.z = movieViewPt.z + (camViewPt.z - movieViewPt.z) * tComp;
-
-				// lerp the camera's focus from movie to gameplay camera
-				gfx.mCamera->mFocus.x = movieWatchPt.x + (camWatchPt.x - movieWatchPt.x) * tComp;
-				gfx.mCamera->mFocus.y = movieWatchPt.y + (camWatchPt.y - movieWatchPt.y) * tComp;
-				gfx.mCamera->mFocus.z = movieWatchPt.z + (camWatchPt.z - movieWatchPt.z) * tComp;
-
-				// recalculate camera matrix after changing vectors
-				gfx.mCamera->calcLookAt(gfx.mCamera->mPosition, gfx.mCamera->mFocus, nullptr);
-#else
-
 				// in the demo, we'd also lerp the camera view (pos) and watch (focus) points from movie to gameplay camera
 				// but it seems this was removed in retail - someone forgot to remove these though!
 				Vector3f camViewPt(cameraMgr->mCamera->getViewpoint());
@@ -2063,7 +1975,6 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 
 				// just lerp the field of view from movie to gameplay camera (but preserve the eye and target points!)
 				gfx.mCamera->mFov = (camFov - movieFov) * tComp + movieFov;
-#endif
 			} else {
 				// no scene or active transition, so set to player cam
 				gameflow.mMoviePlayer->setGameCamInfo(true, cameraMgr->mCamera->getFov(), cameraMgr->mCamera->getViewpoint(),
@@ -2084,25 +1995,14 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		// do the main frame render
 
 // need these to be commented out, otherwise gsys does weird things in the next if block.
-#if defined(VERSION_G98E01_PIKIDEMO)
-		gsys->mTimer->start("mainRender", true);
-#else
 		MATCHING_START_TIMER("mainRender", true);
-#endif
 		mainRender(gfx);
-#if defined(VERSION_G98E01_PIKIDEMO)
-		gsys->mTimer->stop("mainRender");
-#else
 		MATCHING_STOP_TIMER("mainRender");
-#endif
 
 		// try and update and draw effects
 		if (effectMgr) {
 			if (!gameflow.mPauseAll && !gameflow.mIsUIOverlayActive || gameflow.mIsTutorialTextActive) {
 
-#if defined(VERSION_G98E01_PIKIDEMO)
-				gsys->mTimer->start("effect", true);
-#endif
 				bool isDVDNormal = true;
 				if (gsys->mDvdErrorCode >= DvdError::ReadingDisc) {
 					isDVDNormal = false;
@@ -2111,25 +2011,13 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 				if (isDVDNormal) {
 					effectMgr->update();
 				}
-#if defined(VERSION_G98E01_PIKIDEMO)
-				gsys->mTimer->stop("effect");
-#endif
 			}
 
-#if defined(VERSION_G98E01_PIKIDEMO)
-			gsys->mTimer->start("eff draw", true);
-#endif
 			effectMgr->draw(gfx);
-#if defined(VERSION_G98E01_PIKIDEMO)
-			gsys->mTimer->stop("eff draw");
-#endif
 		}
 
 		// do any 2D post-rendering (for overlays and windows)
 		if (!(gameflow.mDemoFlags & CinePlayerFlags::NonGameMovie)) {
-#if defined(VERSION_G98E01_PIKIDEMO)
-			gsys->mTimer->start("postRender", true);
-#endif
 			menuOn = false;
 			RectArea area(AREA_FULL_SCREEN(gfx));
 			gfx.setOrthogonal(orthoMtx.mMtx, area);
@@ -2137,17 +2025,14 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 			if (!mActiveMenu && menuWindow) {
 				menuOn = menuWindow->draw(gfx);
 			}
-#if defined(VERSION_G98E01_PIKIDEMO)
-			gsys->mTimer->stop("postRender");
-#endif
 		}
 
-		RectArea area1(AREA_FULL_SCREEN(gfx));
+		const RectArea area1(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area1);
 
 		// whole section in DLL here about printing some debug text to screen
 
-		RectArea area2(AREA_FULL_SCREEN(gfx));
+		const RectArea area2(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area2);
 
 		// draw the debug menu if it's open
@@ -2158,28 +2043,26 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		if (!mActiveMenu || gameflow.mMoviePlayer->mIsActive) {
 			// draw any other main windows we might have open
 			if (challengeWindow) {
-				RectArea area3(AREA_FULL_SCREEN(gfx));
+				const RectArea area3(AREA_FULL_SCREEN(gfx));
 				gfx.setOrthogonal(orthoMtx.mMtx, area3);
 				challengeWindow->draw(gfx);
 			}
 			if (resultWindow) {
-				RectArea area4(AREA_FULL_SCREEN(gfx));
+				const RectArea area4(AREA_FULL_SCREEN(gfx));
 				gfx.setOrthogonal(orthoMtx.mMtx, area4);
 				resultWindow->draw(gfx);
 			}
 			if (totalWindow) {
-				RectArea area5(AREA_FULL_SCREEN(gfx));
+				const RectArea area5(AREA_FULL_SCREEN(gfx));
 				gfx.setOrthogonal(orthoMtx.mMtx, area5);
 				totalWindow->draw(gfx);
 			}
-#if defined(VERSION_G98E01_PIKIDEMO)
-#else
+			
 			if (memcardWindow) {
-				RectArea area6(AREA_FULL_SCREEN(gfx));
+				const RectArea area6(AREA_FULL_SCREEN(gfx));
 				gfx.setOrthogonal(orthoMtx.mMtx, area6);
 				memcardWindow->draw(gfx);
 			}
-#endif
 		}
 
 		BaseGameSection::draw(gfx);
@@ -2230,10 +2113,9 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		resultWindow    = nullptr;
 		totalWindow     = nullptr;
 		challengeWindow = nullptr;
-#if defined(VERSION_G98E01_PIKIDEMO)
-#else
+
 		memcardWindow = nullptr;
-#endif
+		
 		tutorialWindow = nullptr;
 		menuWindow     = nullptr;
 		memStat->start("gameover");
@@ -2282,8 +2164,6 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 		}
 
 		map->initShape();
-
-		STACK_PAD_VAR(6);
 	}
 
 	/**
@@ -2298,20 +2178,17 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 	 */
 	void mainRender(Graphics& gfx)
 	{
-		RectArea area1(AREA_FULL_SCREEN(gfx));
+		const RectArea area1(AREA_FULL_SCREEN(gfx));
 		gfx.setViewport(area1);
-		RectArea area2(AREA_FULL_SCREEN(gfx));
+		const RectArea area2(AREA_FULL_SCREEN(gfx));
 		gfx.setScissor(area2);
-		Colour transparent(COLOUR_TRANSPARENT);
+		const Colour transparent(COLOUR_TRANSPARENT);
 		gfx.setClearColour(transparent);
 		gfx.clearBuffer(3, false);
 		gfx.setPerspective(gfx.mCamera->mPerspectiveMatrix.mMtx, gfx.mCamera->mFov, gfx.mCamera->mAspectRatio, gfx.mCamera->mNear,
 		                   gfx.mCamera->mFar, 1.0f);
-#if defined(VERSION_G98E01_PIKIDEMO)
-		if (!(gameflow.mDemoFlags & CinePlayerFlags::NonGameMovie))
-#else
+
 		if (!memcardWindow && !(gameflow.mDemoFlags & CinePlayerFlags::NonGameMovie))
-#endif
 		{
 			bool isTimeMoving = true;
 			if (playerState->isTutorial() && !gameflow.mIsDayEndActive) {
@@ -2541,9 +2418,8 @@ struct NewPikiGameSetupSection : public BaseGameSection {
 	u32 _44;                        ///< _044, unused/unknown.
 	u8 _48[0x50 - 0x48];            ///< _048, unused/unknown.
 	Menu* mDebugMenu;               ///< _050, debug menu, only enabled in DEVELOP builds.
-	Controller* mPlayer2Controller; ///< _054, controller for player 2 - never used, but set up and updated.
-	Font* mGameFont;                ///< _058, "big" font, seemingly for screens - set up, but never used.
-	Camera mGameCamera;             ///< _05C, camera following captain.
+	Font* mGameFont;                ///< _054, "big" font, seemingly for screens - set up, but never used.
+	Camera mGameCamera;             ///< _058, camera following captain.
 	f32 mCameraFarClip;             ///< _3A4, max render distance from the camera.
 	Colour _3A8;                    ///< _3A8, unused/unknown.
 	Colour _3AC[2];                 ///< _3AC, unused/unknown.
@@ -2588,9 +2464,7 @@ void GameMovieInterface::parse(GameMovieInterface::SimpleMessage& msg)
 	int cmd  = msg.mCommand;
 	int data = msg.mData;
 
-#if defined(VERSION_GPIP01_00)
 	OSReport("!!!!!!!!!!! Got message %d : %d\n", cmd, data);
-#endif
 
 	switch (cmd) {
 	case MOVIECMD_TextDemo:
@@ -2733,13 +2607,8 @@ void GameMovieInterface::parse(GameMovieInterface::SimpleMessage& msg)
 	case MOVIECMD_EndMovie:
 	{
 		// stop playing a cutscene
-#if defined(VERSION_PIKIDEMO)
-		// demo version takes no parameter because it has no cutscene-specific behaviour
-		gamecore->endMovie();
-#else
 		// after demo, devs added some angle changes for finding each onyon, and for the main engine cutscene, so need the ID.
 		gamecore->endMovie(data);
-#endif
 		break;
 	}
 	case MOVIECMD_FadeOut:
@@ -2805,16 +2674,6 @@ void GameMovieInterface::parse(GameMovieInterface::SimpleMessage& msg)
 		createMenuWindow();
 		break;
 	}
-#if defined(VERSION_G98E01_PIKIDEMO)
-	case MOVIECMD_DemoFinish:
-	{
-		// show the happy ending text at the end of the demo :)
-		createTutorialWindow(zen::ogScrTutorialMgr::TUT_HappyEnding, -1, false);
-		gameflow.mIsUIOverlayActive = TRUE;
-		break;
-	}
-#else
-#endif
 	}
 }
 
@@ -2851,11 +2710,9 @@ NewPikiGameSection::NewPikiGameSection()
 	}
 
 	flowCont.mGameEndFlag = GAMEEND_None;
-#if defined(VERSION_GPIP01_00)
-	// in PAL, day end is skippable unless it's a special day end
+	// day end is skippable unless it's a special day end
 	flowCont.mIsDayEndSkippable = TRUE;
 	flowCont.mIsDayEndSkipped   = FALSE;
-#endif
 
 	// run gameplay at 30 fps
 	gsys->setFrameClamp(2);
