@@ -88,26 +88,25 @@ struct GameCoreSection : public Node {
 	// _00     = VTBL
 	// _00-_20 = Node
 	Controller* mController;          // _20
-	u8 _24[0x4];                      // _24, unknown
-	int mDrawHideType;                // _28, enum todo
-	u32 mHideFlags;                   // _2C, see GameHideFlags enum
-	bool mUseMovieBackCamera;         // _30
-	bool mDoneSundownWarn;            // _31
-	u32 _34;                          // _34, unknown
-	bool mIsTimePastQuarter1;         // _38
-	bool mIsTimePastNoon;             // _39
-	bool mIsTimePastQuarter3;         // _3A
-	Menu* mAiPerfDebugMenu;           // _3C, unknown
-	u8 _40[0x50 - 0x40];              // _40, unknown
-	Shape* mPikiShape;                // _50, unknown
-	SearchSystem* mSearchSystem;      // _54
-	Navi* mNavi;                      // _58
-	u8 _5C[0x64 - 0x5C];              // _5C, unknown
-	MapMgr* mMapMgr;                  // _64
-	Texture* mShadowTexture;          // _68
-	Font* mBigFont;                   // _6C
-	Light _70;                        // _70
-	zen::DrawGameInfo* mDrawGameInfo; // _344
+	int mDrawHideType;                // _24, enum todo
+	u32 mHideFlags;                   // _28, see GameHideFlags enum
+	bool mUseMovieBackCamera;         // _2C
+	bool mDoneSundownWarn;            // _2D
+	u32 _30;                          // _30, unknown
+	bool mIsTimePastQuarter1;         // _34
+	bool mIsTimePastNoon;             // _35
+	bool mIsTimePastQuarter3;         // _36
+	Menu* mAiPerfDebugMenu;           // _38, unknown
+	u8 _3C[0x4C - 0x3C];              // _3C, unknown
+	Shape* mPikiShape;                // _4C, unknown
+	SearchSystem* mSearchSystem;      // _50
+	Navi* mNavi;                      // _54
+	u8 _58[0x60 - 0x58];              // _58, unknown
+	MapMgr* mMapMgr;                  // _60
+	Texture* mShadowTexture;          // _64
+	Font* mBigFont;                   // _68
+	Light _6C;                        // _6C
+	zen::DrawGameInfo* mDrawGameInfo; // _340
 };
 
 #endif

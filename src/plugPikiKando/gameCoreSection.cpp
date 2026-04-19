@@ -434,7 +434,7 @@ void GameCoreSection::enterFreePikmins()
 	{
 		Piki* piki = (Piki*)*it;
 		u32 mode   = piki->mMode;
-		if (!piki->isKinoko() && !piki->isHolding() && piki->isAlive() && (int)mode != PikiMode::FormationMode && (1 < mode - 11)) {
+		if (!piki->isKinoko() && !piki->isHolding() && piki->isAlive() && (int)mode != PikiMode::FormationMode && (int)mode != PikiMode::ExitMode && (int)mode != PikiMode::EnterMode) {
 			int state = piki->getState();
 			if (state != PIKISTATE_Dead && state != PIKISTATE_Drown && state == PIKISTATE_Normal) {
 				for (int i = 0; i < 3; i++) {
@@ -584,10 +584,7 @@ void GameCoreSection::cleanupDayEnd()
 			int mode   = piki->mMode;
 			if (piki->isKinoko()) {
 				GameStat::victimPikis.inc(piki->mColor);
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 				GameStat::deadPikis.inc(piki->mColor);
-#endif
 				piki->setEraseKill();
 				piki->kill(false);
 				it.dec();
@@ -605,7 +602,7 @@ void GameCoreSection::cleanupDayEnd()
 				if ((mode != PikiMode::FormationMode || state == PIKISTATE_Drown || state == PIKISTATE_Fired || state == PIKISTATE_Dead
 				     || state == PIKISTATE_Swallowed || state == PIKISTATE_Bubble || state == PIKISTATE_Dying || state == PIKISTATE_Flick
 				     || !piki->isAlive())
-				    && !(mode == PikiMode::EnterMode || mode == PikiMode::ExitMode) && state != PIKISTATE_LookAt) {
+				    && !(mode == PikiMode::ExitMode || mode == PikiMode::EnterMode) && state != PIKISTATE_LookAt) {
 					bool isNearOnyonShip = false;
 					if (piki->mMode == PikiMode::FreeMode) {
 						for (int i = 0; i < 3; i++) {
@@ -629,10 +626,7 @@ void GameCoreSection::cleanupDayEnd()
 					}
 					if (!isNearOnyonShip) {
 						GameStat::victimPikis.inc(piki->mColor);
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 						GameStat::deadPikis.inc(piki->mColor);
-#endif
 						piki->setEraseKill();
 						piki->kill(false);
 						it.dec();
@@ -726,7 +720,9 @@ void GameCoreSection::cleanupDayEnd()
 					} else {
 						PRINT("no free inf for PikiHead ***\n");
 					}
+#ifdef DEVELOP
 					PRINT(">>> @@@@ FREE = %d ACTIVE = %d\n", inf->mBPikiInfMgr.getFreeNum(), inf->mBPikiInfMgr.getActiveNum());
+#endif
 				}
 			}
 			obj->kill(false);
@@ -1093,13 +1089,12 @@ void GameCoreSection::initStage()
 	cameraMgr->update();
 	mNavi->mIsCursorVisible = TRUE;
 
-#if defined(VERSION_PIKIDEMO)
-#else
 	if (!playerState->isChallengeMode())
-#endif
 	{
 		StageInf* inf = &flowCont.mCurrentStage->mStageInf;
+#ifdef DEVELOP
 		PRINT("@@@@ FREE = %d ACTIVE = %d\n", inf->mBPikiInfMgr.getFreeNum(), inf->mBPikiInfMgr.getActiveNum());
+#endif
 		BaseInf* a = (BaseInf*)inf->mBPikiInfMgr.mActiveList.mChild;
 		while (a) {
 			PikiHeadItem* item = (PikiHeadItem*)itemMgr->birth(OBJTYPE_Pikihead);
@@ -1114,7 +1109,9 @@ void GameCoreSection::initStage()
 				BaseInf* b = a; // why
 				a          = (BaseInf*)a->mNext;
 				inf->mBPikiInfMgr.delInf(b);
+#ifdef DEVELOP
 				PRINT("::::::: FREE = %d ACTIVE = %d\n", inf->mBPikiInfMgr.getFreeNum(), inf->mBPikiInfMgr.getActiveNum());
+#endif
 			} else {
 				PRINT("no room for pikihead! ****\n");
 				a = (BaseInf*)a->mNext;
@@ -1145,7 +1142,6 @@ void GameCoreSection::initStage()
 
 	RandomAccessStream* data2 = gsys->openFile("ghost/record.gst", true, true);
 	if (data2) {
-		data2->getPending();
 		// int pend = ;
 		data2->read(controllerBuffer->mBufferAddr, data2->getPending());
 		data2->close();
@@ -1255,7 +1251,7 @@ GameCoreSection::GameCoreSection(Controller* controller, MapMgr* mgr, Camera& ca
 	mHideFlags       = 0;
 	demoEventMgr     = new DemoEventMgr();
 	radarInfo        = new RadarInfo();
-	_34              = 0;
+	_30              = 0;
 	mDoneSundownWarn = false;
 
 	memStat->start("gamecore");
@@ -1272,7 +1268,7 @@ GameCoreSection::GameCoreSection(Controller* controller, MapMgr* mgr, Camera& ca
 	memStat->end("gui");
 
 	FastGrid::initAIGrid(7);
-	_70.mDistancedRange = 500.0f;
+	_6C.mDistancedRange = 500.0f;
 	NakataCodeInitializer::init();
 
 	if (!preloadUFO) {
@@ -1299,11 +1295,7 @@ GameCoreSection::GameCoreSection(Controller* controller, MapMgr* mgr, Camera& ca
 	mBigFont->setTexture(gsys->loadTexture("bigFont.bti", true), 21, 36);
 
 	memStat->start("dynamics");
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-	particleHeap = new DynParticleHeap(0x200);
-#else
 	particleHeap = new DynParticleHeap(0x400);
-#endif
 	memStat->end("dynamics");
 
 	mAiPerfDebugMenu                     = new Menu(mController, gsys->mConsFont);
@@ -1438,7 +1430,6 @@ GameCoreSection::GameCoreSection(Controller* controller, MapMgr* mgr, Camera& ca
  */
 void GameCoreSection::update()
 {
-	STACK_PAD_VAR(2);
 	if (!gameflow.mMoviePlayer->mIsActive && !mDoneSundownWarn && gameflow.mWorldClock.mTimeOfDay >= gameflow.mParameters->mNightWarning()
 	    && (flowCont.mGameEndFlag != GAMEEND_PikminExtinction || flowCont.mGameEndFlag != GAMEEND_NaviDown)) {
 		if (playerState->inDayEnd()) {
@@ -1515,7 +1506,7 @@ void GameCoreSection::update()
  */
 void GameCoreSection::startContainerDemo()
 {
-	_34 = 2;
+	_30 = 2;
 }
 
 /**
@@ -1534,7 +1525,6 @@ void GameCoreSection::startSundownWarn()
  */
 void GameCoreSection::updateAI()
 {
-	STACK_PAD_VAR(2);
 	int pikis = GameStat::mapPikis;
 	if (pikis > 50) {
 		if (AIPerf::optLevel != 2)
@@ -1661,16 +1651,10 @@ void GameCoreSection::updateAI()
 				bossMgr->postUpdate(0, deltaTime);
 			}
 		}
-#if defined(VERSION_PIKIDEMO)
-		MATCHING_STOP_TIMER("post");
-		gsys->mTimer->stop("GameCore");
-	}
-#else
 	}
 	// ... did they mess up the scope for this deliberately??
 	MATCHING_STOP_TIMER("post"); // Wrong scope, but if the tekiMgr doesn't exist you probably have bigger problems.
 	gsys->mTimer->stop("GameCore");
-#endif
 }
 
 /**
@@ -1758,7 +1742,7 @@ void GameCoreSection::draw(Graphics& gfx)
 	gfx.setDepth(false);
 	gfx.setLighting(false, nullptr);
 	gfx.useTexture(mShadowTexture, GX_TEXMAP0);
-	Colour colour(255, 255, 255, 128);
+	const Colour colour(255, 255, 255, 128);
 	gfx.setColour(colour, true);
 	if (AIPerf::optLevel <= 1) {
 		pikiMgr->drawShadow(gfx, mShadowTexture);
@@ -1804,7 +1788,7 @@ void GameCoreSection::draw1D(Graphics& gfx)
 	}
 
 	Matrix4f orthoMtx;
-	RectArea area(AREA_FULL_SCREEN(gfx));
+	const RectArea area(AREA_FULL_SCREEN(gfx));
 	gfx.setOrthogonal(orthoMtx.mMtx, area);
 
 	if (!AIPerf::generatorMode) {
@@ -1818,9 +1802,9 @@ void GameCoreSection::draw1D(Graphics& gfx)
 	naviMgr->refresh2d(gfx);
 
 	if (gsys->mToggleDebugExtra) {
-		Colour colour1(COLOUR_WHITE);
+		const Colour colour1(COLOUR_WHITE);
 		gfx.setColour(colour1, true);
-		Colour colour2(COLOUR_WHITE);
+		const Colour colour2(COLOUR_WHITE);
 		gfx.setAuxColour(colour2);
 		gfx.useTexture(nullptr, GX_TEXMAP0);
 		char str[PATH_MAX];
@@ -1843,7 +1827,7 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		"", "HIDE PIKI", "HIDE TEKI", "HIDE ITEM", "HIDE BOSS", "HIDE PELLET", "HIDE WORK", "HIDE PLANTS", "HIDE MAP", "HIDE 2D",
 	};
 	Matrix4f orthoMtx;
-	RectArea area1(AREA_FULL_SCREEN(gfx));
+	const RectArea area1(AREA_FULL_SCREEN(gfx));
 	gfx.setOrthogonal(orthoMtx.mMtx, area1);
 #if defined (DEVELOP)
 	Colour colour1(COLOUR_WHITE);
@@ -1900,8 +1884,8 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		GXSetTevColorOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
 		f32 scale = 1.0f;
-		RectArea area2(0, 0, (f32)gfx.mScreenWidth * scale, (f32)gfx.mScreenHeight * scale);
-		RectArea area3(0, 0, 0.5f * (f32)gfx.mScreenWidth, 0.5f * (f32)gfx.mScreenHeight);
+		const RectArea area2(0, 0, (f32)gfx.mScreenWidth * scale, (f32)gfx.mScreenHeight * scale);
+		const RectArea area3(0, 0, 0.5f * (f32)gfx.mScreenWidth, 0.5f * (f32)gfx.mScreenHeight);
 		gfx.drawRectangle(area2, area3, nullptr);
 
 		GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -1915,7 +1899,7 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		if (state != NAVISTATE_DemoSunset) {
 			mDrawGameInfo->draw(gfx);
 		}
-		RectArea area4(AREA_FULL_SCREEN(gfx));
+		const RectArea area4(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area4);
 		
 		if (!gameflow.mMoviePlayer->mIsActive && !gameflow.mIsUIOverlayActive) {
