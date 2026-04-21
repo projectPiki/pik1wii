@@ -3,6 +3,7 @@
 
 #include "Node.h"
 #include "types.h"
+#include "egg/core/eggController.h"
 
 /**
  * @brief Controller input bit-flags used by `Controller`.  Not the same as Dolphin OS `PAD_XXX` defines.
@@ -44,6 +45,7 @@ struct Controller : public Node {
 	// a DEFAULT ARGUMENT tips the inlining score enough to stop the `Node` base class constructor from inlining.  This compiler, man.
 	Controller(int playerNum)
 	    : Node("<Controller>")
+	    , mCoreController(nullptr)
 	{
 		initialise(playerNum);
 	}
@@ -68,24 +70,25 @@ struct Controller : public Node {
 
 	// _00     = VTBL
 	// _00-_20 = Node
-	u32 mCurrentInput;        // _20
-	u32 mPrevInput;           // _24
-	u32 mInputPressed;        // _28
-	u32 mInputReleased;       // _2C
-	u32 mInputDoublePressed;  // _30
-	u32 mDoublePressMask;     // _34
-	u32 mPlayerNum;           // _38, 1 => use controller port 0, etc
-	u32 _3C;                  // _3C
-	u32 mInputDelay;          // _40
-	bool mIsControllerFrozen; // _44
-	s8 mMainStickX;           // _45
-	s8 mMainStickY;           // _46
-	s8 mSubStickX;            // _47
-	s8 mSubStickY;            // _48
-	u8 mAnalogA;              // _49
-	u8 mAnalogB;              // _4A
-	u8 mTriggerL;             // _4B
-	u8 mTriggerR;             // _4C
+	u32 mCurrentInput;        					// _20
+	u32 mPrevInput;           					// _24
+	u32 mInputPressed;        					// _28
+	u32 mInputReleased;       					// _2C
+	u32 mInputDoublePressed;  					// _30
+	u32 mDoublePressMask;     					// _34
+	u32 mPlayerNum;           					// _38, 1 => use controller port 0, etc
+	u32 _3C;                  					// _3C
+	u32 mInputDelay;          					// _40
+	bool mIsControllerFrozen; 					// _44
+	s8 mMainStickX;           					// _45
+	s8 mMainStickY;           					// _46
+	s8 mSubStickX;            					// _47
+	s8 mSubStickY;            					// _48
+	u8 mAnalogA;             				 	// _49
+	u8 mAnalogB;              					// _4A
+	u8 mTriggerL;             					// _4B
+	u8 mTriggerR;             					// _4C
+	EGG::CoreController* mCoreController;       // _50
 };
 
 /**

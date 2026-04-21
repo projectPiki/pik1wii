@@ -67,6 +67,7 @@ void Controller::updateCont(u32 keyStatus)
  */
 void Controller::update()
 {
+	mCoreController = EGG_INSTANCE(EGG::CoreControllerMgr)->getNthController(mPlayerNum - 1);
 	gsys->mControllerMgr.updateController(this);
 }
 
