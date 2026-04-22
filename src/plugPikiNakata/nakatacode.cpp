@@ -5,6 +5,8 @@
 #include "system.h"
 #include "teki.h"
 
+#include "floats_small.h"
+
 BOOL nakataDebugMode;
 
 /**

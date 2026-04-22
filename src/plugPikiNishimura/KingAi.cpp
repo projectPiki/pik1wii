@@ -14,6 +14,8 @@
 #include "SoundMgr.h"
 #include "Stickers.h"
 
+#include "floats_full.h"
+
 static u32 kingSE[] = {
 	SE_KING_WALK,  SE_KING_READY, SE_KING_BERO1, SE_KING_BERO2, SE_KING_GEPPU, SE_KING_DRINK,  SE_KING_EAT,
 	SE_KING_CHEEK, SE_KING_NAME,  SE_KING_HIP,   SE_KING_DEAD1, SE_KING_DEAD2, SE_KING_APPEAR, SE_KING_SINK,

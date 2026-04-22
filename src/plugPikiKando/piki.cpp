@@ -28,6 +28,8 @@
 #include "timers.h"
 #include "zen/Math.h"
 
+#include "floats_full.h"
+
 Colour Piki::pikiColors[6] = {
 	Colour(0, 50, 255, 255),  // blue
 	Colour(255, 30, 0, 255),  // red

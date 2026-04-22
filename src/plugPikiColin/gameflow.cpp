@@ -24,6 +24,8 @@
 #include "timers.h"
 #include "zen/ogTest.h"
 
+#include "floats_small.h"
+
 /// Global game state.
 GameFlow gameflow;
 

@@ -10,6 +10,8 @@
 #include "sysNew.h"
 #include "system.h"
 
+#include "floats_small.h"
+
 /// Life gauge border color for bar-style health gauges (grey by default, never used in-game).
 static Colour lgborder;
 

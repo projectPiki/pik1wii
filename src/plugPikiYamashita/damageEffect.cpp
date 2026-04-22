@@ -3,6 +3,8 @@
 #include "NaviMgr.h"
 #include "gameflow.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  */

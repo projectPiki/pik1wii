@@ -5,6 +5,8 @@
 #include "sysNew.h"
 #include "zen/DrawCommon.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

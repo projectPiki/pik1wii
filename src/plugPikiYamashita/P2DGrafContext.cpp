@@ -4,6 +4,8 @@
 #include "P2D/Graph.h"
 #include "PUT/Geometry.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

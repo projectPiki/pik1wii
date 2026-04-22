@@ -5,6 +5,8 @@
 #include "P2D/Screen.h"
 #include "PlayerState.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

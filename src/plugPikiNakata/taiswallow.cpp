@@ -14,6 +14,8 @@
 #include "TekiConditions.h"
 #include "teki.h"
 
+#include "floats_full.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

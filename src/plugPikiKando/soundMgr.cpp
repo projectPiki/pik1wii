@@ -14,6 +14,8 @@
 #include "sysNew.h"
 #include "timers.h"
 
+#include "floats_small.h"
+
 /// Global sound effect system manager object.
 SeSystem* seSystem;
 

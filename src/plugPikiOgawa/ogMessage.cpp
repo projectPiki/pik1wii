@@ -11,6 +11,9 @@
 #include "zen/ogSub.h"
 #include <stddef.h>
 
+
+#include "floats_small.h"
+
 #if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01) // these tables aren't here in demo
 #else
 static s16 sjis_convert_table[0x258] ATTRIBUTE_ALIGN(32) = {

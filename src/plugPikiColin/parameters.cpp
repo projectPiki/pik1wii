@@ -7,6 +7,8 @@
 #include "Stream.h"
 #include "Vector.h"
 
+#include "floats_small.h"
+
 // macros for packing and unpacking parameter IDs and sizes, to be read/written together.
 
 /// Packs 3-byte ID and parameter length (in bytes) into single 4-byte entry.

@@ -47,6 +47,8 @@
 #include "zen/ogTutorial.h"
 #include "RevoSDK/wpad.h"
 
+#include "floats_small.h"
+
 bool DelayPikiBirth = true;
 
 static f32 controllerLen;

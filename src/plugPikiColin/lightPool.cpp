@@ -4,6 +4,8 @@
 #include "DebugLog.h"
 #include "Graphics.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

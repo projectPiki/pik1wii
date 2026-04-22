@@ -27,6 +27,8 @@
 #include "teki.h"
 #include "zen/ogTutorial.h"
 
+#include "floats_full.h"
+
 namespace {
 /**
  * @brief Sub-phases for the "called attention" reaction.

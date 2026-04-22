@@ -5,6 +5,8 @@
 #include "Graphics.h"
 #include "Matrix3f.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

@@ -1,6 +1,8 @@
 #include "RevoSDK/gx.h"
 #include "P2D/Graph.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 000088

@@ -13,6 +13,8 @@
 #include "Spider.h"
 #include "Stickers.h"
 
+#include "floats_full.h"
+
 namespace Kumo {
 static int leg_index[4][3] = {
 	{ 12, 11, 10 },

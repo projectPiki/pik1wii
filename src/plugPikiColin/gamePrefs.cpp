@@ -7,6 +7,8 @@
 #include "jaudio/interface.h"
 #include "system.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

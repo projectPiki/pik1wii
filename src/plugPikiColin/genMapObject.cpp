@@ -8,6 +8,8 @@
 #include "MapMgr.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 /// Pointer to active map manager to use when initialising objects.
 MapMgr* GenObjectMapObject::mapMgr;
 

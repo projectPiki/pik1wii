@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "floats_small.h"
+
 /// Specialised global game flow controller for single-player gameplay (story or challenge mode).
 FlowController flowCont;
 

@@ -5,6 +5,8 @@
 #include "gameflow.h"
 #include "system.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

@@ -13,6 +13,8 @@
 #include "SoundMgr.h"
 #include "zen/Math.h"
 
+#include "floats_full.h"
+
 static u32 snakeSE[] = {
 	SE_SNAKE_APPEAR, SE_SNAKE_DIG,    SE_SNAKE_SHOUT, SE_SNAKE_EAT,   SE_SNAKE_DRINK,
 	SE_SNAKE_TURN,   SE_SNAKE_MOGAKU, SE_KING_DEAD2,  SE_SNAKE_DEAD2,

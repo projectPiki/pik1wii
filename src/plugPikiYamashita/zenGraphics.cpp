@@ -5,6 +5,8 @@
 #include "zen/Graphics.h"
 #include "zen/Math.h"
 
+#include "floats_small.h"
+
 const f32 zen::DrawLifeCircle::TRI_NUM = 128.0f;
 
 /**

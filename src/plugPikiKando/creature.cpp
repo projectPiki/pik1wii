@@ -21,6 +21,8 @@
 #include "timers.h"
 #include <math.h>
 
+#include "floats_small.h"
+
 static CollTriInfo* triList[0x200];
 
 static int numTris;

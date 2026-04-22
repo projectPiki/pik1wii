@@ -5,6 +5,8 @@
 #include "UtilityKando.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

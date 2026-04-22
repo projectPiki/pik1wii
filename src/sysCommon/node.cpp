@@ -4,6 +4,8 @@
 #include "system.h"
 #include <stdio.h>
 
+#include "floats_small.h"
+
 NodeMgr* nodeMgr;
 
 /**

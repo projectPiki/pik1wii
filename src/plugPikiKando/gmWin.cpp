@@ -6,6 +6,8 @@
 #include "Vector.h"
 #include "Win.h"
 
+#include "floats_small.h"
+
 static Texture* wintex;
 static Font* font;
 

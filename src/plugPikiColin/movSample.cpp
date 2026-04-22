@@ -10,6 +10,8 @@
 #include "sysNew.h"
 #include "system.h"
 
+#include "floats_small.h"
+
 u16 ImgH;
 u16 ImgW;
 GXTexObj YtexObj;

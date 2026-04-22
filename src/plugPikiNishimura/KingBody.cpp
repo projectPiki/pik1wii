@@ -10,6 +10,8 @@
 #include "RumbleMgr.h"
 #include "SoundMgr.h"
 
+#include "floats_full.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

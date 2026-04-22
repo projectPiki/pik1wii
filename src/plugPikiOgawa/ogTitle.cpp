@@ -11,6 +11,8 @@
 #include "zen/ZenController.h"
 #include "zen/ogSub.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

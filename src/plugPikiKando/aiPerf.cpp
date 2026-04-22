@@ -15,6 +15,8 @@
 #include "UfoItem.h"
 #include "WorkObject.h"
 
+#include "floats_small.h"
+
 bool AIPerf::useLOD       = true;
 bool AIPerf::showColls    = true;
 bool AIPerf::useCollSort  = true;

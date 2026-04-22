@@ -6,6 +6,8 @@
 #include "Stickers.h"
 #include "TAI/EffectAttack.h"
 
+#include "floats_full.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

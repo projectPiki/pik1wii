@@ -9,6 +9,8 @@
 #include "gameflow.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 PikiMgr* pikiMgr;
 bool PikiMgr::containerDebug;
 bool PikiMgr::meBirthMode;

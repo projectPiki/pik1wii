@@ -1,6 +1,8 @@
 #include "DebugLog.h"
 #include "PaniPikiAnimator.h"
 
+#include "floats_small.h"
+
 PaniMotionTable* PaniPikiAnimMgr::motionTable;
 
 /**

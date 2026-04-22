@@ -4,6 +4,8 @@
 #include "zen/DrawCM.h"
 #include "zen/Number.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

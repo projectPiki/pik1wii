@@ -13,6 +13,8 @@
 #include "SoundMgr.h"
 #include "Stickers.h"
 
+#include "floats_full.h"
+
 static u32 pomSE[] = {
 	SE_KING_CHEEK, SE_PONGASHI_CLOSE, SE_PONGASHI_EAT, SE_PONGASHI_SHOT, SE_PONGASHI_DEAD, SE_PONGASHI_TOUCH,
 };

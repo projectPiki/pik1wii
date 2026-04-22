@@ -25,6 +25,8 @@
 #include "sysNew.h"
 #include "zen/particle.h"
 
+#include "floats_small.h"
+
 const int BTeki::TEKI_OPTION_VISIBLE            = 1 << 0;
 const int BTeki::TEKI_OPTION_SHADOW_VISIBLE     = 1 << 1;
 const int BTeki::TEKI_OPTION_LIFE_GAUGE_VISIBLE = 1 << 2;

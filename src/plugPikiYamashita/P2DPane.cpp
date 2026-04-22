@@ -5,6 +5,8 @@
 #include "PSU/LinkList.h"
 #include "PSU/Tree.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

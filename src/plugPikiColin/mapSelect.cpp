@@ -17,6 +17,8 @@
 #include "zen/DrawCM.h"
 #include "zen/DrawWorldMap.h"
 
+#include "floats_small.h"
+
 /// Size of the message heap (102 kb).
 #define MESSAGE_HEAP_SIZE (0x19800)
 

@@ -13,6 +13,8 @@
 #include "sysNew.h"
 #include <math.h>
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

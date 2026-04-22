@@ -9,6 +9,8 @@
 #include "sysNew.h"
 #include "timers.h"
 
+#include "floats_small.h"
+
 #define TIMER_STATE_X           (32) ///< Horizontal position to start printing timer debug text from.
 #define TIMER_STATE_Y           (32) ///< Vertical position to start printing timer debug text from.
 #define TIMER_STATE_LINE_HEIGHT (12) ///< How far down to offset each line of timer debug text from the previous.

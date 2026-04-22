@@ -373,8 +373,4 @@ inline Vector3f CP(const Vector3f& a, const Vector3f& b)
 	return Vector3f(x, y, z);
 }
 
-//temporary sinit float fix
-static const Vector2f fake1(6.0f, 6.0f);
-static const Vector2f fake2(0.0f, 0.0f);
-static const Vector2f fake3(1.0f, 1.0f);
 #endif

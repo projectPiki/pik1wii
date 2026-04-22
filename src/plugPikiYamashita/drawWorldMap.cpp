@@ -9,6 +9,8 @@
 #include "zen/EffectMgr2D.h"
 #include <stddef.h>
 
+#include "floats_small.h"
+
 #define MAX_PARTS_PRACTICE  (2)
 #define MAX_PARTS_FOREST    (8)
 #define MAX_PARTS_CAVE      (9)

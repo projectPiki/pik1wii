@@ -5,6 +5,8 @@
 #include "Vector.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 RadarInfo* radarInfo;
 
 /**

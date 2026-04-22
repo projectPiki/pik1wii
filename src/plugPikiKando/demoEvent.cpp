@@ -12,6 +12,8 @@
 #include "UfoItem.h"
 #include "gameflow.h"
 
+#include "floats_small.h"
+
 DemoEventMgr* demoEventMgr;
 
 /**

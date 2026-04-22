@@ -6,6 +6,8 @@
 #include "SoundMgr.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  */

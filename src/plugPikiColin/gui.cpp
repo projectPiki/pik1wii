@@ -7,6 +7,8 @@
 #include "sysNew.h"
 #include <stdio.h>
 
+#include "floats_small.h"
+
 /// Total height to allow for each menu item, including padding, in pixels.
 #define MENU_ITEM_HEIGHT (14)
 

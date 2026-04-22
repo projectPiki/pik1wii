@@ -6,6 +6,8 @@
 #include "Stickers.h"
 #include "jaudio/pikiinter.h"
 
+#include "floats_full.h"
+
 // theres a lot more to this
 GemTable table[5] = {
 	{ 1, 3, 1, 2, 1, 0, 16.0f },      { 5, 10, 5, 5, 3, 5, 32.0f },    { 10, 20, 10, 10, 6, 2, 48.0f },

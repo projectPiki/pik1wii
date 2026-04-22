@@ -1,6 +1,8 @@
 #include "Condition.h"
 #include "Creature.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  */

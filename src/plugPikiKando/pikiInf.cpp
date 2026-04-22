@@ -7,6 +7,8 @@
 #include "gameflow.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 PikiInfMgr pikiInfMgr;
 
 /**

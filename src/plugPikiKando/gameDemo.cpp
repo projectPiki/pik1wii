@@ -9,6 +9,8 @@
 #include "sysNew.h"
 #include "zen/ogTutorial.h"
 
+#include "floats_small.h"
+
 DemoParms* demoParms;
 
 /**

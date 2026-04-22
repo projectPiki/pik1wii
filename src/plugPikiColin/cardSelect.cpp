@@ -15,6 +15,8 @@
 #include "sysNew.h"
 #include "zen/ogFileChkSel.h"
 
+#include "floats_small.h"
+
 // Macros for packing and unpacking the section compression flag.
 // (this packing is a holdover from TitlesSection where there's also section transitions, not just OnePlayerSection).
 

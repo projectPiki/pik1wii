@@ -4,6 +4,8 @@
 #include "MemStat.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 u8* FastGrid::aiGridMap;
 u16 FastGrid::aiGridSize;
 u16 FastGrid::aiGridShift = 12;

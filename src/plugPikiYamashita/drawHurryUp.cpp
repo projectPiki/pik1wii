@@ -9,6 +9,8 @@
 #include "zen/Math.h"
 #include "zen/ogTutorial.h"
 
+#include "floats_small.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

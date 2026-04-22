@@ -3,6 +3,8 @@
 #include "SimpleAI.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 SAIMotionDoneEvent* saiMotionDoneEvent;
 SAIBounceEvent* saiBounceEvent;
 SAIMotionLoopStartEvent* saiMotionLoopStartEvent;

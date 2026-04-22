@@ -3,6 +3,8 @@
 #include "SRT.h"
 #include "Vector.h"
 
+#include "floats_small.h"
+
 f32 sintable[0x1000];
 f32 costable[0x1000];
 immut Matrix4f Matrix4f::ident;

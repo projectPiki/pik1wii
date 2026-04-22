@@ -15,6 +15,8 @@
 #include "sysNew.h"
 #include "system.h"
 
+#include "floats_small.h"
+
 /// Size of controller input recording buffer.
 #define CONTROLLER_INPUT_BUFFER_SIZE (12 * 3000)
 

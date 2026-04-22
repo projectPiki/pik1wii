@@ -3,6 +3,8 @@
 #include "DebugLog.h"
 #include "gameflow.h"
 
+#include "floats_small.h"
+
 /// Global thread for async card operations called directly by the game code.
 CardUtilThread CardThread;
 

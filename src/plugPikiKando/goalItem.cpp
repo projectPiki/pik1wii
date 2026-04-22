@@ -32,6 +32,8 @@ static f32 rotateX[1] = { 0.0f };
 static f32 rotateY[1] = { 0.0f };
 static f32 rotateZ[1] = { 0.0f };
 
+#include "floats_full.h"
+
 /**
  * @todo: Documentation
  * @note UNUSED Size: 00009C

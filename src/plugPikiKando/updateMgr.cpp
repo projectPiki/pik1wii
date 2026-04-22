@@ -2,6 +2,8 @@
 #include "DebugLog.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 UpdateMgr* pikiUpdateMgr;
 UpdateMgr* searchUpdateMgr;
 UpdateMgr* pikiLookUpdateMgr;

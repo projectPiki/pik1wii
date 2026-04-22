@@ -19,6 +19,8 @@
 #include "gameflow.h"
 #include "sysNew.h"
 
+#include "floats_full.h"
+
 int PlayerState::totalUfoParts = MAX_UFO_PARTS;
 
 bool preloadUFO = false;

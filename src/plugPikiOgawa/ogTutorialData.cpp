@@ -1,5 +1,7 @@
 #include "types.h"
 
+#include "floats_small.h"
+
 static char file[] = __FILE__;
 static char name[] = "OgTutorialSection";
 

@@ -54,6 +54,8 @@
 #include "zen/ogTutorial.h"
 #include <stddef.h>
 
+#include "floats_full.h"
+
 static bool lastDamage;
 static bool currDamage;
 static u32 damageParm;

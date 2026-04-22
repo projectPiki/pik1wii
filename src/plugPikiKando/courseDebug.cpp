@@ -4,6 +4,8 @@
 #include "Generator.h"
 #include "sysNew.h"
 
+#include "floats_small.h"
+
 int CourseDebug::collision;
 int CourseDebug::pikiNoAttack;
 int CourseDebug::noCarryover;

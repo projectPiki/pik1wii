@@ -13,6 +13,8 @@
 #include "types.h"
 #include "zen/DrawProgre.h"
 
+#include "floats_small.h"
+
 /**
  * @note UNUSED Size: 00009C
  */

@@ -15,6 +15,8 @@
 #include "jaudio/pikiinter.h"
 #include "sysNew.h"
 
+#include "floats_full.h"
+
 WorkObjectMgr* workObjectMgr;
 
 /**

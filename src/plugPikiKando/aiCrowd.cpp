@@ -12,6 +12,8 @@
 #include "gameflow.h"
 #include <stdlib.h>
 
+#include "floats_small.h"
+
 static bool newVer = true;
 
 /**

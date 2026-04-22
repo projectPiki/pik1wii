@@ -21,6 +21,8 @@
 #include "zen/ogStart.h"
 #include "zen/ogTitle.h"
 
+#include "floats_full.h"
+
 struct TitleSetupSection;
 
 // Macros for packing and unpacking the section compression flag, to pass both section and subsection ID together.
