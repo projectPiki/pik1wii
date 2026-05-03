@@ -247,3 +247,13 @@ void* operator new[](size_t size, EGG::Heap* pHeap, int align)
 {
 	return EGG::Heap::alloc(size, align, pHeap);
 }
+
+void operator delete(void* pBlock)
+{
+	EGG::Heap::free(pBlock, nullptr);
+}
+
+void operator delete[](void* pBlock)
+{
+	EGG::Heap::free(pBlock, nullptr);
+}
