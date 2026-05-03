@@ -187,8 +187,8 @@ void* operator new[](size_t size);
 void* operator new[](size_t size, int align);
 void* operator new[](size_t size, EGG::Heap* pHeap, int align = 4);
 
-void operator delete(void* pBlock);
-void operator delete[](void* pBlock);
+//void operator delete(void* pBlock) noexcept;
+//void operator delete[](void* pBlock) noexcept;
 
 ////////////////////////////////////////////////////////
 
