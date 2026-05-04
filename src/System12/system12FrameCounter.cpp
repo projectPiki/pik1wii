@@ -1,8 +1,5 @@
-#include "RevoSDK/sc.h"
 #include "System12/FrameCounter.h"
-#include "egg/core/eggDvdRipper.h"
 #include "egg/prim/eggAssert.h"
-#include <string.h>
 
 namespace System12 {
 
