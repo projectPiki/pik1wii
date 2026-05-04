@@ -3,21 +3,53 @@
 
 #include <egg/egg_types.h>
 
-#include <egg/prim/eggBitFlag.h>
 #include <egg/core/eggDisposer.h>
+#include <egg/prim/eggBitFlag.h>
 
 #include <nw4r/ut.h>
 
 #include <RevoSDK/mem.h>
 #include <RevoSDK/os.h>
 
-#include <new.h>
-
 namespace EGG {
 
 // Forward declarations
 class Allocator;
 class ExpHeap;
+
+struct HeapAllocArg {
+	void* userArg; // _00
+	u32 size;      // _04
+	int align;     // _08
+	Heap* heap;    // _0C heap to allocate in
+
+	inline HeapAllocArg()
+	    : userArg(0)
+	    , size(0)
+	    , align(0)
+	    , heap(nullptr)
+	{
+	}
+};
+typedef void (*HeapAllocCallback)(HeapAllocArg* arg);
+
+struct HeapErrorArg {
+	const char* msg; // _00
+	void* userdata;  // _04
+
+	inline HeapErrorArg() { }
+};
+typedef void (*ErrorCallback)(HeapErrorArg*);
+
+struct HeapFreeArg {
+	void* userArg; // _00
+	void* ptr;     // _04
+	Heap* heap;    // _08
+};
+typedef void (*HeapFreeCallback)(HeapFreeArg*);
+
+typedef void (*HeapCreateCallback)(void*);
+typedef void (*HeapDestroyCallback)(void*);
 
 //////////////////// HEAP BASE TYPE ////////////////////
 
@@ -60,8 +92,6 @@ public:
 	virtual u32 getTotalFreeSize()                                   = 0; // _24
 	virtual u32 getAllocatableSize(s32 align = 4)                    = 0; // _28
 	virtual u32 adjust()                                             = 0; // _2C
-	
-	
 
 	static Heap* findHeap(MEMiHeapHead* pHeapHandle);
 	Heap* findParentHeap();
@@ -83,10 +113,16 @@ public:
 	void appendDisposer(Disposer* pDisposer) { nw4r::ut::List_Append(&mDisposerList, pDisposer); }
 	void removeDisposer(Disposer* pDisposer) { nw4r::ut::List_Remove(&mDisposerList, pDisposer); }
 
+	void setName(const char* name) { mName = name; }
+
+	const char* getName() { return mName; }
+
 	static void initialize();
 
 	static void* alloc(u32 size, int align, Heap* pHeap);
 	static void free(void* pBlock, Heap* pHeap);
+
+	static void dumpAll() DECOMP_DONT_INLINE;
 
 	static const nw4r::ut::List& getHeapList() { return sHeapList; }
 	static Heap* getCurrentHeap() { return sCurrentHeap; }
@@ -117,8 +153,13 @@ private:
 protected:
 	static Heap* sCurrentHeap;
 
-	static void(*sCreateCallback)(void*);
-	static void(*sDestroyCallback)(void*);
+	static ErrorCallback sErrorCallback;
+	static HeapAllocCallback sAllocCallback;
+	static void* sErrorCallbackArg;
+	static void* sAllocCallbackArg;
+	static void (*sCreateCallback)(void*);
+	static void (*sDestroyCallback)(void*);
+	static Thread* sAllocatableThread;
 
 	// _00     = VTBL
 	// _00-_10 = Disposer
@@ -130,6 +171,7 @@ protected:
 private:
 	NW4R_UT_LIST_LINK_DECL();     // _20
 	nw4r::ut::List mDisposerList; // _28
+	const char* mName;            // set to "NoName" in ctor
 };
 
 } // namespace EGG
@@ -137,15 +179,16 @@ private:
 ////////////////////////////////////////////////////////
 ////////////////// OPERATOR OVERRIDES //////////////////
 
-// void* operator new(size_t size);
+void* operator new(size_t size);
+void* operator new(size_t, void* p);
 void* operator new(size_t size, EGG::Heap* pHeap, int align = 4);
 
-// void* operator new[](size_t size);
-// void* operator new[](size_t size, int align);
+void* operator new[](size_t size);
+void* operator new[](size_t size, int align);
 void* operator new[](size_t size, EGG::Heap* pHeap, int align = 4);
 
-// void operator delete(void* pBlock) noexcept;
-// void operator delete[](void* pBlock) noexcept;
+//void operator delete(void* pBlock) noexcept;
+//void operator delete[](void* pBlock) noexcept;
 
 ////////////////////////////////////////////////////////
 
