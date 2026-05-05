@@ -143,7 +143,6 @@ protected:
     Pane* mpRootPane;                				 // _10
     GroupContainer* mpGroupContainer; 				 // _14
     Size mLayoutSize;                				 // _18
-    u8 mOriginType;                  				 // _20
 
     static MEMAllocator* mspAllocator;
 };
