@@ -305,13 +305,13 @@ void Layout::draw(const EGG::Matrix34f& mtx, _GXCullMode mode, bool zbuffer)
 	mLayout->Draw(drawinfo);
 }
 
-bool System12LayoutImpl::Build(const void* pLytBinary, ResourceAccessor* lytResBuf)
+bool System12LayoutImpl::Build(const void* pLytBinary, nw4r::lyt::ResourceAccessor* lytResBuf)
 {
-	const res::BinaryFileHeader* const pHeader = static_cast<const res::BinaryFileHeader*>(pLytBinary);
+	const nw4r::lyt::res::BinaryFileHeader* const pHeader = static_cast<const nw4r::lyt::res::BinaryFileHeader*>(pLytBinary);
 
 	NW4R_ASSERT_PTR_NULL(mspAllocator, 1067);
 	NW4R_ASSERT_PTR_NULL(lytResBuf, 1068);
-	if (!detail::TestFileHeader(*pHeader, SIGNATURE)) {
+	if (!nw4r::lyt::detail::TestFileHeader(*pHeader, SIGNATURE)) {
 		return false;
 	}
 
@@ -319,15 +319,15 @@ bool System12LayoutImpl::Build(const void* pLytBinary, ResourceAccessor* lytResB
 		NW4R_PANIC(1083, "Version check faild ('%d.%d' must be '%d.%d')", (pHeader->version >> 8) & 0xFF, pHeader->version & 0xFF, 0, 10);
 	}
 
-	ResBlockSet blockSet = {
+	nw4r::lyt::ResBlockSet blockSet = {
 		nullptr,  // pTextureList
 		nullptr,  // pFontList
 		nullptr,  // pMaterialList
 		lytResBuf // pResAccessor
 	};
 
-	Pane* pParentPane = nullptr;
-	Pane* pLastPane   = nullptr;
+	nw4r::lyt::Pane* pParentPane = nullptr;
+	nw4r::lyt::Pane* pLastPane   = nullptr;
 
 	bool bReadRootGroup = false;
 	int groupNestLevel  = 0;
@@ -335,28 +335,28 @@ bool System12LayoutImpl::Build(const void* pLytBinary, ResourceAccessor* lytResB
 	const void* pBlockData = static_cast<const u8*>(pLytBinary) + pHeader->headerSize;
 
 	for (int i = 0; i < pHeader->dataBlocks; i++) {
-		const res::DataBlockHeader* pBlockHeader = static_cast<const res::DataBlockHeader*>(pBlockData);
+		const nw4r::lyt::res::DataBlockHeader* pBlockHeader = static_cast<const nw4r::lyt::res::DataBlockHeader*>(pBlockData);
 
-		switch (detail::GetSignatureInt(pBlockHeader->kind)) {
+		switch (nw4r::lyt::detail::GetSignatureInt(pBlockHeader->kind)) {
 		case 'lyt1': {
-			const res::Layout* pRes = static_cast<const res::Layout*>(pBlockData);
+			const nw4r::lyt::res::Layout* pRes = static_cast<const nw4r::lyt::res::Layout*>(pBlockData);
 
 			mLayoutSize = pRes->layoutSize;
 			break;
 		}
 
 		case 'txl1': {
-			blockSet.pTextureList = static_cast<const res::TextureList*>(pBlockData);
+			blockSet.pTextureList = static_cast<const nw4r::lyt::res::TextureList*>(pBlockData);
 			break;
 		}
 
 		case 'fnl1': {
-			blockSet.pFontList = static_cast<const res::FontList*>(pBlockData);
+			blockSet.pFontList = static_cast<const nw4r::lyt::res::FontList*>(pBlockData);
 			break;
 		}
 
 		case 'mat1': {
-			blockSet.pMaterialList = static_cast<const res::MaterialList*>(pBlockData);
+			blockSet.pMaterialList = static_cast<const nw4r::lyt::res::MaterialList*>(pBlockData);
 			break;
 		}
 
@@ -365,7 +365,7 @@ bool System12LayoutImpl::Build(const void* pLytBinary, ResourceAccessor* lytResB
 		case 'txt1':
 		case 'wnd1':
 		case 'bnd1': {
-			Pane* pPane = buildPane(detail::GetSignatureInt(pBlockHeader->kind), pBlockData, blockSet);
+			nw4r::lyt::Pane* pPane = buildPane(nw4r::lyt::detail::GetSignatureInt(pBlockHeader->kind), pBlockData, blockSet);
 
 			if (pPane != nullptr) {
 				if (mpRootPane == nullptr) {
@@ -397,12 +397,12 @@ bool System12LayoutImpl::Build(const void* pLytBinary, ResourceAccessor* lytResB
 		case 'grp1': {
 			if (!bReadRootGroup) {
 				bReadRootGroup   = true;
-				mpGroupContainer = NewObj<GroupContainer>();
+				mpGroupContainer = NewObj<nw4r::lyt::GroupContainer>();
 				break;
 			}
 
 			if (mpGroupContainer != nullptr && groupNestLevel == 1) {
-				Group* pGroup = NewObj<Group>(reinterpret_cast<const res::Group*>(pBlockHeader), mpRootPane);
+				nw4r::lyt::Group* pGroup = NewObj<nw4r::lyt::Group>(reinterpret_cast<const nw4r::lyt::res::Group*>(pBlockHeader), mpRootPane);
 
 				if (pGroup != nullptr) {
 					mpGroupContainer->AppendGroup(pGroup);
@@ -429,33 +429,33 @@ bool System12LayoutImpl::Build(const void* pLytBinary, ResourceAccessor* lytResB
 	return true;
 }
 
-Pane* System12LayoutImpl::buildPane(s32 kind, const void* pBinary, const ResBlockSet& rBlockSet)
+nw4r::lyt::Pane* System12LayoutImpl::buildPane(s32 kind, const void* pBinary, const nw4r::lyt::ResBlockSet& rBlockSet)
 {
 
 	switch (kind) {
 	case 'pan1': {
-		const res::Pane* pRes = static_cast<const res::Pane*>(pBinary);
-		return NewObj<Pane>(pRes);
+		const nw4r::lyt::res::Pane* pRes = static_cast<const nw4r::lyt::res::Pane*>(pBinary);
+		return NewObj<nw4r::lyt::Pane>(pRes);
 	}
 
 	case 'pic1': {
-		const res::Picture* pRes = static_cast<const res::Picture*>(pBinary);
-		return NewObj<Picture>(pRes, rBlockSet);
+		const nw4r::lyt::res::Picture* pRes = static_cast<const nw4r::lyt::res::Picture*>(pBinary);
+		return NewObj<nw4r::lyt::Picture>(pRes, rBlockSet);
 	}
 
 	case 'txt1': {
-		const res::TextBox* pRes = static_cast<const res::TextBox*>(pBinary);
+		const nw4r::lyt::res::TextBox* pRes = static_cast<const nw4r::lyt::res::TextBox*>(pBinary);
 		return NewObj<System12TextBox>(pRes, rBlockSet);
 	}
 
 	case 'wnd1': {
-		const res::Window* pRes = static_cast<const res::Window*>(pBinary);
-		return NewObj<Window>(pRes, rBlockSet);
+		const nw4r::lyt::res::Window* pRes = static_cast<const nw4r::lyt::res::Window*>(pBinary);
+		return NewObj<nw4r::lyt::Window>(pRes, rBlockSet);
 	}
 
 	case 'bnd1': {
-		const res::Bounding* pRes = static_cast<const res::Bounding*>(pBinary);
-		return NewObj<Bounding>(pRes, rBlockSet);
+		const nw4r::lyt::res::Bounding* pRes = static_cast<const nw4r::lyt::res::Bounding*>(pBinary);
+		return NewObj<nw4r::lyt::Bounding>(pRes, rBlockSet);
 	}
 
 	default: {

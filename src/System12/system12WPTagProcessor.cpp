@@ -43,42 +43,6 @@ int WPTagProcessor::CalcStrLenAppointingNumWord(const wchar_t* str, int p2, int*
 	return j;
 }
 
-int WPTagProcessor::PreProcessWithNumWords(const wchar_t* str, int p2, wchar_t* buffer, int, int*, int*, int trg_page)
-{
-		EGG_ASSERT(191, str);
-		EGG_ASSERT(192, buffer);	
-		EGG_ASSERT(193, trg_page > 0);
-		
-		u16 some = WPMessage::TAG_MARK;
-		int t1 = -1;
-		int t2 = 1;
-		
-		while (t2 != trg_page){
-		
-		    if (*str == 0) {
-				return 0;
-			}
-			
-			if (some == *str) {
-				u8 cmdLen = 0;
-				u32 cmd = 0;
-				void *endPtr = nullptr;
-				WPMessage::AnalyzeTagWide((u16)p2, str + 2, &cmdLen, &cmd, &endPtr);
-				if (cmdLen == 1) {
-					t2 += 1;
-				}
-				str = str + (cmdLen >> 1) + 1;
-				if (*str == '\n') {
-					str++;
-				}
-			} else {
-				str++;
-			}
-		
-			
-		}
-}
-
 nw4r::ut::TagProcessorBase<wchar_t>::Operation WPTagProcessor::Process(u16 ch, nw4r::ut::TagProcessorBase<wchar_t>::ContextType* pCtx)
 {
 	RuntimeProcess(nullptr, ch, pCtx);
@@ -138,28 +102,6 @@ void WPTagProcessor::ProcessTagFontSize(nw4r::ut::Rect* rec, nw4r::ut::PrintCont
 	f32 v1    = *static_cast<const u16*>(pParam) / 100.0f;
 	f32 v2    = *static_cast<const u16*>(pParam) / 100.0f;
 	pContext->writer->SetScale(v1, v2);
-}
-
-void WPTagProcessor::ProcessTagRuby(nw4r::ut::Rect* rec, nw4r::ut::PrintContext<wchar_t>* pContext, u8 f, void* pParam)
-{
-	EGG_ASSERT(554, pContext);
-	EGG_ASSERT(555, pParam);
-	//f32 v1    = *static_cast<const u16*>(pParam) / 100.0f;
-	//f32 v2    = *static_cast<const u16*>(pParam) / 100.0f;
-	if (pContext->flags & 1 == nw4r::ut::PrintContext<wchar_t>::FLAGS_CHARSPACE){
-		f32 space = pContext->writer->GetCharSpace();
-		pContext->writer->MoveCursorX(space);
-	}
-	
-	
-	
-	pContext->writer->SetDrawFlag(nw4r::ut::TextWriterBase<wchar_t>::DRAWFLAG_MASK_ALIGN_H);
-	pContext->writer->SetCharSpace(0.0f);
-	f32 scaleH = pContext->writer->GetScaleH();
-	f32 scaleV = pContext->writer->GetScaleV();
-	pContext->writer->SetScale(scaleH, scaleV);
-	pContext->writer->SetCursor(scaleH, scaleV);
-	f32 fontheight = pContext->writer->GetFontHeight();
 }
 	
 }

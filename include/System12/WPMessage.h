@@ -17,6 +17,7 @@ public:
 
 	void initialize(const void*);
 	static void AnalyzeTagWide(unsigned short code, const wchar_t* tag, unsigned char* pTagLength, unsigned long* pTagID, void** ppParam);
+	const wchar_t* GetMessageWide(u32, u32);
 	
 	virtual ~WPMessage();
 	

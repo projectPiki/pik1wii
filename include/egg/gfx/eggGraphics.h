@@ -15,10 +15,6 @@ public:
     static void enable_zbuffer();
     static void disable_zbuffer();
     void drawQuad2Lyt(EGG::BoundBox2f&, EGG::Texture*);
-
-//protected:
-  //  Matrix34f mViewMtx;
-    //Matrix34f mOtherMtx;
 };
 
 
