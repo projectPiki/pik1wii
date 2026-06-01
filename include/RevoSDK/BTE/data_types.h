@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#define BCM_STRNCPY_S(x1, x2, x3, x4)	strncpy(x1, x3, x4)
+
 /* bte uses different types so we will respect them here */
 
 typedef unsigned char UINT8;
