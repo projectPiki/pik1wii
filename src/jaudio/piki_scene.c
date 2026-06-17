@@ -250,7 +250,7 @@ void Jac_SceneSetup(u32 sceneID, u32 stage)
 	case BGM_SysEvent:
 	{
 		bgm2 = tbl_stage_to_bgm[stage];
-		if (stage) {
+		if (stage != STAGE_Practice) {
 			closeScene = TRUE;
 		}
 		Jam_PauseTrack(Jam_GetTrackHandle(0x20000), 1);
@@ -467,7 +467,7 @@ void Jac_PrepareDemoSound(u32 id)
 		} while (stop_ready == 0);
 	}
 	DVDT_ExtendPath(buffer, filelist[id]);
-	StreamAudio_Start(0, id, buffer, 1, 0, 0);
+	StreamAudio_Start(0, id, buffer, TRUE, FALSE, NULL);
 	Jac_UpdateStreamLevel();
 	current_prepare = id;
 }

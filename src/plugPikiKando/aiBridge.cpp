@@ -1,9 +1,9 @@
 #include "AIPerf.h"
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "EffectMgr.h"
 #include "Interactions.h"
 #include "PikiAI.h"
+#include "RevoSDK/os.h"
 #include "WorkObject.h"
 #include "gameflow.h"
 #include "zen/Math.h"
@@ -93,7 +93,7 @@ bool ActBridge::collideBridgeBlocker()
 	Creature* platform = mPiki->getCollidePlatformCreature();
 	if (platform && platform == mBridge) {
 		Vector3f normal = mPiki->getCollidePlatformNormal();
-		Vector3f zVec = mBridge->getBridgeZVec();
+		Vector3f zVec   = mBridge->getBridgeZVec();
 		if (normal.dot(zVec) < -0.8f) {
 			return true;
 		}
@@ -278,7 +278,6 @@ void ActBridge::doWork(int mins)
  */
 void ActBridge::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 {
-	STACK_PAD_VAR(1);
 	switch (event.mEventType) {
 	case KEY_LoopEnd:
 	{
@@ -316,8 +315,9 @@ void ActBridge::cleanup()
 void ActBridge::newInitApproach()
 {
 	mState = STATE_Approach;
-	PaniMotionInfo anim1(PIKIANIM_Walk, this);
-	PaniMotionInfo anim2(PIKIANIM_Walk);
+
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk, this);
 	mPiki->startMotion(anim1, anim2);
 	PRINT("approach init\n");
 }
@@ -400,8 +400,8 @@ void ActBridge::newInitGo()
 		mStageID = -1;
 	}
 
-	PaniMotionInfo anim1(PIKIANIM_Walk, this);
-	PaniMotionInfo anim2(PIKIANIM_Walk);
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk, this);
 	mPiki->startMotion(anim1, anim2);
 }
 
@@ -430,11 +430,6 @@ int ActBridge::newExeGo()
 		return ACTOUT_Continue;
 	}
 
-	if (collideBridgeBlocker()) {
-		newInitWork();
-		return ACTOUT_Continue;
-	}
-
 	bool c = collideBridgeSurface();
 
 	Vector3f stagePos = mBridge->getStagePos(mStageID);
@@ -443,7 +438,14 @@ int ActBridge::newExeGo()
 	stagePos.add(xVec);
 
 	Vector3f direction = stagePos - mPiki->mSRT.t;
-	mBridge->getBridgeZVec();
+
+	Vector3f zVec = mBridge->getBridgeZVec();
+	f32 xDist     = direction.DP(zVec);
+	mBridge->getStageDepth();
+	if (collideBridgeBlocker() && xDist < mBridge->getStageDepth()) {
+		newInitWork();
+		return ACTOUT_Continue;
+	}
 
 	direction.normalise();
 
@@ -463,12 +465,12 @@ void ActBridge::newInitWork()
 	mCollisionCount = 0;
 	_2A             = 0;
 
-	if (mActionCounter) {
+	if (mActionCounter != 0) {
 		return;
 	}
 
-	PaniMotionInfo anim1(PIKIANIM_Kuttuku, this);
-	PaniMotionInfo anim2(PIKIANIM_Kuttuku);
+	PaniMotionInfo anim1(PIKIANIM_Kuttuku);
+	PaniMotionInfo anim2(PIKIANIM_Kuttuku, this);
 	mPiki->startMotion(anim1, anim2);
 	mAnimationFinished = false;
 	if (AIPerf::bridgeFast) {
@@ -546,13 +548,14 @@ int ActBridge::newExeWork()
 	}
 
 	if (absF(xDist) > 0.3f * mBridge->getStageWidth()) {
+		Vector3f unused(xVec);
 		if (xDist < 0.0f) {
 			xVec.multiply(-1.0f);
 		}
 		zVec = zVec + xVec;
 		zVec.normalise();
 	}
-	mBridge->getStageDepth();
+	f32 unused = mBridge->getStageDepth(); // It looks like this unused result was stored in a variable in the DLL.
 	mPiki->setSpeed(0.5f, zVec);
 	return ACTOUT_Continue;
 	/*

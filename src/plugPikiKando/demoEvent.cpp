@@ -172,7 +172,7 @@ void DemoEventMgr::act(int cmd, int type)
 			switch (type) {
 			case 0:
 			{
-				goal->mCurrAnimId++;
+				goal->mSAICtx.mCurrAnimId++;
 				goal->emitPiki();
 				break;
 			}
@@ -183,7 +183,7 @@ void DemoEventMgr::act(int cmd, int type)
 			}
 			case 4:
 			{
-				if (playerState->hasContainer(goalID + 3)) {
+				if (playerState->hasBootContainer(goalID)) {
 					goal->startConeEmit();
 				}
 				break;
@@ -206,17 +206,13 @@ void DemoEventMgr::act(int cmd, int type)
 			{
 				PRINT("boot onion\n");
 				goal->startBoot();
-				playerState->setContainer(goalID + 3);
+				playerState->setBootContainer(goalID);
 				if (playerState->isTutorial() && playerState->mShipEffectPartFlag & 8) {
 					Navi* navi = naviMgr->getNavi();
 					playerState->mShipEffectPartFlag &= ~8;
 					cameraMgr->mCamera->finishMotion();
 					cameraMgr->mCamera->mControlsEnabled = true;
-#if defined(VERSION_PIKIDEMO)
-					cameraMgr->mCamera->startCamera(navi, 1, 0);
-#else
 					cameraMgr->mCamera->startMotion(1, 0);
-#endif
 					PRINT("*** FINISH MOTION \n");
 				}
 				break;
@@ -226,7 +222,7 @@ void DemoEventMgr::act(int cmd, int type)
 				if (playerState->hasContainer(goalID) && GameStat::allPikis[goalID] == 0) {
 					PRINT("***** SUPPLY 1 PiKI (COLOR = %d)\n", goalID);
 					playerState->mResultFlags.setOn(zen::RESFLAG_PikminSeedStageUp);
-					goal->mCurrAnimId++;
+					goal->mSAICtx.mCurrAnimId++;
 					goal->emitPiki();
 				}
 				break;

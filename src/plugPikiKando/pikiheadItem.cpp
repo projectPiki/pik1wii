@@ -56,9 +56,11 @@ void PikiHeadItem::playSound(int id)
 	if (id > 0) {
 		int sound = id + 0x108;
 		seSystem->playPikiSound(sound, mSRT.t);
+#ifdef DEVELOP
 		PRINT("SEF_PIKI_GROW1 = %d / seIdx = %d\n", SEF_PIKI_GROW1, sound);
 		seSystem->getJacID(sound);
 		PRINT("play (idx=%d) Pikihead sound jac =%d/simz(dmg=%d grow1=%d)\n", id, sound, SE_PIKI_DAMAGED, 0x23);
+#endif
 	}
 }
 
@@ -110,13 +112,13 @@ bool PikiHeadItem::isAlive()
 PikiHeadItem::PikiHeadItem(CreatureProp* props, ItemShapeObject* shape, SimpleAI* ai)
     : ItemCreature(15, props, nullptr)
 {
-	mItemShapeObject = shape;
-	mStateMachine    = ai;
-	mSeedColor       = 0;
-	mFlowerStage     = 0;
-	mParentOnion     = nullptr;
-	mFreeLightEfx    = new FreeLightEffect;
-	mRippleEfx       = new RippleEffect;
+	mItemShapeObject      = shape;
+	mSAICtx.mStateMachine = ai;
+	mSeedColor            = 0;
+	mFlowerStage          = 0;
+	mParentOnion          = nullptr;
+	mFreeLightEfx         = new FreeLightEffect;
+	mRippleEfx            = new RippleEffect;
 }
 
 /**

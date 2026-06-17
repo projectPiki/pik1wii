@@ -40,7 +40,7 @@ void Actor::setType(int /*unused*/, PikiShapeObject* shape, CreatureProp* props,
 	PaniMotionInfo anim2(PIKIANIM_Wait);
 	mPikiAnimMgr.startMotion(anim1, anim2);
 
-	mStateMachine = ai;
+	mSAICtx.mStateMachine = ai;
 }
 
 /**
@@ -49,7 +49,7 @@ void Actor::setType(int /*unused*/, PikiShapeObject* shape, CreatureProp* props,
  */
 void Actor::startAI(int state)
 {
-	((SimpleAI*)mStateMachine)->start(this, state);
+	C_SAI(this)->start(this, state);
 }
 
 /**
@@ -98,8 +98,8 @@ void Actor::doAnimation()
  */
 void Actor::doAI()
 {
-	if (mStateMachine) {
-		mStateMachine->exec(this);
+	if (mSAICtx.mStateMachine) {
+		mSAICtx.mStateMachine->exec(this);
 	}
 }
 

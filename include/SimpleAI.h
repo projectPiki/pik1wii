@@ -5,7 +5,7 @@
 #include "StateMachine.h"
 #include "types.h"
 
-#define C_SAI(obj) static_cast<SimpleAI*>(obj->mStateMachine)
+#define C_SAI(obj) static_cast<SimpleAI*>(obj->mSAICtx.mStateMachine)
 
 struct SAIEvent;
 
@@ -224,8 +224,6 @@ struct SimpleAI : public StateMachine<AICreature> {
 	SAIArrow* addArrow(int, SAIEvent*, int);
 	void start(AICreature*, int);
 	void checkEvent(AICreature*);
-
-	inline SAIState* getState(int idx) { return static_cast<SAIState*>(mStates[idx]); }
 
 	// _00     = VTBL
 	// _00-_1C = StateMachine

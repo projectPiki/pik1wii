@@ -4,7 +4,6 @@
 #include "BombItem.h"
 #include "BuildingItem.h"
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "DoorItem.h"
 #include "FishItem.h"
 #include "GameCoreSection.h"
@@ -22,6 +21,7 @@
 #include "MizuItem.h"
 #include "Pcam/CameraManager.h"
 #include "PikiHeadItem.h"
+#include "RevoSDK/os.h"
 #include "RopeCreature.h"
 #include "RumbleMgr.h"
 #include "SeedItem.h"
@@ -560,9 +560,6 @@ void ItemMgr::initialise()
 	memStat->end("register");
 
 	mPikiHeadMgr = new PikiHeadMgr(this);
-
-	STACK_PAD_VAR(3);
-	STACK_PAD_TERNARY(mPikiHeadMgr, 1);
 }
 
 /**
@@ -576,9 +573,9 @@ ItemCreature::ItemCreature(int objType, CreatureProp* props, Shape* shape)
 	resetCreatureFlag(CF_DisableAutoFaceDir);
 	setCreatureFlag(CF_Unk1);
 	mSearchBuffer.init(mItemSearchData, 8);
-	mObjType         = (EObjType)objType;
-	mItemShapeObject = nullptr;
-	mStateMachine    = nullptr;
+	mObjType              = (EObjType)objType;
+	mItemShapeObject      = nullptr;
+	mSAICtx.mStateMachine = nullptr;
 }
 
 /**
@@ -706,8 +703,8 @@ void ItemCreature::update()
  */
 void ItemCreature::doAI()
 {
-	if (mStateMachine && !isCreatureFlag(CF_IsAiDisabled)) {
-		mStateMachine->exec(this);
+	if (mSAICtx.mStateMachine && !isCreatureFlag(CF_IsAiDisabled)) {
+		mSAICtx.mStateMachine->exec(this);
 	}
 }
 
@@ -741,7 +738,7 @@ void ItemCreature::refresh(Graphics& gfx)
 	}
 
 	if (mItemShape && !isOffCamera) {
-#if defined (DEVELOP)
+#if defined(DEVELOP)
 		PRINT("refreshing : %s\n", ObjType::getName(mObjType));
 #endif
 		mWorldMtx.makeSRT(mSRT.s, mSRT.r, mSRT.t);
@@ -957,7 +954,7 @@ BuildingItem::BuildingItem(int objType, CreatureProp* props, ItemShapeObject* it
     , mBuildCollision(0)
 {
 	mItemShapeObject        = itemShape;
-	mStateMachine           = ai;
+	mSAICtx.mStateMachine   = ai;
 	mLifeGauge.mRenderStyle = LifeGauge::Wheel;
 }
 
@@ -982,10 +979,10 @@ f32 BuildingItem::getBoundingSphereRadius()
 void BuildingItem::startAI(int)
 {
 	mItemShapeObject->mShape->makeInstance(mAnimatedMaterials, 0);
-	mCounter    = 0;
-	mCurrAnimId = 0;
-	_3C4        = true;
-	mSeContext  = &mBuildSFX;
+	mSAICtx.mCounter    = 0;
+	mSAICtx.mCurrAnimId = 0;
+	_3C4                = true;
+	mSeContext          = &mBuildSFX;
 	mSeContext->setContext(this, JACEVENT_Build);
 	PRINT("*** \n");
 	enableFaceDirAdjust();
@@ -1131,7 +1128,7 @@ void BuildingItem::doSave(RandomAccessStream& output)
 	output.writeFloat(mMaxHealth);
 	output.writeInt(mCurrStage);
 	output.writeInt(mNumStages);
-	output.writeInt(mCurrAnimId);
+	output.writeInt(mSAICtx.mCurrAnimId);
 	PRINT_KANDO("\t life=%.1f maxLife=%.1f curr/num=%d/%d\n", mHealth, mMaxHealth, mCurrStage, mNumStages);
 }
 
@@ -1140,11 +1137,11 @@ void BuildingItem::doSave(RandomAccessStream& output)
  */
 void BuildingItem::doLoad(RandomAccessStream& input)
 {
-	mHealth     = input.readFloat();
-	mMaxHealth  = input.readFloat();
-	mCurrStage  = input.readInt();
-	mNumStages  = input.readInt();
-	mCurrAnimId = input.readInt();
+	mHealth             = input.readFloat();
+	mMaxHealth          = input.readFloat();
+	mCurrStage          = input.readInt();
+	mNumStages          = input.readInt();
+	mSAICtx.mCurrAnimId = input.readInt();
 
 	PRINT_KANDO("currStage %d numStages %d\n", mCurrStage, mNumStages);
 

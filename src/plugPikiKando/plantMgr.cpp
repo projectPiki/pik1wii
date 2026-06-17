@@ -2,10 +2,10 @@
 #include "Age.h"
 #include "CreatureProp.h"
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "Generator.h"
 #include "Graphics.h"
 #include "MapMgr.h"
+#include "RevoSDK/os.h"
 #include "SoundMgr.h"
 #include "gameflow.h"
 #include "sysNew.h"
@@ -60,7 +60,7 @@ void Plant::reset(int plantType)
 	mPlantAnimator.init(&shape->mAnimContext, shape->mAnimMgr, plantMgr->mMotionTable);
 	mMotionSpeed = 0.0f;
 	mCollInfo->initInfo(shape->mShape, nullptr, nullptr);
-	mStateMachine = plantMgr->mAI;
+	mSAICtx.mStateMachine = plantMgr->mAI;
 }
 
 /**
@@ -173,7 +173,7 @@ PlantAI::PlantAI()
  */
 bool PlantAI::OpponentMove::satisfy(AICreature* plant)
 {
-	Creature* collider = plant->mCollidingCreature;
+	Creature* collider = plant->mSAICtx.mCollidingCreature;
 	f32 dist           = collider->mVelocity.length();
 	if (dist > 40.0f) {
 		return true;
@@ -187,8 +187,6 @@ bool PlantAI::OpponentMove::satisfy(AICreature* plant)
  */
 void PlantAI::WaitInit::act(AICreature* plant)
 {
-	STACK_PAD_VAR(1);
-
 	if (static_cast<Plant*>(plant)->mPlantType == PLANT_Mizukusa) {
 		plant->startMotion(PlantMotion::Touch);
 		plant->setMotionSpeed(30.0f);
@@ -203,9 +201,8 @@ void PlantAI::WaitInit::act(AICreature* plant)
  */
 void PlantAI::TouchInit::act(AICreature* plant)
 {
-	STACK_PAD_VAR(1);
 	if (static_cast<Plant*>(plant)->mPlantType != PLANT_Mizukusa) {
-		if (plant->mCollidingCreature->mObjType == OBJTYPE_Navi) {
+		if (plant->mSAICtx.mCollidingCreature->mObjType == OBJTYPE_Navi) {
 			SeSystem::playPlayerSe(SE_ORIMA_TOUCHPLANTS);
 		}
 

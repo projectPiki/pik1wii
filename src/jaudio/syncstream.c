@@ -142,7 +142,7 @@ static void __LoadFin(s32 size, DVDFileInfo* fileinfo)
 		}
 	}
 
-	ctrl->isLoadInProgress = 0;
+	ctrl->isLoadInProgress = FALSE;
 
 	u32 idx = ctrl->buffCtrlMain.currentBufIdx;
 
@@ -165,7 +165,7 @@ static void __LoadFin(s32 size, DVDFileInfo* fileinfo)
 	ctrl->buffCtrlMain.currentBufIdx = (idx + 1) % ctrl->buffCtrlMain.maxBufCount;
 
 	if (ctrl->remainingBytes == 0) {
-		ctrl->isBufferingComplete = 1;
+		ctrl->isBufferingComplete = TRUE;
 		return;
 	}
 
@@ -249,7 +249,7 @@ static void LoadADPCM(StreamCtrl_* ctrl, int r28)
 
 		DCStoreRange((void*)buff->mLength, size);
 
-		ctrl->isLoadInProgress = 1;
+		ctrl->isLoadInProgress = TRUE;
 
 		DVDReadAsyncPrio2(&ctrl->fileinfo, (void*)buff->mLength, size, oldSize, __LoadFin, 1);
 
@@ -297,7 +297,7 @@ static s32 StreamAudio_Callback(void*);
 /**
  * @TODO: Documentation
  */
-BOOL StreamAudio_Start(u32 ctrlID, int soundId, immut char* name, int r6, int r7, StreamHeader_* header)
+BOOL StreamAudio_Start(u32 ctrlID, int soundId, immut char* name, BOOL r6, BOOL r7, StreamHeader_* header)
 {
 	StreamCtrl_* ctrl = &SC[ctrlID];
 	int i;
@@ -305,8 +305,8 @@ BOOL StreamAudio_Start(u32 ctrlID, int soundId, immut char* name, int r6, int r7
 
 	ctrl->controllerId  = ctrlID;
 	ctrl->streamId      = soundId;
-	ctrl->stopRequested = 0;
-	ctrl->isAtEnd       = 0;
+	ctrl->stopRequested = FALSE;
+	ctrl->isAtEnd       = FALSE;
 	ctrl->isPaused      = FALSE;
 
 	if (name) {
@@ -333,7 +333,7 @@ BOOL StreamAudio_Start(u32 ctrlID, int soundId, immut char* name, int r6, int r7
 	ctrl->totalSamples        = ctrl->header.sampleCount;
 	ctrl->samplesDecoded      = 0;
 	ctrl->samplesLoaded       = 0;
-	ctrl->isBufferingComplete = 0;
+	ctrl->isBufferingComplete = FALSE;
 	ctrl->frameCounter        = 0;
 	ctrl->playbackState       = 0;
 
@@ -376,7 +376,7 @@ BOOL StreamAudio_Start(u32 ctrlID, int soundId, immut char* name, int r6, int r7
 	}
 
 	ctrl->autoStart        = r6;
-	ctrl->isLoadInProgress = 0;
+	ctrl->isLoadInProgress = FALSE;
 	LoadADPCM(ctrl, 1);
 
 	for (u32 i = 0; i < 2; i++) {
@@ -425,7 +425,7 @@ static s32 StreamAudio_Callback(void* data)
 	if (ctrl->frameCounter) {
 		DSPchannel_* buff = GetDspHandle(ctrl->dspch[0]->buffer_idx);
 		if (buff->done) {
-			ctrl->isAtEnd = 1;
+			ctrl->isAtEnd = TRUE;
 		}
 
 		if (ctrl->isAtEnd) {
@@ -458,7 +458,7 @@ static s32 StreamAudio_Callback(void* data)
 			int callbackResult = ctrl->syncCallback(ctrl->controllerId, r4);
 			// TODO: Figure out what this -1 means
 			if (callbackResult == -1) {
-				ctrl->stopRequested = 1;
+				ctrl->stopRequested = TRUE;
 			}
 		}
 
@@ -516,7 +516,7 @@ static s32 StreamAudio_Callback(void* data)
 		}
 	}
 
-	if (ctrl->isBufferingComplete == 0 && ctrl->playbackState != 5 && ctrl->frameCounter != 0) {
+	if (ctrl->isBufferingComplete == FALSE && ctrl->playbackState != 5 && ctrl->frameCounter != 0) {
 		DSPchannel_* buff = GetDspHandle(ctrl->dspch[0]->buffer_idx);
 		u32 size          = ctrl->totalSamples - Get_DirectPCM_Remain(buff);
 
@@ -536,7 +536,7 @@ static s32 StreamAudio_Callback(void* data)
 		DSPchannel_* buff = GetDspHandle(ctrl->dspch[0]->buffer_idx);
 		u32 size          = ctrl->totalSamples - Get_DirectPCM_Remain(buff);
 
-		if (ctrl->samplesLoaded - size > 0xc00 || ctrl->isBufferingComplete == 1) {
+		if (ctrl->samplesLoaded - size > 0xc00 || ctrl->isBufferingComplete == TRUE) {
 			DSP_SetPauseFlag(ctrl->dspch[0]->buffer_idx, 0);
 			DSP_SetPauseFlag(ctrl->dspch[1]->buffer_idx, 0);
 
@@ -577,34 +577,27 @@ static s32 StreamAudio_Callback(void* data)
 				ctrl->buffCtrlMain2.mLength -= ctrl->buffCtrlMain3.usedSize;
 			}
 		} else if (ctrl->frameCounter == 0) {
-			if (ctrl->autoStart == 1) {
+			if (ctrl->autoStart == TRUE) {
 				if (ctrl->syncCallback != NULL) {
 					int callbackResult = ctrl->syncCallback(ctrl->controllerId, 0);
 					if (callbackResult == -1) {
-						ctrl->stopRequested = 1;
+						ctrl->stopRequested = TRUE;
 					}
 					if (callbackResult == 1) {
-						ctrl->autoStart = 0;
+						ctrl->autoStart = FALSE;
 					}
 				}
 				ctrl->playbackState = 2;
-				if (ctrl->stopRequested == 0) {
+				if (!ctrl->stopRequested) {
 					return 0;
 				}
 			} else {
 				ctrl->playbackState = 1;
 				ctrl->frameCounter++;
-#if defined(VERSION_GPIJ01_01)
-#else
 				u32 mode = Jac_GetOutputMode();
-#endif
 				for (channelIdx = 0; channelIdx < 2; channelIdx++) {
 					u16 pitch = (4096.0f * ctrl->header.sampleRate * ctrl->pitchRatio) / JAC_DAC_RATE;
 					Play_DirectPCM(ctrl->dspch[channelIdx], ctrl->loopBufs[channelIdx], ctrl->loopSize, ctrl->totalSamples);
-#if defined(VERSION_GPIJ01_01)
-					DSP_SetMixerInitVolume(ctrl->dspch[channelIdx]->buffer_idx, channelIdx, ctrl->volume[channelIdx], 0);
-					DSP_SetMixerInitVolume(ctrl->dspch[channelIdx]->buffer_idx, 1 - channelIdx, 0, 0);
-#else
 					switch (mode) {
 					case 0:
 					{
@@ -621,7 +614,6 @@ static s32 StreamAudio_Callback(void* data)
 						break;
 					}
 					}
-#endif
 					DSP_SetPitch(ctrl->dspch[channelIdx]->buffer_idx, pitch);
 					DSP_FlushChannel(ctrl->dspch[channelIdx]->buffer_idx);
 				}
@@ -633,12 +625,12 @@ static s32 StreamAudio_Callback(void* data)
 		return 0;
 	}
 
-	if (ctrl->stopRequested != 0) {
+	if (ctrl->stopRequested) {
 		if (ctrl->frameCounter == 0) {
 			if (ctrl->buffCtrl[ctrl->buffCtrlMain.currentBufIdx].state == 1) {
 				return 0;
 			}
-			ctrl->stopRequested = 0;
+			ctrl->stopRequested = FALSE;
 			if (ctrl->syncCallback != NULL) {
 				ctrl->syncCallback(ctrl->controllerId, -1);
 			}
@@ -646,7 +638,7 @@ static s32 StreamAudio_Callback(void* data)
 			ctrl->streamId      = -1;
 			return -1;
 		}
-		ctrl->stopRequested = 0;
+		ctrl->stopRequested = FALSE;
 		ctrl->playbackState = 3;
 		for (channelIdx = 0; channelIdx < 2; channelIdx++) {
 			ForceStopDSPchannel(ctrl->dspch[channelIdx]);
@@ -945,7 +937,7 @@ int StreamSyncPlayAudio(f32 f1, u32 ctrlID, int volumeL, int volumeR)
 		ctrl->pitchRatio = f1;
 		ctrl->volume[0]  = volumeL;
 		ctrl->volume[1]  = volumeR;
-		ctrl->autoStart  = 0;
+		ctrl->autoStart  = FALSE;
 		return TRUE;
 	}
 
@@ -967,7 +959,7 @@ BOOL StreamSyncStopAudio(u32 ctrlID)
 	}
 
 	// isStopped?
-	ctrl->stopRequested = 1;
+	ctrl->stopRequested = TRUE;
 
 	return TRUE;
 }

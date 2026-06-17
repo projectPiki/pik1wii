@@ -1,7 +1,7 @@
 #include "MizuItem.h"
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "ItemAI.h"
+#include "RevoSDK/os.h"
 #include "SimpleAI.h"
 
 #include "floats_small.h"
@@ -24,8 +24,8 @@ DEFINE_PRINT("matoItem")
 MizuItem::MizuItem(int objType, CreatureProp* props, ItemShapeObject* shape, SimpleAI* ai)
     : ItemCreature(objType, props, nullptr)
 {
-	mItemShapeObject = shape;
-	mStateMachine    = ai;
+	mItemShapeObject      = shape;
+	mSAICtx.mStateMachine = ai;
 }
 
 /**
@@ -36,8 +36,8 @@ void MizuItem::update()
 	ItemCreature::update();
 	if (mGroundTriangle && mObjType == OBJTYPE_FallWater) {
 		MsgGround msg;
-		if (static_cast<SimpleAI*>(mStateMachine)) {
-			static_cast<SimpleAI*>(mStateMachine)->procMsg(this, &msg);
+		if (mSAICtx.mStateMachine) {
+			C_SAI(this)->procMsg(this, &msg);
 		}
 	}
 }

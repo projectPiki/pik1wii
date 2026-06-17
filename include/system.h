@@ -5,10 +5,10 @@
 #include "Controller.h"
 #include "CoreNode.h"
 #include "Delegate.h"
+#include "GfxObject.h"
 #include "RevoSDK/ar.h"
 #include "RevoSDK/dvd.h"
 #include "RevoSDK/os.h"
-#include "GfxObject.h"
 #include "Stream.h"
 #include "types.h"
 #include <stddef.h>
@@ -199,10 +199,10 @@ struct StdSystem {
 
 	// Static functions
 	static char* stringDup(immut char*);
-	static f32 getHalfRand(f32 max) { return max * (f32(rand()) / 32767.0f - 0.5f); }
+	static f32 getHalfRand(f32 max) { return max * (rand() / f32(RAND_MAX) - 0.5f); }
 
 	// Inline functions
-	f32 getRand(f32 max) { return max * (f32(rand()) / 32767.0f); }
+	f32 getRand(f32 max) { return max * (rand() / f32(RAND_MAX)); }
 	inline f32 getFade() { return mCurrentFade; }
 	inline void setFade(f32 target, f32 rate = 3.0f)
 	{
@@ -251,7 +251,7 @@ struct StdSystem {
 	int mActiveHeapIdx;            // _194
 	BOOL mForcePrint;              // _198
 	MemInfo* mCurrMemInfo;         // _19C
-	LanguageID mLanguageID; 	   // _1A0, language ID for PAL.
+	LanguageID mLanguageID;        // _1A0, language ID for PAL.
 
 	// the vtable has to be at 0x1A0, so it's in the middle, yes.
 	virtual void initSoftReset();                                                                         // _08
@@ -346,6 +346,15 @@ enum {
 } END_ENUM_TYPE;
 
 /**
+ * @brief FABRICATED - No other class we currently know of has a virtual table like this.
+ */
+struct SystemClass250 {
+	virtual void method(Graphics& gfx) = 0; // _00
+
+	// _00     = VTBL
+};
+
+/**
  * @brief FABRICATED - Singly-linked list of symbolic information (See `ParseMapFile`)
  */
 struct SymbolInfo {
@@ -408,11 +417,11 @@ struct System : public StdSystem {
 
 	// _00      = VTBL
 	// _00-_248 = StdSystem
-	u8 _298[0x8];                                        
+	u8 _298[0x8];
 	u32 mHeapStart;                                  // _244
 	u32 mHeapEnd;                                    // _248
 	Graphics* mDGXGfx;                               // _24C, cast to DGXGraphics in DOL
-	u32 _250;                                        // _250, unknown/unused - set to 0 by GameFlow::softReset.
+	SystemClass250* _250;                            // _250, unknown/unused - set to 0 by GameFlow::softReset.
 	Delegate1<System, Graphics&>* mDvdErrorCallback; // _254
 	int mDvdErrorCode;                               // _258
 	u32 mDvdBufferSize;                              // _25C

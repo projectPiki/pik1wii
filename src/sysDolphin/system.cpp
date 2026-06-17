@@ -361,6 +361,7 @@ void System::parseArchiveDirectory(immut char* arcPath, immut char* dirPath)
  */
 static void ParseMapFile()
 {
+#ifdef DEBUG
 	RandomAccessStream* file = gsys->openFile("build.map", true, true);
 	if (!file) {
 		return;
@@ -532,6 +533,7 @@ static void ParseMapFile()
 
 	STACK_PAD_VAR(3);
 	file->close();
+#endif
 }
 
 /**
@@ -619,7 +621,7 @@ void initBigFont()
 	img->mFormat      = TEX_FMT_IA4;
 	img->mWidth       = 504;
 	img->mHeight      = 1008;
-	tex->mTexFlags    = 0x101;
+	tex->mTexFlags    = Texture::TEX_CLAMP_S | Texture::TEX_CLAMP_T;
 	img->mDataSize    = img->calcDataSize(img->mFormat, img->mWidth, img->mHeight);
 	//img->mTextureData = bigFont_data;
 	img->getTileSize(img->mFormat, tex->mTileSizeX, tex->mTileSizeY);

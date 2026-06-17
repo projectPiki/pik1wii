@@ -1051,7 +1051,7 @@ void TexImg::read(RandomAccessStream& stream)
 	mWidth         = stream.readShort();
 	mHeight        = stream.readShort();
 	mFormat        = static_cast<TexImgFormat>(stream.readInt());
-	mDataPtrOffset = stream.readInt();
+	mImageCount    = stream.readInt();
 
 	s32 _ = stream.readInt();
 	_     = stream.readInt();
@@ -1184,7 +1184,7 @@ void TexImg::importBti(Texture* tex, RandomAccessStream& input, u8* data)
 		ERROR("Bti file has imageData at offset %d!!!\n", bti.mImageDataOffset);
 	}
 
-	tex->mTexFlags = (!bti.mWrapS ? 0x1 : 0) | (!bti.mWrapT ? 0x100 : 0);
+	tex->mTexFlags = (!bti.mWrapS ? Texture::TEX_CLAMP_S : 0) | (!bti.mWrapT ? Texture::TEX_CLAMP_T : 0);
 
 	readTexData(tex, input, data);
 }
@@ -1224,10 +1224,10 @@ void TexAttr::initImage()
 	TexImg::getTileSize(mImage->mFormat, mTexture->mTileSizeX, mTexture->mTileSizeY);
 
 	if (mUseOffsetImgData) {
-		mTexture->mTextureData = (u32*)(mImage->mDataPtrOffset - 1);
+		mTexture->mLODCount    = mImage->mImageCount - 1;
 		mTexture->mLODBias     = mLODBias;
 	} else {
-		mTexture->mTextureData = nullptr;
+		mTexture->mLODCount    = 0;
 		mTexture->mLODBias     = 0.0f;
 	}
 

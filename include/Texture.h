@@ -3,8 +3,8 @@
 
 #include "AyuStack.h"
 #include "CoreNode.h"
-#include "RevoSDK/gx.h"
 #include "GfxObject.h"
+#include "RevoSDK/gx.h"
 #include "Stream.h"
 
 struct Texture;
@@ -133,8 +133,8 @@ struct TexImg : public CoreNode {
 	TexImg()
 	    : CoreNode("texImg")
 	{
-		mDataPtrOffset = 1;
-		mPixelData     = nullptr;
+		mImageCount = 1;
+		mPixelData  = nullptr;
 	}
 
 	void read(RandomAccessStream&);
@@ -157,7 +157,7 @@ struct TexImg : public CoreNode {
 	TexImgFormat mFormat; // _18
 	int mWidth;           // _1C
 	int mHeight;          // _20
-	int mDataPtrOffset;   // _24
+	int mImageCount;      // _24, 1 + number of mipmaps
 	int mDataSize;        // _28
 	void* mTextureData;   // _2C
 	void* mPixelData;     // _30
@@ -173,14 +173,9 @@ struct Texture : public GfxObject {
 	 * @brief TODO
 	 */
 	enum TexFlags {
-		TEX_CLAMP_S  = 1 << 0, //  0x1
+		TEX_CLAMP_S  = 1 << 0, // 0x1
 		TEX_MIRROR_S = 1 << 1, // 0x2
 		TEX_Unk2     = 1 << 2, // 0x4
-		TEX_Unk3     = 1 << 3, // 0x8
-		TEX_Unk4     = 1 << 4, // 0x10
-		TEX_Unk5     = 1 << 5, // 0x20
-		TEX_Unk6     = 1 << 6, // 0x40
-		TEX_Unk7     = 1 << 7, // 0x80
 		TEX_CLAMP_T  = 1 << 8, // 0x100
 		TEX_MIRROR_T = 1 << 9, // 0x200
 	};
@@ -192,6 +187,7 @@ struct Texture : public GfxObject {
 	virtual void makeResident() { } // _10 (weak)
 
 	u8 getAlpha(int x, int y);
+	u8 getRed(int x, int y);
 	void read(RandomAccessStream& input);
 	void createBuffer(int width, int height, int texFmt, void* buf);
 	void grabBuffer(int width, int height, bool doClear, bool useMIPmap);
@@ -199,17 +195,20 @@ struct Texture : public GfxObject {
 
 	// unused/inlined:
 	void offsetGLtoGX(int, int);
-	u8 getRed(int, int);
+	static void offsetGXtoGL(int, int, int, int);
+	void offsetGXtoGL(int, int);
+	void write(Stream*);
+	static void decodeS3TC(int, int, u8*, u8*);
 
 	// _00 = VTBL
 	u16 mTexFormat;    // _04, see TexImgFormat enum
-	u16 mTexFlags;     // _06
+	u16 mTexFlags;     // _06, see TexFlags enum
 	u16 mWidth;        // _08
 	u16 mHeight;       // _0A
 	u32 mTileSizeX;    // _0C
 	u32 mTileSizeY;    // _10
 	void* mPixelData;  // _14
-	u32* mTextureData; // _18
+	u32 mLODCount;     // _18
 	f32 mLODBias;      // _1C
 	u32 _20;           // _20, -1 if detached, 0 if attached
 	GXTexObj* mTexObj; // _24
