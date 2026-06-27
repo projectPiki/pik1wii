@@ -58,13 +58,8 @@ bool TaiPikiCollisionAction::actByEvent(immut TekiEvent& event)
 	if (!TaiCreatureCollisionAction::actByEvent(event)) {
 		return false;
 	}
-
-	if (!event.mOther) {
-		PRINT_NAKATA("!TaiPikiCollisionAction::actByEvent:%08x\n", event.mTeki);
-		return false;
-	}
-
-	return event.mOther->mObjType == OBJTYPE_Piki;
+	
+	return !event.mOther ? false : event.mOther->mObjType == OBJTYPE_Piki;
 }
 
 /**

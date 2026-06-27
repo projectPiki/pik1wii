@@ -499,7 +499,7 @@ config.libs = [
     },
     {
         "lib": "MSL_C.PPCEABI.bare.H",
-        "mw_version": "GC/3.0a5.2",
+        "mw_version": "GC/3.0a3",
         "progress_category": "sdk",
         "cflags": [
             *cflags_base,
@@ -1590,7 +1590,7 @@ config.libs = [
     {
         "lib": "System12",
         "cflags": [*cflags_pikmin, "-common on", "-DNW4R_LOG", "-DEGG_LOG"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sys12",
         "objects": [
             Object(NonMatching, "System12/sys12System.cpp"),

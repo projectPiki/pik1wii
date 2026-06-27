@@ -1,10 +1,10 @@
 #include "KusaItem.h"
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "EffectMgr.h"
 #include "Graphics.h"
 #include "Interactions.h"
 #include "MapMgr.h"
+#include "RevoSDK/os.h"
 #include "SoundMgr.h"
 #include "jaudio/pikiinter.h"
 #include "sysNew.h"
@@ -122,9 +122,17 @@ void KusaItem::refresh(Graphics& gfx)
 {
 	Matrix4f camMat;
 	Matrix4f mat;
-	Vector3f scale(1.0f, 1.0f, 1.0f);
-	Vector3f rot(0.0f, 0.0f, 0.0f);
-	Vector3f trans(0.0f, mHealth - mMaxHealth, 0.0f);
+	f32 health = mHealth - mMaxHealth;
+
+	Vector3f scale;
+	Vector3f rot;
+	Vector3f trans;
+	trans.set(0.0f, health, 0.0f);
+
+	rot.set(0.0f, 0.0f, 0.0f);
+
+	scale.set(1.0f, 1.0f, 1.0f);
+
 	mat.makeSRT(scale, rot, trans);
 	mWorldMtx.makeSRT(mSRT.s, mSRT.r, mSRT.t);
 	mWorldMtx.multiply(mat);

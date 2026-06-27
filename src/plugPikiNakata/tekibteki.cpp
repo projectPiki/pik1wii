@@ -25,7 +25,7 @@
 #include "sysNew.h"
 #include "zen/particle.h"
 
-#include "floats_small.h"
+#include "floats_full.h"
 
 const int BTeki::TEKI_OPTION_VISIBLE            = 1 << 0;
 const int BTeki::TEKI_OPTION_SHADOW_VISIBLE     = 1 << 1;
@@ -1974,9 +1974,15 @@ void BTeki::drawRange(Graphics& gfx, immut Vector3f& centre, f32 range, immut Co
 {
 	Matrix4f mtx1;
 	Matrix4f mtx2;
-	Vector3f scale(1.0f, 1.0f, 1.0f);
-	Vector3f rot(0.0f, 0.0f, 0.0f);
-	Vector3f trans(0.0f, 0.0f, 0.0f);
+
+	Vector3f scale;
+	Vector3f rot;
+	Vector3f trans;
+	trans.set(0.0f, 0.0f, 0.0f);
+	rot.set(0.0f, 0.0f, 0.0f);
+	scale.set(1.0f, 1.0f, 1.0f);
+	
+	
 	mtx1.makeSRT(scale, rot, trans);
 	gfx.mCamera->mLookAtMtx.multiplyTo(mtx1, mtx2);
 	gfx.setColour(colour, true);

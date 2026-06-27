@@ -932,8 +932,8 @@ void PlayerState::UfoParts::startMotion(int id)
 void PlayerState::UfoParts::startMotion(int id1, int id2)
 {
 	if (mPelletShape) {
-		PaniMotionInfo anim1(id1, this);
-		PaniMotionInfo anim2(id2);
+		PaniMotionInfo anim1(id2);
+		PaniMotionInfo anim2(id1, this);
 		mAnimator.startMotion(anim1, anim2);
 	}
 }

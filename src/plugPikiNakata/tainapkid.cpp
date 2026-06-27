@@ -949,8 +949,9 @@ void TaiNapkidStrategy::drawDebugInfo(Teki& teki, Graphics& gfx)
 		f32 endKey   = teki.mTekiAnimator->getKeyValueByKeyType(3);
 		if (startKey <= counter && counter <= endKey) {
 			NVector3f hitCenter;
-			teki.outputHitCenter(hitCenter);
 			Colour colour4(255, 0, 0, 255);
+
+			teki.outputHitCenter(hitCenter);
 			teki.drawRange(gfx, hitCenter, teki.getAttackHitRange(), colour4);
 		}
 	}
@@ -973,7 +974,9 @@ bool TekiNapkidTargetPikiCondition::satisfy(Creature* target) immut
 		return false;
 	}
 
-	if (!TekiVisibleCondition(mTeki).satisfy(target)) {
+	TekiVisibleCondition visCond(mTeki);
+
+	if (!visCond.satisfy(target)) {
 		return false;
 	}
 
@@ -981,7 +984,6 @@ bool TekiNapkidTargetPikiCondition::satisfy(Creature* target) immut
 		return false;
 	}
 
-	TekiVisibleCondition(nullptr);
 	return true;
 }
 
@@ -998,12 +1000,13 @@ bool TekiNapkidShortRangeCondition::satisfy(Creature* target) immut
 		return false;
 	}
 
-	if (TekiDistanceCondition(mTeki, 130.0f).satisfy(target)) {
+	TekiDistanceCondition distCond(mTeki, 130.0f);
+
+	if (distCond.satisfy(target)) {
 		return true;
 	}
 
 	return false;
-	TekiDistanceCondition(nullptr, 0.0f);
 }
 
 /**
@@ -1087,8 +1090,6 @@ bool TaiNapkidTargetPikiAction::act(Teki& teki)
 	}
 
 	return false;
-
-	TekiNapkidTargetPikiCondition(nullptr);
 }
 
 /**
@@ -1103,16 +1104,14 @@ bool TaiNapkidPikiLostAction::act(Teki& teki)
 		return true;
 	}
 
-	if (!TekiNapkidTargetPikiCondition(&teki).satisfy(targetCreature)) {
+	TekiNapkidTargetPikiCondition targetPikiCond(&teki);
+
+	if (!targetPikiCond.satisfy(targetCreature)) {
 		PRINT_NAKATA("TaiNapkidPikiLostAction::act:!condition.satisfy:%08x\n", &teki);
 		teki.clearCreaturePointer(0);
 		return true;
 	}
-
-	STACK_PAD_TERNARY(targetCreature, 1);
 	return false;
-
-	TekiNapkidTargetPikiCondition(nullptr);
 }
 
 /**
@@ -1126,15 +1125,14 @@ bool TaiNapkidShortRangeAction::act(Teki& teki)
 		return true;
 	}
 
-	if (TekiNapkidShortRangeCondition(&teki).satisfy(targetCreature)) {
+	TekiNapkidShortRangeCondition shortRangeCond(&teki);
+
+	if (shortRangeCond.satisfy(targetCreature)) {
 		PRINT_NAKATA("TaiNapkidShortRangeAction::act:condition.satisfy:%08x\n", &teki);
 		return true;
 	}
 
-	STACK_PAD_TERNARY(targetCreature, 1);
 	return false;
-
-	TekiNapkidShortRangeCondition(nullptr);
 }
 
 /**
@@ -1163,8 +1161,7 @@ bool TaiNapkidStraightFlyingAction::act(Teki& teki)
 	if (targetPosition.distanceXZ(teki.getPosition()) >= _08) {
 		return true;
 	}
-
-	STACK_PAD_VAR(1);
+	
 	return false;
 }
 
@@ -1319,7 +1316,10 @@ bool TaiNapkidCatchingAction::act(Teki& teki)
 	NVector3f offset;
 	offset.add2(teki.getPosition(), direction);
 
-	TekiAndCondition notStickerAndIsRecognizedCond(&TekiRecognitionCondition(&teki), &TekiNotCondition(&TekiStickerCondition(&teki)));
+	TekiRecognitionCondition recCond(&teki);
+	TekiStickerCondition stickerCond(&teki);
+
+	TekiAndCondition notStickerAndIsRecognizedCond(&recCond, &TekiNotCondition(&stickerCond));
 	TekiAndCondition posSphereDistAndOtherConds(&notStickerAndIsRecognizedCond,
 	                                            &TekiPositionSphereDistanceCondition(offset, teki.getParameterF(TPF_AttackHitRange)));
 
@@ -1338,16 +1338,12 @@ bool TaiNapkidCatchingAction::act(Teki& teki)
 				break;
 			}
 
-			InteractSwallow swallow(&teki, freeSlot, 0);
+			const InteractSwallow swallow(&teki, freeSlot, 0);
 			piki->stimulate(swallow);
 		}
 	}
 
 	return false;
-
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
-	TekiNotCondition(nullptr);
 }
 
 /**
@@ -1541,7 +1537,7 @@ bool TaiNapkidThrowingPikiAction::act(Teki& teki)
 					PRINT_NAKATA("TaiNapkidThrowingPikiAction::act:%08x:endStickObject\n", &teki);
 					throwPiki->endStickMouth();
 
-					InteractThrowAway throwaway(&teki);
+					const InteractThrowAway throwaway(&teki);
 					throwPiki->stimulate(throwaway);
 
 					throwPiki->mVelocity.set(throwVel);

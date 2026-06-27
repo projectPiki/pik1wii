@@ -106,12 +106,12 @@ void zen::AlphaWipe::draw(Graphics& gfx)
 {
 	if (mState == STATE_Active) {
 		Matrix4f mtx;
-		RectArea area1(AREA_FULL_SCREEN(gfx));
+		const RectArea area1(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(mtx.mMtx, area1);
 		gfx.setColour(mStartColor, true);
 		gfx.setAuxColour(mEndColor);
-		RectArea area2(AREA_FULL_SCREEN(gfx));
-		gfx.fillRectangle(area2);
+		const RectArea area2(AREA_FULL_SCREEN(gfx));
+		gfx.lineRectangle(area2);
 	}
 }
 

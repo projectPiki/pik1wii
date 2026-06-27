@@ -31,8 +31,7 @@ immut char* Reaction::info[9] = {
  */
 void Action::procMsg(Msg* msg)
 {
-	STACK_PAD_VAR(1);
-	if (mPiki->isCreatureFlag(CF_IsAiDisabled)) {
+	if (!mPiki->isAIActive()) {
 		return;
 	}
 

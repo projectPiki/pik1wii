@@ -80,9 +80,9 @@ void ActWeed::initApproach()
 {
 	mState     = STATE_Approach;
 	mCurrGrass = mGrassGen->getRandomGrass();
-	PaniMotionInfo anim1(PIKIANIM_Walk);
 	PaniMotionInfo anim2(PIKIANIM_Walk);
-	mPiki->startMotion(anim1, anim2);
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	mPiki->startMotion(anim2, anim1);
 }
 
 /**
@@ -157,8 +157,8 @@ int ActWeed::exeAdjust()
 void ActWeed::initNuking()
 {
 	mState = STATE_Attack;
-	PaniMotionInfo anim1(PIKIANIM_Nuku, this);
-	PaniMotionInfo anim2(PIKIANIM_Nuku);
+	PaniMotionInfo anim1(PIKIANIM_Nuku);
+	PaniMotionInfo anim2(PIKIANIM_Nuku, this);
 	mPiki->startMotion(anim1, anim2);
 	_28                = 4;
 	mAnimationFinished = false;

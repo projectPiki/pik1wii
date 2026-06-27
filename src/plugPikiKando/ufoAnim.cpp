@@ -16,7 +16,7 @@ DEFINE_ERROR(__LINE__) // Never used in the DLL
  * @todo: Documentation
  * @note UNUSED Size: 0000F0
  */
-DEFINE_PRINT(nullptr);
+DEFINE_PRINT("ufoAnim");
 
 /**
  * @todo: Documentation
@@ -142,7 +142,8 @@ void UfoAnimator::stopAllMotions()
 void UfoAnimator::initFlagMotions(int id)
 {
 	for (int i = 1; i < 8; i++) {
-		startMotion(i, &PaniMotionInfo(i + 2));
+		PaniMotionInfo anim(i + 2);
+		startMotion(i, &anim);
 		setMotionSpeed(i, 0.0f);
 	}
 	startFlagMotions(id);
@@ -191,7 +192,8 @@ void UfoAnimator::startFlagMotions(int id)
 	switch (id) {
 	case 5:
 	{
-		startMotion(7, &PaniMotionInfo(UfoMotion::Henka4b));
+		PaniMotionInfo anim1(UfoMotion::Henka4b);
+		startMotion(7, &anim1);
 		playerState->startSpecialMotions();
 		// fallthrough
 	}
@@ -221,7 +223,8 @@ void UfoAnimator::startFlagMotions(int id)
 	case 0:
 	{
 		for (int i = 1; i < 8; i++) {
-			startMotion(i, &PaniMotionInfo(i + UfoMotion::Henka1 - 1));
+			PaniMotionInfo anim2(i + UfoMotion::Henka1 - 1);
+			startMotion(i, &anim2);
 			setMotionSpeed(i, 0.0f);
 		}
 		break;

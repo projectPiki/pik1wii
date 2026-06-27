@@ -247,7 +247,7 @@ public:
 				Creature* sprout = *iter;
 				if (sprout && sprout->getPosition().distance(teki.getPosition()) < teki.getParameterF(TPF_VisibleRange)) {
 					PRINT("Bikkuri %08x \n", sprout);
-					InteractBikkuri bikkuri(navi);
+					const InteractBikkuri bikkuri(navi);
 					sprout->stimulate(bikkuri);
 				}
 			}
@@ -315,7 +315,8 @@ protected:
 	{
 		int typeID = TekiMgr::getTypeId(teki.mTekiType);
 		ID32 unused(typeID);
-		teki.becomePellet(typeID, teki.getCentre(), teki.mFaceDirection);
+		Vector3f centre = teki.getCentre(); // todo: fix
+		teki.becomePellet(typeID, centre, teki.mFaceDirection); 
 		if (!teki.mPellet) {
 			ERROR("?dieSoon:%08x:pellet==null\n", this);
 			return;

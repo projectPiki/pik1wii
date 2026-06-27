@@ -38,9 +38,6 @@ bool TaiAttackableNaviPikiAction::act(Teki& teki)
 
 	teki.setCreaturePointer(0, naviPiki);
 
-	// .
-	STACK_PAD_VAR(2);
-
 	return true;
 }
 
@@ -69,8 +66,6 @@ bool TaiAttackablePikiAction::act(Teki& teki)
 	}
 
 	teki.setCreaturePointer(0, nearest);
-	// sigh
-	STACK_PAD_VAR(2);
 	return true;
 }
 
@@ -96,10 +91,11 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 		teki.outputHitCenter(center);
 		
 		TekiRecognitionCondition recCond(&teki);
-		TekiNotCondition notCond(&TekiStickerCondition(&teki));
+		TekiStickerCondition stickCond(&teki);
+		TekiNotCondition notCond(&stickCond);
 		TekiAndCondition andCond1(&recCond, &notCond);
-		
-		TekiNotCondition notFlickCond(&TekiPikiStateCondition(PIKISTATE_Flick));
+		TekiPikiStateCondition pikiStateCond(PIKISTATE_Flick);
+		TekiNotCondition notFlickCond(&pikiStateCond);
 		TekiAndCondition andCond2(&andCond1, &notFlickCond);
 		
 		TekiPositionSphereDistanceCondition posSphereCond(center, teki.getAttackHitRange());
@@ -119,7 +115,7 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 		Navi* navi             = naviMgr->getNavi();
 
 		if (andCond3.satisfy(navi)) {
-			InteractSwallow swallow(&teki, nullptr, 0);
+			const InteractSwallow swallow(&teki, nullptr, 0);
 			navi->stimulate(swallow);
 			check1 = true;
 		}
@@ -183,7 +179,7 @@ bool TaiAnimationSwallowingAction::act(Teki& teki)
 
 			if (stuck->isStickToMouth()) {
 				PRINT_NAKATA("TaiAnimationSwallowingAction::act:ACTION_1:kill:%08x:%08x\n", &teki, stuck);
-				InteractKill kill(&teki, 0);
+				const InteractKill kill(&teki, 0);
 				stuck->stimulate(kill);
 				iter.dec();
 			}
@@ -223,7 +219,7 @@ void TaiAnimationSwallowingAction::finish(Teki& teki)
 bool TaiBangingAction::actByEvent(immut TekiEvent& event)
 {
 	if (event.mEventType == TekiEventType::Entity) {
-		InteractPress press(event.mTeki, event.mTeki->getParameterF(TPF_AttackPower));
+		const InteractPress press(event.mTeki, event.mTeki->getParameterF(TPF_AttackPower));
 		event.mOther->stimulate(press);
 		return true;
 	}
@@ -236,12 +232,11 @@ bool TaiBangingAction::actByEvent(immut TekiEvent& event)
  */
 bool TaiFlickAction::act(Teki& teki)
 {
-	TekiAndCondition cond(&TekiRecognitionCondition(&teki), &TekiLowerRangeCondition(&teki));
+	TekiRecognitionCondition recCond(&teki);
+	TekiLowerRangeCondition lowRangeCond(&teki);
+	TekiAndCondition cond(&recCond, &lowRangeCond);
 	int pikiCount = teki.countPikis(cond);
 	return teki.mDamageCount >= f32(teki.getFlickDamageCount(pikiCount));
-
-	TekiAndCondition(nullptr, nullptr);
-	TekiAndCondition(nullptr, nullptr);
 }
 
 /**

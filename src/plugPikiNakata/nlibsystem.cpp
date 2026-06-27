@@ -79,12 +79,7 @@ void NNode::addChild(int idx, NNode* child)
  */
 NNode* NNode::getChild(int idx)
 {
-	if (!mNodeArray) {
-		PRINT("?getChild:children==null:this:%08x\n", this);
-		return nullptr;
-	}
-
-	return mNodeArray->get(idx);
+	return !mNodeArray ? nullptr : mNodeArray->get(idx);
 }
 
 /**

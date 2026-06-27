@@ -1,7 +1,7 @@
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "Interactions.h"
 #include "PikiAI.h"
+#include "RevoSDK/os.h"
 #include "system.h"
 
 #include "floats_small.h"
@@ -48,10 +48,19 @@ void ActPick::animationKeyUpdated(immut PaniAnimKeyEvent& event)
 	case KEY_Action0:
 	{
 		Creature* obj = mObject.getPtr();
-		if (obj && obj->isVisible() && qdist2(obj, mPiki) < 20.0f) {
-			InteractGrab grab(mPiki);
-			obj->stimulate(grab);
+		if (!obj) {
+			break;
 		}
+		if (!obj->isVisible()) {
+			break;
+		}
+		if (qdist2(obj, mPiki) < 20.0f) {
+			const InteractGrab grab(mPiki);
+			if (obj->stimulate(grab)) {
+				break;
+			}
+		}
+		mIsAnimationFinished = true;
 		break;
 	}
 	case KEY_Finished:
@@ -70,8 +79,8 @@ void ActPick::init(Creature* object)
 	mIsAnimationFinished = false;
 	mObject.set(object);
 
-	PaniMotionInfo anim1(PIKIANIM_Pick, this);
-	PaniMotionInfo anim2(PIKIANIM_Pick);
+	PaniMotionInfo anim1(PIKIANIM_Pick);
+	PaniMotionInfo anim2(PIKIANIM_Pick, this);
 	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 }
@@ -196,7 +205,6 @@ void ActAdjust::init(Creature* target)
 		mTargetPosition = target->mSRT.t;
 		Vector3f dir    = mTargetPosition - mPiki->mSRT.t;
 		f32 adjPerFrame = mAdjustTimeLimit * (1.0f / 30.0f);
-		STACK_PAD_VAR(1);
 		mTurnSpeed = angDist(atan2f(dir.x, dir.z), mPiki->mFaceDirection) / adjPerFrame;
 		f32 dist   = dir.length();
 

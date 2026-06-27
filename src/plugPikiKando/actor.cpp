@@ -36,8 +36,8 @@ void Actor::setType(int /*unused*/, PikiShapeObject* shape, CreatureProp* props,
 	mPikiShape->mAnimMgr = PikiShapeObject::getAnimMgr();
 	mPikiAnimMgr.init(mPikiShape->mAnimMgr, &mPikiShape->mAnimatorB, &mPikiShape->mAnimatorA, actorMgr->mMotionTable);
 
-	PaniMotionInfo anim1(PIKIANIM_Wait, nullptr);
-	PaniMotionInfo anim2(PIKIANIM_Wait);
+	PaniMotionInfo anim1(PIKIANIM_Wait);
+	PaniMotionInfo anim2(PIKIANIM_Wait, nullptr);
 	mPikiAnimMgr.startMotion(anim1, anim2);
 
 	mSAICtx.mStateMachine = ai;

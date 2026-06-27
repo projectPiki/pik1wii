@@ -1280,6 +1280,8 @@ void ActTransport::findObstacle()
  */
 bool ActTransport::crMove()
 {
+	
+
 #if 0 // Seems to only exist in the DLL, and it's very repetitive.
 #define ASSERT_MVDIR_NOTNAN(...)                                       \
 	if (isNan(mMoveDir.x) || isNan(mMoveDir.y) || isNan(mMoveDir.z)) { \
@@ -1424,6 +1426,7 @@ bool ActTransport::crMove()
 			return false;
 		}
 	}
+	return true;
 
 #undef ASSERT_MVDIR_NOTNAN
 }

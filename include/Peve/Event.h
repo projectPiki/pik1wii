@@ -25,11 +25,7 @@ struct PeveEvent : public NNode {
 	}
 	virtual bool isFinished() // _28 (weak)
 	{
-		if (!mCondition) {
-			return true;
-		}
-
-		return mCondition->isMet();
+		return !mCondition ? true : mCondition->isMet();
 	}
 	virtual void finish() { }            // _2C (weak)
 	virtual void setEventOption(int opt) // _30

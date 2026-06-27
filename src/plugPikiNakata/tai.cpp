@@ -149,7 +149,7 @@ bool TaiState::eventPerformed(immut TekiEvent& event)
 			PRINT_NAKATA("eventPerformed:%08x:i:%d:%d->%d(%d),t:%d,m:%d\n", event.mTeki, i, event.mTeki->mStateID, action->mNextState,
 			             event.mTeki->mReturnStateID, event.mTeki->mTekiType, event.mTeki->mTekiAnimator->getCurrentMotionIndex());
 
-			Teki* volatile teki = event.mTeki;
+			Teki* teki = event.mTeki;
 			int startVal        = event.mTeki->mStateID;
 			int nextState       = action->mNextState;
 			if (nextState == TAI_RETURN_TRANSIT) {

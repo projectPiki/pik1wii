@@ -163,7 +163,7 @@ NumberPel numberPellets[13] = {
 /**
  * @todo: Documentation
  */
-void PelletView::becomePellet(u32 id, Vector3f NRef pos, f32 direction)
+void PelletView::becomePellet(u32 id, Vector3f& pos, f32 direction)
 {
 	if (mPellet) {
 		PRINT("becomePellet twice **\n");
