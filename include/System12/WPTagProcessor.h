@@ -5,6 +5,12 @@
 
 namespace System12 {
 
+class WPMsgCallbackImpl {
+public:
+	virtual int GetInsertString(u32, void*) = 0; // _08
+	virtual ~WPMsgCallbackImpl();                // _0C
+};
+
 class WPTagProcessor : public nw4r::ut::TagProcessorBase<wchar_t> {
 public:
 	WPTagProcessor();
@@ -28,7 +34,7 @@ private:
 	// _00     = VTBL
 	// _00-_04 = nw4r::ut::TagProcessorBase<wchar_t>
 	f32 _04;
-	int _08;
+	WPMsgCallbackImpl* _08;
 };
 
 } // namespace System12
