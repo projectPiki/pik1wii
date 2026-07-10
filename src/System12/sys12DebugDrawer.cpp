@@ -4,7 +4,7 @@
 
 namespace System12 {
 
-EGG_SINGLETON_IMPL(DebugDrawer);
+EGG_SINGLETON_IMPL(11, DebugDrawer);
 
 	
 DebugDrawer::DebugDrawer()
