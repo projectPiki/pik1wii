@@ -32,37 +32,37 @@ protected:                                     \
 /**
  * @brief Defines functions and data for a disposable singleton class
  */
-#define EGG_SINGLETON_IMPL(T)                                                                          \
-	T::T__Disposer::~T__Disposer()                                                                     \
-	{                                                                                                  \
-                                                                                                       \
-		if (this == T__Disposer::sStaticDisposer) {                                                    \
-			T::deleteInstance();                                                                       \
-		}                                                                                              \
-	}                                                                                                  \
-                                                                                                       \
-	T* T::createInstance()                                                                             \
-	{                                                                                                  \
-		if (sInstance == nullptr) {                                                                    \
-			sInstance = new T();                                                                       \
-			if (T__Disposer::sStaticDisposer != nullptr) {                                             \
-				EGG_ASSERT_MSG(__LINE__, false, "Create Singleton Twice (%s).\n", #T);                 \
-			}                                                                                          \
-			T__Disposer::sStaticDisposer = &sInstance->mDisposer;                                      \
-		} else {                                                                                       \
-			EGG_ASSERT_MSG(__LINE__, false, "Create Singleton Twice (%s) : addr %x\n", #T, sInstance); \
-		}                                                                                              \
-                                                                                                       \
-		return sInstance;                                                                              \
-	}                                                                                                  \
-                                                                                                       \
-	void T::deleteInstance()                                                                           \
-	{                                                                                                  \
-		sInstance                    = nullptr;                                                        \
-		T__Disposer::sStaticDisposer = nullptr;                                                        \
-	}                                                                                                  \
-                                                                                                       \
-	T* T::sInstance                                 = nullptr;                                         \
+#define EGG_SINGLETON_IMPL(LINE, T)                                                                \
+	T::T__Disposer::~T__Disposer()                                                                 \
+	{                                                                                              \
+                                                                                                   \
+		if (this == T__Disposer::sStaticDisposer) {                                                \
+			T::deleteInstance();                                                                   \
+		}                                                                                          \
+	}                                                                                              \
+                                                                                                   \
+	T* T::createInstance()                                                                         \
+	{                                                                                              \
+		if (sInstance == nullptr) {                                                                \
+			sInstance = new T();                                                                   \
+			if (T__Disposer::sStaticDisposer != nullptr) {                                         \
+				EGG_ASSERT_MSG(LINE, false, "Create Singleton Twice (%s).\n", #T);                 \
+			}                                                                                      \
+			T__Disposer::sStaticDisposer = &sInstance->mDisposer;                                  \
+		} else {                                                                                   \
+			EGG_ASSERT_MSG(LINE, false, "Create Singleton Twice (%s) : addr %x\n", #T, sInstance); \
+		}                                                                                          \
+                                                                                                   \
+		return sInstance;                                                                          \
+	}                                                                                              \
+                                                                                                   \
+	void T::deleteInstance()                                                                       \
+	{                                                                                              \
+		sInstance                    = nullptr;                                                    \
+		T__Disposer::sStaticDisposer = nullptr;                                                    \
+	}                                                                                              \
+                                                                                                   \
+	T* T::sInstance                                 = nullptr;                                     \
 	T::T__Disposer* T::T__Disposer::sStaticDisposer = nullptr;
 
 #ifndef EGG_INSTANCE
