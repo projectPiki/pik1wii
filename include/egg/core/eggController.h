@@ -252,6 +252,10 @@ public:
     void startPowerFrameRumble(f32 power, int frame, bool force);
     void stopRumbleMgr();
 	
+	bool isConnected() const {
+        return mFlag.onBit(0);
+    }
+	
 	Vector2f getDpdRawPos();
     f32 getDpdDistance();
     s32 getDpdValidFlag();
