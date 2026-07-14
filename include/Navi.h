@@ -104,7 +104,7 @@ public:
 	void letPikiWork();
 	void reviseController(Vector3f&);
 	void makeVelocity(bool);
-	void makeCStick(bool);
+	void makeCStick(bool, bool = false);
 	void draw(Graphics&);
 	void renderCircle(Graphics&);
 	bool orimaDamaged();

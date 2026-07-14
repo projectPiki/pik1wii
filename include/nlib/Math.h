@@ -73,7 +73,7 @@ struct NMathF {
 	}
 
 	static inline f32 interpolate(f32 x, f32 y, f32 t) { return x * (1.0f - t) + y * t; }
-	static inline f32 length(f32 x, f32 y) { return std::sqrtf(x * x + y * y); }
+	static inline f32 length(f32 x, f32 y) { return std::sqrtf(SQUARE(x) + SQUARE(y)); }
 
 	static inline bool equals(f32 x, f32 y) { return NMathF::isZero(x - y); }
 	static inline bool isPositive(f32 x) { return x >= error; }

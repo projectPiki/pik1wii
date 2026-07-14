@@ -2571,14 +2571,15 @@ void NaviNukuAdjustState::init(Navi* navi)
 	PRINT("NAVI ADJUST INIT *\n");
 
 	Vector3f pos;
-	if (DelayPikiBirth) {
+	bool birth = DelayPikiBirth;
+	if (birth) {
 		pos = navi->mSproutToPluck->mSRT.t - navi->mSRT.t;
 	} else {
 		pos = navi->mPikiToPluck->mSRT.t - navi->mSRT.t;
 	}
 	_10     = atan2f(pos.x, pos.z);
 	f32 len = pos.normalise();
-	if (DelayPikiBirth) {
+	if (birth) {
 		_14 = navi->mSproutToPluck->mSRT.t - (6.0f * pos);
 	} else {
 		_14 = navi->mPikiToPluck->mSRT.t - (6.0f * pos);
@@ -2591,6 +2592,7 @@ void NaviNukuAdjustState::init(Navi* navi)
  */
 void NaviNukuAdjustState::exec(Navi* navi)
 {
+	navi->makeCStick(false, true);
 	if (navi->mKontroller->keyDown(KBBTN_B)) {
 		navi->mFastPluckKeyTaps = 0;
 		transit(navi, NAVISTATE_Walk);
@@ -2615,7 +2617,7 @@ void NaviNukuAdjustState::exec(Navi* navi)
 	pos     = _14 - navi->mSRT.t;
 	f32 len = pos.normalise();
 	f32 ang = angDist(_10, navi->mFaceDirection);
-	if (quickABS(ang) < PI / 10.0f && len < 1.0f) {
+	if (absF(ang) < PI / 10.0f && len < 1.0f) {
 		PRINT("dist = %f ang diff is %f\n", len, ang);
 		if (DelayPikiBirth) {
 			pikiMgr->meBirthMode = true;
@@ -2638,16 +2640,16 @@ void NaviNukuAdjustState::exec(Navi* navi)
 			navi->mSproutToPluck->kill(false);
 			navi->mSproutToPluck = nullptr;
 			navi->mPikiToPluck   = piki;
-			InteractPullout pullout(navi);
+			const InteractPullout pullout(navi);
 			navi->mPikiToPluck->stimulate(pullout);
 		} else {
-			InteractPullout pullout(navi);
+			const InteractPullout pullout(navi);
 			navi->mPikiToPluck->stimulate(pullout);
 		}
 		transit(navi, NAVISTATE_Nuku);
 	} else {
 		f32 v = ang * 0.2f;
-		if (quickABS(v) < PI / 20.0f) {
+		if (absF(v) < PI / 20.0f) {
 			v = (v > 0.0f) ? PI / 20.0f : -(PI / 20.0f);
 		}
 		navi->mFaceDirection = roundAng(navi->mFaceDirection + v);

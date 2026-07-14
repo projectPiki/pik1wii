@@ -821,10 +821,6 @@ ASM void asmTest(f32, f32)
  */
 void GameCoreSection::initStage()
 {
-#if defined(VERSION_PIKIDEMO)
-#else
-	STACK_PAD_VAR(2);
-#endif
 	playerState->setDayEnd(false);
 	if (playerState->isChallengeMode()) {
 		pikiInfMgr.initGame();
@@ -926,9 +922,6 @@ void GameCoreSection::initStage()
 	*++tmp = 'e';
 	*++tmp = 'n';
 	*++tmp = '\0';
-#if defined(VERSION_PIKIDEMO)
-	gsys->openFile(path, true, true); // bruh
-#endif
 	PRINT("---------- auto load generator file : <%s>\n", path);
 	for (tmp = (u8*)path; *tmp != (u32)'.'; tmp++) { }
 	*tmp++ = '/';
@@ -1491,7 +1484,7 @@ void GameCoreSection::update()
 		// 4-6 = leaf/bud/flower, bomb, blue
 		// 7-12 = ", ", red
 		// 13-18 = ", ", yellow
-		encodedNextThrowType = 6 * color + 3 * isHolding + happa + 1;
+		encodedNextThrowType = (PikiHappaCount * 2) * color + PikiHappaCount * isHolding + happa + 1;
 	} else {
 		// 0 = no next throw piki
 		encodedNextThrowType = 0;

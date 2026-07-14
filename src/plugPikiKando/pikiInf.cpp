@@ -1,9 +1,9 @@
 #include "BaseInf.h"
 #include "DebugLog.h"
-#include "RevoSDK/os.h"
 #include "GlobalGameOptions.h"
 #include "Piki.h"
 #include "PikiHeadItem.h"
+#include "RevoSDK/os.h"
 #include "gameflow.h"
 #include "sysNew.h"
 
@@ -205,8 +205,8 @@ void BaseInf::loadCard(RandomAccessStream& card)
  */
 BPikiInf::BPikiInf()
 {
-	mPikiColour = mNextKeyIndex = 0;
-	// UNUSED FUNCTION
+	mNextKeyIndex = 0;
+	mPikiColour   = Blue;
 }
 
 /**
@@ -250,8 +250,8 @@ void BPikiInf::doRestore(Creature* piki)
 	if (piki->mObjType != OBJTYPE_Pikihead) {
 		ERROR("mail to teppe2\n");
 	}
-	static_cast<PikiHeadItem*>(piki)->mSeedColor = mPikiColour;
-	static_cast<PikiHeadItem*>(piki)->mFlowerStage   = mNextKeyIndex;
+	static_cast<PikiHeadItem*>(piki)->mSeedColor   = mPikiColour;
+	static_cast<PikiHeadItem*>(piki)->mFlowerStage = mNextKeyIndex;
 }
 
 /**

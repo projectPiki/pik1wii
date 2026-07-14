@@ -38,24 +38,13 @@ void zen::ogScrFileSelectMgr::setOperateMode_Delete()
  */
 void zen::ogScrFileSelectMgr::DeleteEffectStart()
 {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 	SetTitleMsg(NoMemoryCardInserted);
-#endif
 	Vector3f pos1, pos2;
 
 	pos1.set(0.0f, 0.0f, 0.0f);
 
-	// this is to fix stack
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
 	pos1.x = mIconOnyonPanes[mCurrSlotIdx]->getPosH() + mIconOnyonPanes[mCurrSlotIdx]->getWidth() / 2.0f;
-#else
-	f32 w  = mIconOnyonPanes[mCurrSlotIdx]->getPosH() + mIconOnyonPanes[mCurrSlotIdx]->getWidth() / 2.0f;
-	pos1.x = w;
-#endif
-
-	f32 h  = mIconOnyonPanes[mCurrSlotIdx]->getPosV() + mIconOnyonPanes[mCurrSlotIdx]->getHeight() / 2.0f;
-	pos1.y = 480.0f - h;
+	pos1.y = 480.0f - (mIconOnyonPanes[mCurrSlotIdx]->getPosV() + mIconOnyonPanes[mCurrSlotIdx]->getHeight() / 2.0f);
 	mFxMgr->create(EFF2D_Unk44, pos1, nullptr, nullptr);
 
 	pos2.set(pos1.x, (480.0f - pos1.y) - 80.0f, 0.0f);
@@ -78,8 +67,6 @@ void zen::ogScrFileSelectMgr::OperateDelete(Controller* input)
 	}
 
 	if (mCanCreateNewFile) {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 		mCardAccessIcon->show();
 		f32 rate = mTailEffectSpawnTimer;
 		int x, y;
@@ -95,19 +82,8 @@ void zen::ogScrFileSelectMgr::OperateDelete(Controller* input)
 			y = mCardAccessIcon->getPosV();
 		}
 		mCardAccessIcon->move(x, y);
-#endif
 		mTailEffectSpawnTimer -= gsys->getFrameTime();
 
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		if (mTailEffectSpawnTimer < 0.0f && gameflow.mMemoryCard.hasCardFinished()) {
-			seSystem->playSysSe(ogEnumFix(SYSSE_CARDOK, JACSYS_CardOK));
-			copyCardInfosSub();
-			ChkNewData();
-			mCanCreateNewFile     = false;
-			mMemoryCardCheckState = true;
-			mTailEffectSpawnTimer = 1.0f;
-		}
-#else
 		if (!mIsDeletingFileActive && gameflow.mMemoryCard.hasCardFinished()) {
 			mIsDeletingFileActive = true;
 			copyCardInfosSub();
@@ -121,7 +97,6 @@ void zen::ogScrFileSelectMgr::OperateDelete(Controller* input)
 			mCardAccessIcon->hide();
 			SetTitleMsg(MemoryCardErrorOccurred);
 		}
-#endif
 		return;
 	}
 
@@ -130,20 +105,15 @@ void zen::ogScrFileSelectMgr::OperateDelete(Controller* input)
 		CloseYesNoWindow();
 	}
 	if (status == ogNitakuMgr::Status_4) {
-		seSystem->playSysSe(ogEnumFix(SYSSE_CANCEL, JACSYS_Cancel));
+		seSystem->playSysSe(SYSSE_CANCEL);
 		setOperateMode(Normal);
 	} else if (status == ogNitakuMgr::ExitSuccess) {
-		seSystem->playSysSe(ogEnumFix(SYSSE_CARDACCESS, JACSYS_CardAccess));
+		seSystem->playSysSe(SYSSE_CARDACCESS);
 		gameflow.mMemoryCard.delFile(mCardInfo[mCurrSlotIdx]);
 		DeleteEffectStart();
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		mTailEffectSpawnTimer = 1.0f;
-		mCanCreateNewFile     = true;
-#else
 		mTailEffectSpawnTimer = 2.0f;
 		mCanCreateNewFile     = true;
 		mIsDeletingFileActive = false;
-#endif
 	} else if (status == ogNitakuMgr::ExitFailure) {
 		setOperateMode(Normal);
 	}

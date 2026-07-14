@@ -1,8 +1,8 @@
 #ifndef _SYSTEM12_TAGPARMS_H
 #define _SYSTEM12_TAGPARMS_H
 
-#include <egg/core/eggStream.h>
 #include <egg/core/eggHeap.h>
+#include <egg/core/eggStream.h>
 
 namespace System12 {
 
@@ -12,19 +12,18 @@ struct TagParameters {
 	TagParameters(char*);
 
 	void read(EGG::Stream&);
-	
-	TagParm* mHead; 	// _00
-	char* mName; 		// _04
+
+	TagParm* mHead; // _00
+	char* mName;    // _04
 };
 
 struct TagParm {
 	TagParm(TagParameters*, char*);
 
-
-	virtual void doWrite(EGG::Stream&) { } 	// _00
-	virtual void doRead(EGG::Stream&) { } 	// _04
-	virtual void flushValue() { } 			// _08
-	virtual void doDump() { } 				// _0C
+	virtual void doWrite(EGG::Stream&) { } // _00
+	virtual void doRead(EGG::Stream&) { }  // _04
+	virtual void flushValue() { }          // _08
+	virtual void doDump() { }              // _0C
 
 	// _00 VTBL
 	char* mName;    // _04
@@ -34,10 +33,10 @@ struct TagParm {
 struct StringTagParm : public TagParm {
 	StringTagParm(TagParameters*, char*);
 
-	virtual void doWrite(EGG::Stream&); 	// _00
-	virtual void doRead(EGG::Stream&);  	// _04
-	virtual void flushValue();     			// _08
-	virtual void doDump();         			// _0C
+	virtual void doWrite(EGG::Stream&); // _00
+	virtual void doRead(EGG::Stream&);  // _04
+	virtual void flushValue();          // _08
+	virtual void doDump();              // _0C
 
 	char* mData; // _0C
 };
@@ -49,11 +48,13 @@ struct PrimTagParm : public TagParm {
 	{
 	}
 
-	virtual void doWrite(EGG::Stream&); 	// _00
-	virtual void doRead(EGG::Stream&);  	// _04
-	virtual void doDump();         			// _0C
+	virtual void doWrite(EGG::Stream&); // _00
+	virtual void doRead(EGG::Stream&);  // _04
+	virtual void doDump();              // _0C
 
-	inline T& operator()() { return mData; }
+	void set(T value) { mData = value; }
+
+	T& operator()() { return mData; }
 
 	T mData; // _0C
 };

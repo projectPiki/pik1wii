@@ -134,7 +134,7 @@ int ActDecoy::exec()
 		Vector3f tekiDir = mPiki->mSRT.t - teki->mSRT.t;
 		f32 dist         = tekiDir.length();
 		tekiDir          = tekiDir * (1.0f / dist);
-		tekiDir          = tekiDir + quickABS(tekiDir.DP(naviDir)) * naviDir * 1.3f;
+		tekiDir          = tekiDir + absF(tekiDir.DP(naviDir)) * naviDir * 1.3f;
 		tekiDir.normalise();
 		mPiki->setSpeed(1.0f, tekiDir);
 		if (dist > 60.0f) {

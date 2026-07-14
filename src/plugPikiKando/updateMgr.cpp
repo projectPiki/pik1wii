@@ -76,7 +76,7 @@ UpdateMgr::UpdateMgr()
 	mClientSlotList       = nullptr;
 	mActiveClientSlotList = nullptr;
 	mSlotCount            = 0;
-	mClientCount          = 0;
+	mClientTotal          = 0;
 	mCurrentIndex         = 0;
 }
 
@@ -114,7 +114,7 @@ void UpdateMgr::create(int slotCount)
 	mSlotCount            = slotCount;
 	mClientSlotList       = new int[slotCount];
 	mActiveClientSlotList = new int[slotCount];
-	mClientCount          = 0;
+	mClientTotal          = 0;
 	mCurrentIndex         = 0;
 
 	// zero all client slot counts
@@ -157,7 +157,7 @@ void UpdateMgr::addClient(UpdateContext* client)
 		mActiveClientSlotList[slotIdx]++;
 	}
 
-	mClientCount++;
+	mClientTotal++;
 }
 
 /**
@@ -175,7 +175,7 @@ void UpdateMgr::removeClient(UpdateContext* client)
 		mActiveClientSlotList[client->mMgrSlotIndex]--;
 	}
 
-	mClientCount--;
+	mClientTotal--;
 }
 
 /**

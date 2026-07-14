@@ -1835,7 +1835,7 @@ void Navi::makeVelocity(bool isSunset)
 /**
  * @todo: Documentation
  */
-void Navi::makeCStick(bool isSunset)
+void Navi::makeCStick(bool isSunset, bool p2)
 {
 	f32 cameraYaw               = NMathF::atan2(mNaviCamera->mViewXAxis.z, mNaviCamera->mViewXAxis.x);
 	NVector3f pos(0.0f, 1.0f, 0.0f);
@@ -2178,7 +2178,7 @@ void Navi::renderCircle(Graphics& gfx)
 /**
  * @todo: Documentation
  */
-void Navi::refresh2d(Graphics&)
+void Navi::refresh2d(Graphics& gfx)
 {
 }
 
@@ -2610,7 +2610,7 @@ void Navi::throwPiki(Piki* piki, immut Vector3f& pos)
 	rumbleMgr->start(RUMBLE_Unk2, 0, nullptr);
 	piki->mSRT.t         = mSRT.t + Vector3f(0.0f, 10.0f, 0.0f);
 	Vector3f throwDir    = pos - piki->mSRT.t;
-	f32 throwDist        = speedy_sqrtf(throwDir.x * throwDir.x + throwDir.z * throwDir.z);
+	f32 throwDist        = speedy_sqrtf(SQUARE(throwDir.x) + SQUARE(throwDir.z));
 	f32 throwAngle       = atan2f(throwDir.x, throwDir.z);
 	piki->mFaceDirection = roundAng(throwAngle);
 

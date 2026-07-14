@@ -28,8 +28,8 @@ struct EffectMgr2D;
 namespace {
 
 extern zen::EffectMgr2D* WMeffMgr;
-extern u8 mapNoScr2Game[5];
-extern u8 mapNoGame2Scr[5];
+extern s8 mapNoScr2Game[5];
+extern s8 mapNoGame2Scr[5];
 
 /**
  * @brief Enum for course point ordering in actual game - equivalent to StageID

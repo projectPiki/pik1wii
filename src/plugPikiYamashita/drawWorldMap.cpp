@@ -21,8 +21,8 @@ namespace {
 zen::EffectMgr2D* WMeffMgr;
 
 // idk what's going on with these. mapNoScr2Game has to spit out WorldMapName values, which have to equal StageID values
-u8 mapNoScr2Game[5] = { WM_Yakushima, WM_Forest, WM_Practice, WM_Cave, WM_Last };
-u8 mapNoGame2Scr[5] = { WMSCR_Practice, WMSCR_Forest, WMSCR_Cave, WMSCR_Yakushima, WMSCR_Last };
+s8 mapNoScr2Game[5] = { WM_Yakushima, WM_Forest, WM_Practice, WM_Cave, WM_Last };
+s8 mapNoGame2Scr[5] = { WMSCR_Practice, WMSCR_Forest, WMSCR_Cave, WMSCR_Yakushima, WMSCR_Last };
 } // namespace
 
 /**
@@ -453,14 +453,13 @@ public:
 			}
 		}
 
-		Vector3f pos1(0.0f, 0.0f, 0.0f);
-		mExhaustGenerators[0] = WMeffMgr->create(EFF2D_MapRocketFire, pos1, nullptr, nullptr);
+		Vector3f pos(0.0f, 0.0f, 0.0f);
+		mExhaustGenerators[0] = WMeffMgr->create(EFF2D_MapRocketFire, pos, nullptr, nullptr);
 		mExhaustGenerators[0]->invisible();
 		mFireFreqFrame = mExhaustGenerators[0]->getFreqFrm();
 		mFireInitVel   = mExhaustGenerators[0]->getInitVel();
 
-		Vector3f pos2(0.0f, 0.0f, 0.0f);
-		mExhaustGenerators[1] = WMeffMgr->create(EFF2D_MapRocketSmoke, pos2, nullptr, nullptr);
+		mExhaustGenerators[1] = WMeffMgr->create(EFF2D_MapRocketSmoke, pos, nullptr, nullptr);
 		mExhaustGenerators[1]->invisible();
 		mSmokeFreqFrame = mExhaustGenerators[1]->getFreqFrm();
 		mSmokeInitVel   = mExhaustGenerators[0]->getInitVel(); // maybe typo?
@@ -637,18 +636,17 @@ protected:
 
 	void updateOnyonPos(Vector3f* bluePos, Vector3f* redPos, Vector3f* yellowPos)
 	{
-		Vector3f orbitCenter;
-		Vector3f newBlueTargetPos;
-		Vector3f orbitVec;
+		Vector3f orbitCenter, newBlueTargetPos, orbitVec;
+		f32 norm, time, cosv, sinv, rocketScale;
 
-		f32 time        = 60.0f * gsys->getFrameTime();
-		f32 rocketScale = mRocketIcon->getScale().x;
+		time        = 60.0f * gsys->getFrameTime();
+		rocketScale = mRocketIcon->getScale().x;
 		orbitCenter.set(mRocketPos.x + ONYON_OFFSET_X, mRocketPos.y + ONYON_OFFSET_Y, mRocketPos.z + ONYON_OFFSET_Z);
 
 		Vector3f vel(mOnyonVelocity * time);
 		mBlueOnyonPos.add(vel);
 		orbitVec.set(mBlueOnyonPos - orbitCenter);
-		f32 norm = orbitVec.length();
+		norm = orbitVec.length();
 		if (norm < 0.000001f) {
 			orbitVec.set(0.0f, 0.0f, 0.0f);
 		} else {
@@ -664,14 +662,14 @@ protected:
 		bluePos->set(mBlueOnyonPos.x, mBlueOnyonPos.y, 0.0f);
 
 		// calculate red onyon position (120 degrees rotated from blue)
-		f32 cosR = cosf(TORADIANS(120));
-		f32 sinR = sinf(TORADIANS(120));
-		redPos->set(orbitVec.x * cosR + orbitCenter.x - orbitVec.y * sinR, orbitVec.x * sinR + orbitCenter.y + orbitVec.y * cosR, 0.0f);
+		cosv = NMathF::cos(TORADIANS(120));
+		sinv = NMathF::sin(TORADIANS(120));
+		redPos->set(orbitVec.x * cosv + orbitCenter.x - orbitVec.y * sinv, orbitVec.x * sinv + orbitCenter.y + orbitVec.y * cosv, 0.0f);
 
 		// calculate yellow onyon position (240 degrees rotated from blue)
-		f32 cosY = cosf(TORADIANS(240));
-		f32 sinY = sinf(TORADIANS(240));
-		yellowPos->set(orbitVec.x * cosY + orbitCenter.x - orbitVec.y * sinY, orbitVec.x * sinY + orbitCenter.y + orbitVec.y * cosY, 0.0f);
+		cosv = NMathF::cos(TORADIANS(240));
+		sinv = NMathF::sin(TORADIANS(240));
+		yellowPos->set(orbitVec.x * cosv + orbitCenter.x - orbitVec.y * sinv, orbitVec.x * sinv + orbitCenter.y + orbitVec.y * cosv, 0.0f);
 	}
 
 	void stayUfo()
@@ -697,7 +695,7 @@ protected:
 		mRocketPos.add(mVelocity);
 
 		mRocketIcon->move(zen::RoundOff(mRocketPos.x), zen::RoundOff(mRocketPos.y));
-		mRotationSpeed += calcAddAngle(mRocketIcon->getRotate(), 0.0f, 0.017453292f, sec);
+		mRotationSpeed += calcAddAngle(mRocketIcon->getRotate(), 0.0f, PI / 180.0f, sec);
 		mRotationSpeed *= 0.9999f;
 		if (mRotationSpeed > (5.0f * PI / 180.0f)) {
 			mRotationSpeed = (5.0f * PI / 180.0f);
@@ -2121,15 +2119,15 @@ void zen::DrawWorldMap::start(zen::DrawWorldMap::startModeFlag modeFlag, zen::Dr
 	mMapImageMgr->init();
 
 	if (playerState) {
-		P2DPane* blueCount = mData1Screen->getScreenPtr()->search('p_bc', true);
+		P2DPane* blueCount = mData1Screen->getScreenPtr()->search('_w07', true);
 		if (!playerState->displayPikiCount(Blue)) {
 			blueCount->hide();
 		}
-		P2DPane* redCount = mData1Screen->getScreenPtr()->search('p_rc', true);
+		P2DPane* redCount = mData1Screen->getScreenPtr()->search('_w05', true);
 		if (!playerState->displayPikiCount(Red)) {
 			redCount->hide();
 		}
-		P2DPane* yellowCount = mData1Screen->getScreenPtr()->search('p_yc', true);
+		P2DPane* yellowCount = mData1Screen->getScreenPtr()->search('_w06', true);
 		if (!playerState->displayPikiCount(Yellow)) {
 			yellowCount->hide();
 		}

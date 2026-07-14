@@ -30,11 +30,10 @@ DEFINE_ERROR(__LINE__) // Never used in the DLL
 DEFINE_PRINT("OgRaderSection")
 
 namespace zen {
-static f32 map_area_data[5][3] = { { -698.0f, 2024.0f, 2880.0f },
-	                               { -334.0f, 2024.0f, 2880.0f },
-	                               { -170.0f, 554.0f, 2654.0f },
-	                               { -480.0f, 160.0f, 3950.0f },
-	                               { -44.0f, 1504.0f, 2322.0f } };
+static f32 map_area_data[5][3] = {
+	{ -698.0f, 2024.0f, 2880.0f }, { -334.0f, 2024.0f, 2880.0f }, { -170.0f, 554.0f, 2654.0f },
+	{ -480.0f, 160.0f, 3950.0f },  { -44.0f, 1504.0f, 2322.0f },
+};
 }; // namespace zen
 
 /**
@@ -73,48 +72,43 @@ zen::ogRaderMgr::ogRaderMgr()
 	P2DScreen* screen = new P2DScreen;
 
 	PRINT("----- RADER MAP (%d) -----\n", flowCont.mCurrentStage->mStageID);
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-	switch (flowCont.mCurrentStage->mStageID)
-#else
 	s16 stage = flowCont.mCurrentStage->mStageID;
 	_24       = map_area_data[stage][0];
 	_28       = map_area_data[stage][1];
 	_2C       = map_area_data[stage][2];
 
-	switch (stage)
-#endif
+	switch (stage) {
+	case STAGE_Practice:
 	{
-	case 0:
-	{
-		_54 = 0;
+		_54 = STAGE_Practice;
 		screen->set("screen/blo/p_map00.blo", true);
 		_4C = (P2DPicture*)screen->search('map0', true);
 		break;
 	}
-	case 1:
+	case STAGE_Forest:
 	{
-		_54 = 1;
+		_54 = STAGE_Forest;
 		screen->set("screen/blo/p_map01.blo", true);
 		_4C = (P2DPicture*)screen->search('map1', true);
 		break;
 	}
-	case 2:
+	case STAGE_Cave:
 	{
-		_54 = 2;
+		_54 = STAGE_Cave;
 		screen->set("screen/blo/p_map02.blo", true);
 		_4C = (P2DPicture*)screen->search('map2', true);
 		break;
 	}
-	case 3:
+	case STAGE_Yakushima:
 	{
-		_54 = 3;
+		_54 = STAGE_Yakushima;
 		screen->set("screen/blo/p_map03.blo", true);
 		_4C = (P2DPicture*)screen->search('map3', true);
 		break;
 	}
-	case 4:
+	case STAGE_Last:
 	{
-		_54 = 4;
+		_54 = STAGE_Last;
 		screen->set("screen/blo/p_map04.blo", true);
 		_4C = (P2DPicture*)screen->search('map4', true);
 		break;
@@ -191,12 +185,6 @@ zen::ogRaderMgr::ogRaderMgr()
 	_420 = _4C;
 	_420->setOffset(0, 0);
 	_424->setOffset(0, 0);
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-	_24demo[0].set(-150.0f, 0.0f, -160.0f);
-	_24demo[1].set(150.0f, 0.0f, -160.0f);
-	_24demo[2].set(150.0f, 0.0f, 160.0f);
-	_24demo[3].set(-150.0f, 0.0f, 160.0f);
-#endif
 	_458 = 0;
 	_420->setAlpha(_458);
 	white.set(128, 128, 255, 255);
@@ -210,8 +198,6 @@ zen::ogRaderMgr::ogRaderMgr()
 	_454 = 0.0f;
 	setRaderAngle(_454);
 	mStatus = STATE_NULL;
-
-	STACK_PAD_TERNARY(mStatus, 5);
 }
 
 /**
@@ -310,10 +296,7 @@ void zen::ogRaderMgr::getRocketPos()
 
 	// Hmm, what a rather unfortunate lack of a nullptr check here.  If you wanted to use the radar in a test
 	// map lacking the SS Dolphin, or wanted to re-enable the radar in Challenge Mode, this would be a problem.
-#if defined(VERSION_PIKIDEMO)
-	_7C->hide();
-	return;
-#elif defined(BUGFIX)
+#if defined(BUGFIX)
 	if (!ufo) {
 		_7C->hide();
 		return;
@@ -430,18 +413,18 @@ void zen::ogRaderMgr::startSub()
  */
 void zen::ogRaderMgr::start()
 {
-	if (mStatus == -1) {
-		_04  = 0;
-		_45A = 64;
-		_0C  = 320.0f;
-		_10  = 220.0f;
-		_1C  = 155;
-		_20  = 264;
-		_14  = 320 - _1C / 2;
-		_18  = 220 - _20 / 2;
-		startSub();
+	if (mStatus != STATE_NULL) {
+		return;
 	}
-	// UNUSED FUNCTION
+	_04  = 0;
+	_45A = 64;
+	_0C  = 320.0f;
+	_10  = 220.0f;
+	_1C  = 155;
+	_20  = 264;
+	_14  = 320 - _1C / 2;
+	_18  = 220 - _20 / 2;
+	startSub();
 }
 
 /**
@@ -449,28 +432,31 @@ void zen::ogRaderMgr::start()
  */
 void zen::ogRaderMgr::startMenu(P2DPane* pane)
 {
-	if (mStatus == -1 && (!playerState || playerState->hasRadar())) {
-		_04  = 1;
-		_00  = false;
-		_01  = false;
-		_02  = false;
-		_45A = 200;
-
-		int posH = pane->getPosH();
-		int posV = pane->getPosV();
-		int w    = pane->getWidth();
-		int h    = pane->getHeight();
-		_0C      = posH + w / 2;
-		_10      = posV + h / 2;
-		_1C      = w;
-		_20      = h;
-		_14      = posH;
-		_18      = posV;
-		startSub();
-		setRaderScale(2.0f);
+	if (mStatus != STATE_NULL) {
+		return;
+	}
+	if (playerState && !playerState->hasRadar()) {
+		return;
 	}
 
-	STACK_PAD_VAR(2);
+	_04  = 1;
+	_00  = false;
+	_01  = false;
+	_02  = false;
+	_45A = 200;
+
+	int posH = pane->getPosH();
+	int posV = pane->getPosV();
+	int w    = pane->getWidth();
+	int h    = pane->getHeight();
+	_0C      = posH + w / 2;
+	_10      = posV + h / 2;
+	_1C      = w;
+	_20      = h;
+	_14      = posH;
+	_18      = posV;
+	startSub();
+	setRaderScale(2.0f);
 }
 
 /**
@@ -501,25 +487,25 @@ void zen::ogRaderMgr::updateGame(Controller* input)
 {
 	if (input->keyClick(KBBTN_DPAD_UP)) {
 		switch (mStatus) {
-		case 0:
+		case STATE_0:
 		{
 			_42C    = 2.0f;
 			mStatus = STATE_1;
 			break;
 		}
-		case 1:
+		case STATE_1:
 		{
 			_42C    = 4.0f;
 			mStatus = STATE_2;
 			break;
 		}
-		case 2:
+		case STATE_2:
 		{
 			_42C    = 8.0f;
 			mStatus = STATE_3;
 			break;
 		}
-		case 3:
+		case STATE_3:
 		{
 			mStatus = STATE_5;
 			_50->startFadeOut(0.2f);
@@ -539,8 +525,6 @@ void zen::ogRaderMgr::updateGame(Controller* input)
 	chaseRaderScale(_42C);
 }
 
-#if defined(VERSION_PIKIDEMO)
-#else
 /**
  * @todo: Documentation
  */
@@ -555,7 +539,7 @@ void zen::ogRaderMgr::AreaScroll(f32* p1, f32* p2, f32 p3, f32 p4)
 	f32 x1 = a + x - c;
 	f32 z1 = b + z - d;
 	PRINT("scroll(%7.2f, %7.2f)  orima(%7.2f, %7.2f)  area(%7.2f, %7.2f)\n", p3, p4, _430.x, _430.z, _24, _28);
-	f32 dist = std::sqrtf(x1 * x1 + z1 * z1);
+	f32 dist = std::sqrtf(SQUARE(x1) + SQUARE(z1));
 	if (dist < _2C) {
 		*p1 = a;
 		*p2 = b;
@@ -566,15 +550,13 @@ void zen::ogRaderMgr::AreaScroll(f32* p1, f32* p2, f32 p3, f32 p4)
 		_00 = false;
 	}
 }
-#endif
 
 /**
  * @todo: Documentation
  */
 void zen::ogRaderMgr::updateMenu(Controller* input)
 {
-#if defined(VERSION_GPIP01_00)
-	if (mStatus == -1) {
+	if (mStatus == STATE_NULL) {
 		return;
 	}
 	f32 x  = _428;
@@ -686,148 +668,6 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 	if (x != _428) {
 		setRaderScale(x);
 	}
-#else
-
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
-	if (mStatus == -1) {
-		return;
-	}
-#endif
-	f32 x = _428;
-	f32 y = input->getSubStickY();
-	if (y > 0.3f) {
-		x *= 1.1f;
-		if (x > 10.0f) {
-			x = 10.0f;
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
-			seSystem->stopSysSe(SYSSE_YMENU_ZOOMIN);
-			_01 = false;
-#endif
-		} else {
-			if (!_01) {
-				seSystem->playSysSe(ogEnumFix(SYSSE_YMENU_ZOOMIN, JACSYS_MenuZoomIn));
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-			}
-			_01 = true;
-#else
-				_01 = true;
-			}
-#endif
-		}
-	} else if (y < -0.3f) {
-		x *= 0.9f;
-		if (x < 1.0f) {
-			x = 1.0f;
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
-			seSystem->stopSysSe(SYSSE_YMENU_ZOOMOUT);
-			_02 = false;
-#endif
-		} else {
-			if (!_02) {
-				seSystem->playSysSe(ogEnumFix(SYSSE_YMENU_ZOOMOUT, JACSYS_MenuZoomOut));
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-			}
-			_02 = true;
-#else
-				_02 = true;
-			}
-#endif
-		}
-	}
-
-	f32 c = cosf(_454);
-	f32 s = sinf(_454);
-	if (input->keyDown(KBBTN_MSTICK_UP)) {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		if (!_00) {
-			seSystem->playSysSe(ogEnumFix(SYSSE_YMENU_SCROLL, JACSYS_MenuScroll));
-		}
-		_00 = true;
-		_34 -= 20.0f * s;
-		_38 -= 20.0f * c;
-#else
-		AreaScroll(&_34, &_38, s * -20.0f, c * -20.0f);
-#endif
-	} else if (input->keyDown(KBBTN_MSTICK_DOWN)) {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		if (!_00) {
-			seSystem->playSysSe(ogEnumFix(SYSSE_YMENU_SCROLL, JACSYS_MenuScroll));
-		}
-		_00 = true;
-		_34 += 20.0f * s;
-		_38 += 20.0f * c;
-#else
-		AreaScroll(&_34, &_38, s * 20.0f, c * 20.0f);
-#endif
-	}
-	if (input->keyDown(KBBTN_MSTICK_LEFT)) {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		if (!_00) {
-			seSystem->playSysSe(ogEnumFix(SYSSE_YMENU_SCROLL, JACSYS_MenuScroll));
-		}
-		_00 = true;
-		_34 -= 20.0f * c;
-		_38 += 20.0f * s;
-#else
-		AreaScroll(&_34, &_38, c * -20.0f, s * 20.0f);
-#endif
-	} else if (input->keyDown(KBBTN_MSTICK_RIGHT)) {
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-		if (!_00) {
-			seSystem->playSysSe(ogEnumFix(SYSSE_YMENU_SCROLL, JACSYS_MenuScroll));
-		}
-		_00 = true;
-		_34 += 20.0f * c;
-		_38 -= 20.0f * s;
-#else
-		AreaScroll(&_34, &_38, c * 20.0f, s * -20.0f);
-#endif
-	}
-
-	if (_00 && !input->keyDown(KBBTN_MSTICK_UP | KBBTN_MSTICK_DOWN | KBBTN_MSTICK_RIGHT | KBBTN_MSTICK_LEFT)) {
-		seSystem->stopSysSe(ogEnumFix(SYSSE_YMENU_SCROLL, JACSYS_MenuScroll));
-		_00 = false;
-	}
-
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-	if (_01 && !(y < 0.2f)) {
-		seSystem->stopSysSe(ogEnumFix(SYSSE_YMENU_ZOOMIN, JACSYS_MenuZoomIn));
-		_01 = false;
-	}
-	if (_02 && !(y > -0.2f)) {
-		seSystem->stopSysSe(ogEnumFix(SYSSE_YMENU_ZOOMOUT, JACSYS_MenuZoomOut));
-		_02 = false;
-	}
-	if (_34 < -4096.0f) {
-		_34 = -4096.0f;
-	}
-	if (_34 > 4096.0f) {
-		_34 = 4096.0f;
-	}
-	if (_38 < -4096.0f) {
-		_38 = -4096.0f;
-	}
-	if (_38 > 4096.0f) {
-		_38 = 4096.0f;
-	}
-#else
-	if (_01 && y < 0.2f) {
-		seSystem->stopSysSe(SYSSE_YMENU_ZOOMIN);
-		_01 = false;
-	}
-	if (_02 && y > -0.2f) {
-		seSystem->stopSysSe(SYSSE_YMENU_ZOOMOUT);
-		_02 = false;
-	}
-#endif
-
-	if (x != _428) {
-		setRaderScale(x);
-	}
-#endif
 }
 
 /**

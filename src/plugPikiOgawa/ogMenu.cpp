@@ -108,7 +108,6 @@ zen::ogDrawScrMenu::returnStatusFlag zen::ogDrawScrMenu::update(Controller* inpu
 		zen::ChkAngle(&mTargetAngle);
 		mAngularVelocity = 0.0f;
 		calcAngleSpeed(5.0f);
-		seSystem->playSysSe(SYSSE_CMENU_SELECT);
 	}
 
 	if (a2) {
@@ -116,15 +115,14 @@ zen::ogDrawScrMenu::returnStatusFlag zen::ogDrawScrMenu::update(Controller* inpu
 		zen::ChkAngle(&mTargetAngle);
 		mAngularVelocity = 0.0f;
 		calcAngleSpeed(5.0f);
-		seSystem->playSysSe(SYSSE_CMENU_SELECT);
 	}
 
 	calcAngleSpeed(10.0f);
 	mAngularVelocity -= mAngularVelocity * 0.4f;
 	f32 a = mAngularVelocity;
-	if (quickABS(a) < 0.005f) {
+	if (absF(a) < 0.005f) {
 		a = mCurrentAngle - mTargetAngle;
-		if (quickABS(a) < 0.005f) {
+		if (absF(a) < 0.005f) {
 			mCurrentAngle    = mTargetAngle;
 			mAngularVelocity = 0.0f;
 		}
@@ -142,7 +140,6 @@ zen::ogDrawScrMenu::returnStatusFlag zen::ogDrawScrMenu::update(Controller* inpu
 	}
 	mScreen->update();
 
-	STACK_PAD_VAR(1);
 	return mUpdateResultStatus;
 }
 
@@ -264,11 +261,8 @@ void zen::ogDrawScrController::update()
  */
 zen::ogDrawScrInfo::ogDrawScrInfo()
 {
-#if defined(VERSION_PIKIDEMO)
-	mInfoScreenMenu.setScreen("screen/blo/ot_menu2.blo");
-#else
 	mInfoScreenMenu.setScreen("screen/blo/m_menu2.blo");
-#endif
+
 	P2DScreen* screen  = mInfoScreenMenu.getPsc();
 	mRootPane          = screen->search('root', true);
 	mRadarMovementPane = screen->search('idou', true);
@@ -444,7 +438,7 @@ void zen::ogDrawScrInfo2::drawHougaku(Graphics& gfx)
 	f32 angle = atan2f(-gfx.mCamera->mViewZAxis.x, -gfx.mCamera->mViewZAxis.z);
 
 	// final trial check?
-	if (flowCont.mCurrentStage->mStageID == 4) {
+	if (flowCont.mCurrentStage->mStageID == STAGE_Last) {
 		angle += PI;
 	}
 	mDirectionArrowPane->rotateZ(w, h, angle);
@@ -490,7 +484,6 @@ zen::ogScrMenuMgr::ogScrMenuMgr()
 	mCurrentScreenIndex = 0;
 	mRadarScaleVector.set(1.0f, 0.0f, 1.0f);
 	mStatus = STATE_Inactive;
-	STACK_PAD_TERNARY(mStatus, 1);
 }
 
 /**
@@ -523,10 +516,8 @@ void zen::ogScrMenuMgr::updateInfo(Controller* input)
 	if (!input->keyClick(KBBTN_L) && input->keyClick(KBBTN_R)) {
 		mCurrentScreenIndex++;
 		mSwitchRightRequested = true;
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 		mRadarManager->end();
-#endif
+		seSystem->playSysSe(SYSSE_CMENU_SELECT);
 	}
 	// UNUSED FUNCTION
 }
@@ -542,10 +533,8 @@ void zen::ogScrMenuMgr::updateCont(Controller* input)
 	if (input->keyClick(KBBTN_L)) {
 		mCurrentScreenIndex--;
 		mSwitchLeftRequested = true;
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 		mRadarManager->MapOn();
-#endif
+		seSystem->playSysSe(SYSSE_CMENU_SELECT);
 	}
 	// UNUSED FUNCTION
 }
@@ -610,15 +599,12 @@ zen::ogScrMenuMgr::returnStatusFlag zen::ogScrMenuMgr::update(Controller* input)
 	mSwitchLeftRequested  = false;
 	mSwitchRightRequested = false;
 
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-#else
 	if (input->keyClick(KBBTN_Y | KBBTN_B)) {
 		mTransitionTimer = 0.0f;
 		mStatus          = STATE_FadingOut;
 		seSystem->playSysSe(SYSSE_CMENU_OFF);
 		mRadarManager->end();
 	}
-#endif
 
 	if (mCurrentScreenIndex) {
 		if (mCurrentScreenIndex == 1) {
@@ -631,17 +617,6 @@ zen::ogScrMenuMgr::returnStatusFlag zen::ogScrMenuMgr::update(Controller* input)
 	}
 	mLeftRightIndicator->update();
 	mBlackScreen->update();
-
-#if defined(VERSION_PIKIDEMO) || defined(VERSION_GPIJ01_01)
-	if (input->keyClick(KBBTN_Y | KBBTN_B)) {
-		mTransitionTimer = 0.0f;
-		mStatus          = STATE_FadingOut;
-		seSystem->playSysSe(SYSSE_CMENU_OFF); // why is this one using the right enum.
-		seSystem->stopSysSe(ogEnumFix(SYSSE_YMENU_SCROLL, JACSYS_MenuScroll));
-		seSystem->stopSysSe(ogEnumFix(SYSSE_YMENU_ZOOMIN, JACSYS_MenuZoomIn));
-		seSystem->stopSysSe(ogEnumFix(SYSSE_YMENU_ZOOMOUT, JACSYS_MenuZoomOut));
-	}
-#endif
 
 	return mStatus;
 }

@@ -256,10 +256,10 @@ RumbleMgr::RumbleMgr(bool enabled1, bool enabled2, bool enabled3, bool enabled4)
 		}
 	}
 
-	mDataMgr    = nullptr;
-	mDataMgr    = new ChannelDataMgr();
-	mIsEnabled  = 1;
-	mIsDisabled = 0;
+	mDataMgr      = nullptr;
+	mDataMgr      = new ChannelDataMgr();
+	mRumbleEnable = true;
+	mRumblePaused = false;
 }
 
 /**
@@ -280,8 +280,8 @@ void RumbleMgr::init()
 	}
 
 	mDataMgr->init();
-	mIsEnabled  = 1;
-	mIsDisabled = 0;
+	mRumbleEnable = true;
+	mRumblePaused = false;
 }
 
 /**
@@ -299,7 +299,7 @@ void RumbleMgr::reset()
 			mSamples[i]->simpleStop();
 		}
 	}
-	mIsDisabled = 0;
+	mRumblePaused = false;
 }
 
 /**
@@ -307,7 +307,7 @@ void RumbleMgr::reset()
  */
 void RumbleMgr::start(int type, int ctrlNum, f32* valuePtr)
 {
-	if (!mIsDisabled && mIsEnabled) {
+	if (!mRumblePaused && mRumbleEnable) {
 		if (mControlerMgrs[ctrlNum]) {
 			mControlerMgrs[ctrlNum]->start(type, valuePtr);
 		}
@@ -319,7 +319,7 @@ void RumbleMgr::start(int type, int ctrlNum, f32* valuePtr)
  */
 void RumbleMgr::start(int type, int ctrlNum, immut Vector3f& sourcePos)
 {
-	if (!mIsDisabled && mIsEnabled) {
+	if (!mRumblePaused && mRumbleEnable) {
 		if (mControlerMgrs[ctrlNum]) {
 			Navi* navi = naviMgr->getNavi(ctrlNum);
 			f32 dist   = navi->getPosition().distance(sourcePos);
@@ -345,7 +345,7 @@ void RumbleMgr::stop()
  */
 void RumbleMgr::stop(int rumbleType, int controllerIndex)
 {
-	if (!mIsDisabled && mIsEnabled) {
+	if (!mRumblePaused && mRumbleEnable) {
 		if (mControlerMgrs[controllerIndex]) {
 			mControlerMgrs[controllerIndex]->stop(rumbleType);
 		}
@@ -357,7 +357,7 @@ void RumbleMgr::stop(int rumbleType, int controllerIndex)
  */
 void RumbleMgr::update()
 {
-	if (!mIsDisabled && mIsEnabled) {
+	if (!mRumblePaused && mRumbleEnable) {
 		for (int i = 0; i < 4; i++) {
 			if (mControlerMgrs[i]) {
 				mRumbleIntensity = mControlerMgrs[i]->update();
@@ -382,13 +382,13 @@ void RumbleMgr::update()
 }
 
 /**
- * @todo: Documentation
+* @brief Set whether rumble is enabled or disabled
  */
 void RumbleMgr::rumbleOption(bool enabled)
 {
-	mIsEnabled = enabled;
+	mRumbleEnable = enabled;
 
-	if (!mIsEnabled) {
+	if (!mRumbleEnable) {
 		reset();
 	} else {
 		reset();

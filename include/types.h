@@ -65,6 +65,13 @@ typedef byte1_t					byte_t;
 typedef u32 HWND;
 #endif
 
+// A boolean value typedef inspired by the Win32 API.
+typedef int BOOL;
+#undef TRUE
+#define TRUE (1)
+#undef FALSE
+#define FALSE (0)
+
 // Here we check if the decomp build system is configured for a non-matching build, and define `BUILD_MATCHING` if it is not.
 // Please do not use the `DTK_CONFIG_NONMATCHING` macro for any other purpose, and instead check if the the `BUILD_MATCHING`
 // macro is defined.  This is to ensure the codebase doesn't require any preprocessor macros to be defined by the build system.
@@ -132,12 +139,6 @@ typedef u32 HWND;
 #else
 #define TERNARY_BUILD_MATCHING(matching, nonmatching) nonmatching
 #endif
-
-// Workarounds for our version of C++ and other stupidities
-#undef TRUE
-#define TRUE (1)
-#undef FALSE
-#define FALSE (0)
 
 // We yearn for modernity.
 #if __cplusplus < 201103L

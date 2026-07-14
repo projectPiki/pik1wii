@@ -17,7 +17,7 @@ DEFINE_ERROR(__LINE__) // Never used in the DLL
  * @todo: Documentation
  * @note UNUSED Size: 0000F4
  */
-DEFINE_PRINT(nullptr)
+DEFINE_PRINT("OgTutorialSection")
 
 /**
  * @todo: Documentation
@@ -79,9 +79,10 @@ zen::ogScrTutorialMgr::TutorialStatus zen::ogScrTutorialMgr::update(Controller* 
  */
 void zen::ogScrTutorialMgr::draw(Graphics& gfx)
 {
-	if (mStatus != -1) {
-		mMessageMgr->draw(gfx);
+	if (mStatus == -1) {
+		return;
 	}
+	mMessageMgr->draw(gfx);
 }
 
 /**

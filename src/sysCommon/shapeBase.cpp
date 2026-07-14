@@ -8,13 +8,13 @@
 #include "Common/String.h"
 #include "DebugLog.h"
 #include "Delegate.h"
-#include "RevoSDK/mtx.h"
 #include "Font.h"
 #include "Graphics.h"
 #include "Joint.h"
 #include "Material.h"
 #include "Mesh.h"
 #include "PVW.h"
+#include "RevoSDK/mtx.h"
 #include "Texture.h"
 #include "Vector.h"
 #include "sysNew.h"
@@ -76,9 +76,6 @@ void Envelope::read(RandomAccessStream& stream)
  */
 void DispList::read(RandomAccessStream& stream)
 {
-	// Match stack size with the original function
-	STACK_PAD_VAR(1);
-
 	mFlags      = stream.readInt();
 	mFaceCount  = stream.readInt();
 	mDataLength = stream.readInt();
@@ -177,9 +174,6 @@ void Joint::recOverrideAnim(AnimContext* anim)
  */
 void Joint::read(RandomAccessStream& stream)
 {
-	// Match stack size with the original function
-	STACK_PAD_VAR(1);
-
 	mParentIndex = stream.readInt();
 
 	int flags      = stream.readInt();
@@ -479,8 +473,6 @@ void CamDataInfo::update(f32 currentFrame, immut Matrix4f& mtx)
 	}
 
 	mCamera.calcLookAt(mCamera.mPosition, mCamera.mFocus, nullptr);
-
-	STACK_PAD_VAR(4);
 }
 
 /**
@@ -566,8 +558,6 @@ void LightDataInfo::update(f32 currentFrame)
 		mLight.mDistancedRange = 1000.0f;
 		mLight.update();
 	}
-
-	STACK_PAD_VAR(3);
 }
 
 /**
@@ -2134,7 +2124,6 @@ void BaseShape::read(RandomAccessStream& stream)
 	u32 chunkType;
 	u32 before;
 	u32 after;
-	STACK_PAD_VAR(1);
 	do {
 		u32 pos = stream.getPosition();
 
@@ -2149,7 +2138,7 @@ void BaseShape::read(RandomAccessStream& stream)
 		case BaseShapeChunk::Header:
 		{
 			stream.skipPadding(0x20);
-			int unused   = stream.readInt();
+			int unused  = stream.readInt();
 			mShapeFlags = stream.readInt();
 			stream.skipPadding(0x20);
 			break;
@@ -2553,9 +2542,6 @@ void BaseShape::read(RandomAccessStream& stream)
 
 	// one matrix for each joint and for each envelope
 	mAnimMtxCount = mJointCount + mEnvelopeCount;
-
-	// i don't even care anymore. i am numb to this.
-	STACK_PAD_TERNARY(chunkType, 11);
 }
 
 /**
@@ -2644,7 +2630,6 @@ void BaseShape::initIni(bool usePlatforms)
  */
 void BaseShape::initialise()
 {
-	STACK_PAD_VAR(1);
 	for (int i = 0; i < mTexAttrCount; i++) {
 		if (!(mTexAttrList[i].mTextureIndex & 0x8000)) {
 			mTexAttrList[i].mImage         = &mTextureList[mTexAttrList[i].mTextureIndex];
@@ -3007,8 +2992,10 @@ void BaseShape::createCollisions(int gridSize)
 	}
 
 	PRINT("got a total of %d unique groups\n", numUnique);
+#ifdef DEVELOP
 	PRINT("*------------------------------------------- collision data uses %.2fk\n",
 	      (heapStart - gsys->getHeap(SYSHEAP_App)->getFree()) / 1024.0f);
+#endif
 }
 
 /**
@@ -3223,11 +3210,10 @@ void AnimFrameCacher::updateInfo(AnimCacheInfo* info)
  */
 void AnimFrameCacher::removeOldest()
 {
-	TexCacheInfo* prev = (TexCacheInfo*)mInfo.mPrev;
-	void* p            = prev;
-	prev->remove();
-	prev->_0C->mPrev = nullptr;
-	mCache->cacheFree(p);
+	AnimCacheInfo* oldest = static_cast<AnimCacheInfo*>(mInfo.mPrev);
+	mInfo.mPrev->remove();
+	*oldest->_0C = nullptr;
+	mCache->cacheFree(oldest);
 	// UNUSED FUNCTION
 }
 
@@ -3342,7 +3328,7 @@ void BaseShape::calcWeightedMatrices()
 			register immut Matrix4f& mtx1 = weighted;
 			register Matrix4f& animMtx    = mAnimMatrices[mJointCount + i];
 
-			f32 weights[2]         = {};
+			f32 weights[2]         = { };
 			register f32* weightsR = weights;
 			weights[0]             = weight;
 			weights[1]             = weight;

@@ -666,7 +666,6 @@ int SeSystem::createEvent(SeContext* context, int eventType, SVector_* soundOffs
 		}
 	}
 
-	STACK_PAD_VAR(1);
 	return newHandle;
 }
 
@@ -807,7 +806,7 @@ void SeSystem::draw3d(Graphics& gfx)
 {
 	char str[PATH_MAX];
 
-	Colour colour(255, 0, 0, 255);
+	const Colour colour(255, 0, 0, 255);
 	gfx.setColour(colour, true);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 	gfx.setLighting(false, nullptr);
@@ -832,17 +831,17 @@ void SeSystem::draw2d(Graphics& gfx)
 {
 	char str[PATH_MAX];
 
-	Colour colour1(COLOUR_WHITE);
+	const Colour colour1(COLOUR_WHITE);
 	gfx.setColour(colour1, true);
 	gfx.useTexture(nullptr, GX_TEXMAP0);
 
-	Colour colour2(55, 55, 55, 128);
+	const Colour colour2(55, 55, 55, 128);
 	gfx.setColour(colour2, true);
 
 	RectArea rect(20, 60, 550, mMaxEventCount * 16 + 120);
 	gfx.fillRectangle(rect);
 
-	Colour colour3(COLOUR_WHITE);
+	const Colour colour3(COLOUR_WHITE);
 	gfx.setColour(colour3, true);
 
 	sprintf(str, "-- se events -- %d/%d (%.1f %.1f %.1f): clock %d", mCurrentEventCount, mMaxEventCount, mListenerPosition.x,
