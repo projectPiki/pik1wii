@@ -213,8 +213,6 @@ void ActFreeSelect::determine()
 	}
 
 	mChildActions[mCurrActionIdx].initialise(target);
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -438,8 +436,8 @@ void ActBoreTalk::init(Creature* creature)
 	Iterator iter(&mPiki->mSearchBuffer);
 	iter.first();
 	mTarget = *iter;
-	PaniMotionInfo anim1(PIKIANIM_Asibumi, mPiki);
-	PaniMotionInfo anim2(PIKIANIM_Asibumi);
+	PaniMotionInfo anim1(PIKIANIM_Asibumi);
+	PaniMotionInfo anim2(PIKIANIM_Asibumi, this);
 	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 }
@@ -495,7 +493,7 @@ int ActBoreTalk::exec()
 		ang                   = angDist(ang, mPiki->mFaceDirection);
 		mPiki->mFaceDirection = roundAng(mPiki->mFaceDirection + 0.1f * ang);
 
-		if (quickABS(ang) < 0.1f) {
+		if (absF(ang) < 0.1f) {
 			mIsLookHandledElsewhere = TRUE;
 			startTalk();
 		}

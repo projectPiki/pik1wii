@@ -86,16 +86,7 @@ void Kontroller::update()
 		if (--mDuration <= 0) {
 			void* addr = mDataStream->mBufferAddr;
 			DCFlushRange(addr, mDataStream->getPosition());
-
-			//! What the actual fuck is this?
-			//! Seriously, all to generate 4 instructions.
-			u32 test = 0;
-			for (int i = 0; i != 16; i++) {
-				!(test += 0x8);
-			}
-
 			mDataStream->close();
-			mDataStream->getPosition();
 			kio->startWrite(KIOWRITE_ControllerStream, (u8*)mDataStream->mBufferAddr, mDataStream->getPosition());
 			stop();
 		}
@@ -107,8 +98,6 @@ void Kontroller::update()
 		break;
 	}
 	}
-
-	STACK_PAD_VAR(2);
 }
 
 /**

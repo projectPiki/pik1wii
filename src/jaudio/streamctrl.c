@@ -55,7 +55,7 @@ void Jac_VolMoveStreamBGM(s32 vol, s32)
  */
 void StreamMain()
 {
-	static DVDFileInfo finfo;
+	/*static DVDFileInfo finfo;
 	static DVDCommandBlock cmd;
 	volatile u32 streamed_samples;
 	u32 trigger;
@@ -170,5 +170,5 @@ void StreamMain()
 	}
 	}
 
-	STACK_PAD_VAR(4);
+	STACK_PAD_VAR(4);*/
 }

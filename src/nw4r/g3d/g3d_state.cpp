@@ -589,7 +589,7 @@ private:
     u8 PADDING_0x103;                // _103
 };
 
-TexState sTex; ATTRIBUTE_ALIGN(32);
+TexState sTex ATTRIBUTE_ALIGN(32);
 
 /******************************************************************************
  *
@@ -631,7 +631,7 @@ private:
     u16 PADDING_0x62;                            // _062
 };
 
-TlutState sTlut; ATTRIBUTE_ALIGN(32);
+TlutState sTlut ATTRIBUTE_ALIGN(32);
 
 /******************************************************************************
  *

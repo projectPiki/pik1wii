@@ -19,7 +19,7 @@ DEFINE_ERROR(__LINE__) // Never used in the DLL
  * @todo: Documentation
  * @note UNUSED Size: 0000F4
  */
-DEFINE_PRINT("")
+DEFINE_PRINT("OgMapSection")
 
 /**
  * @todo: Documentation
@@ -98,7 +98,7 @@ zen::ogScrMapMgr::MapStatus zen::ogScrMapMgr::update(Controller* controller)
 		mTypingTextMgr->update();
 		mTypingTextMgr->transCursor(mCursorPane);
 
-		f32 scale  = sinf(fmod(mFrameTimer, 1.0f) * TAU) + 1.0f;
+		f32 scale  = sinf(fmodf(mFrameTimer, 1.0f) * TAU) + 1.0f;
 		int width  = mPic1->getWidth();
 		int height = mPic1->getHeight();
 		mPic1->setScale(scale);

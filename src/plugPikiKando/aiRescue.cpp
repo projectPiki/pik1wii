@@ -153,8 +153,8 @@ int ActRescue::exeApproach()
 void ActRescue::initRescue()
 {
 	mState = STATE_Rescue;
-	PaniMotionInfo anim1(PIKIANIM_ThrowWait, this);
-	PaniMotionInfo anim2(PIKIANIM_ThrowWait);
+	PaniMotionInfo anim1(PIKIANIM_ThrowWait);
+	PaniMotionInfo anim2(PIKIANIM_ThrowWait, this);
 	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 	mGotAnimationAction = false;
@@ -228,7 +228,6 @@ void ActRescue::initThrow()
  */
 int ActRescue::exeThrow()
 {
-	STACK_PAD_VAR(2);
 	int state = mDrowningPiki->getState();
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	if (mThrowReady) {
@@ -237,8 +236,8 @@ int ActRescue::exeThrow()
 		f32 angle    = angDist(diff, mPiki->mFaceDirection);
 		if (absF(angle) < 0.25132743f) {
 			mThrowReady = false;
-			PaniMotionInfo anim1(PIKIANIM_Throw, this);
-			PaniMotionInfo anim2(PIKIANIM_Throw);
+			PaniMotionInfo anim1(PIKIANIM_Throw);
+			PaniMotionInfo anim2(PIKIANIM_Throw, this);
 			mPiki->startMotion(anim1, anim2);
 			PRINT("THROW MOTION START\n");
 		}

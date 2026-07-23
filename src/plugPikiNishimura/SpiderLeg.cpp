@@ -300,15 +300,17 @@ void SpiderLeg::killCallBackEffect(bool doForceFinish)
  */
 void SpiderLeg::setLegScaleParam(int jointIdx)
 {
+	f32 goal;
 	f32 stepTime = 1.0f / C_SPIDER_PROP(mSpider).mDeadMotionDelay();
 	if (jointIdx < 3) {
 		for (int i = 0; i < 4; i++) {
 			mSegmentScale[Kumo::leg_index[i][jointIdx]]
-			    = NsLibMath<f32>::toGoal(mSegmentScale[Kumo::leg_index[i][jointIdx]], 0.0f, gsys->getFrameTime() * stepTime);
+			    = NsLibMath<f32>::toGoal(mSegmentScale[Kumo::leg_index[i][jointIdx]], (goal = 0.0f), gsys->getFrameTime() * stepTime);
 		}
 	} else {
+		f32 goal2;
 		for (int i = 0; i < 4; i++) {
-			mSegmentScale[i] = NsLibMath<f32>::toGoal(mSegmentScale[i], 0.0f, gsys->getFrameTime() * stepTime);
+			mSegmentScale[i] = NsLibMath<f32>::toGoal(mSegmentScale[i], (goal2 = 0.0f), gsys->getFrameTime() * stepTime);
 		}
 	}
 	/*

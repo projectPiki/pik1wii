@@ -162,6 +162,15 @@ struct DVDPartitionParams {
 	u8 h3Hash[98304];
 };
 
+typedef enum {
+    DVD_PRIO_HIGHEST,
+    DVD_PRIO_HIGH,
+    DVD_PRIO_MEDIUM,
+    DVD_PRIO_LOW,
+
+    DVD_PRIO_MAX,
+} DVDQueuePriority;
+
 //////////////////////////////////
 
 ///////// DVD FUNCTIONS //////////

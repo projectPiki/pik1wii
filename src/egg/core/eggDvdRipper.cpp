@@ -7,7 +7,8 @@
 
 namespace EGG {
 
-bool DvdRipper::sErrorRetry = true;
+bool DvdRipper::sErrorRetry                       = true;
+DvdRipper::DvdRipperCallback DvdRipper::sCallback = nullptr;
 
 /**
  * @brief TODO
@@ -33,7 +34,12 @@ u8* DvdRipper::loadToMainRAM(DvdFile* pFile, u8* pBuffer, Heap* pHeap, EAllocDir
 {
 
 	bool allocedBuffer = false;
-	u32 fileSize       = pFile->getFileSize();
+	if (sCallback != nullptr) {
+		Arg arg;
+		sCallback(arg);
+	}
+
+	u32 fileSize = pFile->getFileSize();
 
 	if (pSize != nullptr) {
 		*pSize = fileSize;

@@ -90,7 +90,7 @@ void Jac_InitARAM(u32 loadAudiorom)
 		aram_size = AUDIO_ARAM_SIZE;
 	}
 
-	AUDIO_ARAM_TOP = ARGetBaseAddress();
+	AUDIO_ARAM_TOP = 0;
 	audiorom_size  = 0;
 
 	CARD_SECURITY_BUFFER = 0x40;
@@ -101,5 +101,5 @@ void Jac_InitARAM(u32 loadAudiorom)
 
 	/* Probably leftovers from some debug print statement */
 	(void)audiorom_size;
-	STACK_PAD_VAR(6);
+	(void)audiorom_size;
 }

@@ -14,7 +14,7 @@ struct Graphics;
 struct DynParticle : public CoreNode {
 	DynParticle();
 
-	virtual bool isFree() { return !-mIsFree; }; // _10
+	virtual bool isFree() { return !mIsFree; }; // _10
 	virtual f32 getSize();                       // _14
 	virtual void refresh(Graphics&);             // _18
 	virtual void doKill();                       // _1C

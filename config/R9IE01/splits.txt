@@ -256,6 +256,7 @@ jaudio/cmdqueue.c:
 
 jaudio/filter3d.c:
 	.text       start:0x8001F620 end:0x8001F680
+	.sdata2     start:0x8049F3E8 end:0x8049F3F0
 
 jaudio/syncstream.c:
 	.text       start:0x8001F680 end:0x80021500
@@ -776,18 +777,22 @@ gx/GXPerf.c:
 
 mtx/mtx.c:
 	.text       start:0x8004AD3C end:0x8004B900
+	.sdata      start:0x804975B8 end:0x804975C0
+	.sdata2     start:0x8049FA68 end:0x8049FA88
 
 mtx/mtxvec.c:
 	.text       start:0x8004B900 end:0x8004B954
 
 mtx/mtx44.c:
 	.text       start:0x8004B954 end:0x8004BB74
+	.sdata2     start:0x8049FA88 end:0x8049FAA0
 
 mtx/mtx44vec.c:
 	.text       start:0x8004BB74 end:0x8004BBEC
 
 mtx/vec.c:
 	.text       start:0x8004BBEC end:0x8004BDCC
+	.sdata2     start:0x8049FAA0 end:0x8049FAB0
 
 NdevExi2A/DebuggerDriver.c:
 	.text       start:0x8004BDCC end:0x8004C100
@@ -947,7 +952,8 @@ tpl/TPL.c:
 usb/usb.c:
 	.text       start:0x80066DFC end:0x80067F28
 	.data       start:0x8032C338 end:0x8032C9C8
-	.sdata      start:0x804976E0 end:0x804976F0
+	.sdata      start:0x804976E0 end:0x804976EE
+	.sbss       start:0x8049E9C8 end:0x8049E9D1
 
 wenc/wenc.c:
 	.text       start:0x80067F28 end:0x80068200
@@ -969,6 +975,9 @@ wpad/WPADHIDParser.c:
 	.bss        start:0x8040E348 end:0x8040E3B0
 	.sbss       start:0x8049EA10 end:0x8049EA28
 	.sdata2     start:0x8049FB50 end:0x8049FBB0
+
+wpad/WPADMem.c:
+	.bss        start:0x8040E3B0 end:0x8040E400
 
 wpad/WPADEncrypt.c:
 	.text       start:0x80074ED4 end:0x80075F7C
@@ -2108,14 +2117,17 @@ plugPikiKando/kusaItem.cpp:
 	.text       start:0x80162C38 end:0x80163500
 	.ctors      start:0x802F5FB8 end:0x802F5FBC
 	.data       start:0x8033D5D0 end:0x8033D898
+	.sdata2     start:0x804A0F60 end:0x804A0F78
 
 plugPikiKando/mapcode.cpp:
 	.text       start:0x80163500 end:0x80163590
+	.sdata2     start:0x804A0F78 end:0x804A0F80
 
 plugPikiKando/mapParts.cpp:
 	.text       start:0x80163590 end:0x80163FCC
 	.ctors      start:0x802F5FBC end:0x802F5FC0
 	.data       start:0x8033D898 end:0x8033D940
+	.sdata2     start:0x804A0F80 end:0x804A0F90
 
 plugPikiKando/memStat.cpp:
 	.text       start:0x80163FCC end:0x80164FB0
@@ -2126,6 +2138,7 @@ plugPikiKando/mizuItem.cpp:
 	.text       start:0x80164FB0 end:0x801651CC
 	.ctors      start:0x802F5FC0 end:0x802F5FC4
 	.data       start:0x8033D950 end:0x8033DAB8
+	.sdata2     start:0x804A0F90 end:0x804A0F98
 
 plugPikiKando/navi.cpp:
 	.text       start:0x801651CC end:0x8016E808
@@ -2133,11 +2146,13 @@ plugPikiKando/navi.cpp:
 	.data       start:0x8033DAB8 end:0x8033DD50
 	.sdata      start:0x8049A468 end:0x8049A6E0
 	.sbss       start:0x8049EE30 end:0x8049EE38
+	.sdata2     start:0x804A0F98 end:0x804A10F0
 
 plugPikiKando/naviDemoState.cpp:
 	.text       start:0x8016E808 end:0x80170328
 	.ctors      start:0x802F5FC8 end:0x802F5FCC
 	.data       start:0x8033DD50 end:0x8033DF78
+	.sdata2     start:0x804A10F0 end:0x804A1138
 
 plugPikiKando/naviMgr.cpp:
 	.text       start:0x80170328 end:0x80170A3C
@@ -2150,12 +2165,14 @@ plugPikiKando/naviState.cpp:
 	.ctors      start:0x802F5FD0 end:0x802F5FD4
 	.rodata     start:0x80302BC8 end:0x80302C80
 	.data       start:0x8033E000 end:0x8033EBD0
+	.sdata2     start:0x804A1138 end:0x804A1218
 
 plugPikiKando/objectMgr.cpp:
 	.text       start:0x8017A5D8 end:0x8017D1BC
 	.ctors      start:0x802F5FD4 end:0x802F5FD8
 	.rodata     start:0x80302C80 end:0x80302CA8
 	.data       start:0x8033EBD0 end:0x8033ECD8
+	.sdata2     start:0x804A1218 end:0x804A1228
 
 plugPikiKando/objectTypes.cpp:
 	.text       start:0x8017D1BC end:0x8017D298
@@ -2164,6 +2181,7 @@ plugPikiKando/objectTypes.cpp:
 
 plugPikiKando/odoMeter.cpp:
 	.text       start:0x8017D298 end:0x8017D3A4
+	.sdata2     start:0x804A1228 end:0x804A1230
 
 plugPikiKando/omake.cpp:
 	.text       start:0x8017D3A4 end:0x8017F610
@@ -2860,6 +2878,9 @@ plugPikiOgawa/ogMakeDefault.cpp:
 plugPikiOgawa/ogMap.cpp:
 	.text       start:0x80213520 end:0x80213B08
 	.ctors      start:0x802F61A4 end:0x802F61A8
+	.rodata     start:0x80307A08 end:0x80307A50
+	.sdata      start:0x8049CC80 end:0x8049CC98
+	.sdata2     start:0x804A2778 end:0x804A27A8
 
 plugPikiOgawa/ogMemChk.cpp:
 	.text       start:0x80213B08 end:0x80215BC0
@@ -3102,93 +3123,128 @@ plugPikiYamashita/effectMgr2D.cpp:
 	.ctors      start:0x802F6258 end:0x802F625C
 	.rodata     start:0x80309CE8 end:0x8030A2F0
 	.data       start:0x8034A378 end:0x8034A5E8
+	.sdata      start:0x8049D580 end:0x8049D5B0
+	.sdata2     start:0x804A32C8 end:0x804A32F8
 
 plugPikiYamashita/effectMgr.cpp:
 	.text       start:0x80250AE8 end:0x80251B80
 	.ctors      start:0x802F625C end:0x802F6260
 	.rodata     start:0x8030A2F0 end:0x8030C828
 	.data       start:0x8034A5E8 end:0x8034B6A0
+	.sdata      start:0x8049D5B0 end:0x8049D620
 	.sbss       start:0x8049EF50 end:0x8049EF58
+	.sdata2     start:0x804A32F8 end:0x804A3318
 
 plugPikiYamashita/gameCourseClear.cpp:
 	.text       start:0x80251B80 end:0x80253E04
 	.ctors      start:0x802F6260 end:0x802F6264
 	.rodata     start:0x8030C828 end:0x8030C8C0
 	.data       start:0x8034B6A0 end:0x8034B980
+	.sdata      start:0x8049D620 end:0x8049D670
+	.sdata2     start:0x804A3318 end:0x804A3348
 
 plugPikiYamashita/gameCredits.cpp:
 	.text       start:0x80253E04 end:0x80253EE8
 	.ctors      start:0x802F6264 end:0x802F6268
+	.rodata     start:0x8030C8C0 end:0x8030C908
 	.data       start:0x8034B980 end:0x8034B9B8
+	.sdata      start:0x8049D670 end:0x8049D688
 
 plugPikiYamashita/gameStageClear.cpp:
 	.text       start:0x80253EE8 end:0x80253FB4
 	.ctors      start:0x802F6268 end:0x802F626C
+	.rodata     start:0x8030C908 end:0x8030C958
 	.data       start:0x8034B9B8 end:0x8034B9F0
+	.sdata      start:0x8049D688 end:0x8049D6A0
 
 plugPikiYamashita/menuPanelMgr.cpp:
 	.text       start:0x80253FB4 end:0x80254D74
 	.ctors      start:0x802F626C end:0x802F6270
+	.rodata     start:0x8030C958 end:0x8030C988
 	.data       start:0x8034B9F0 end:0x8034BA00
+	.sdata      start:0x8049D6A0 end:0x8049D6D0
+	.sdata2     start:0x804A3348 end:0x804A33A8
 
 plugPikiYamashita/P2DFont.cpp:
 	.text       start:0x80254D74 end:0x8025549C
 	.ctors      start:0x802F6270 end:0x802F6274
+	.rodata     start:0x8030C988 end:0x8030C9B0
 	.data       start:0x8034BA00 end:0x8034BA10
+	.sdata      start:0x8049D6D0 end:0x8049D6E8
+	.sdata2     start:0x804A33A8 end:0x804A33D0
 
 plugPikiYamashita/P2DGrafContext.cpp:
 	.text       start:0x8025549C end:0x80255A70
 	.ctors      start:0x802F6274 end:0x802F6278
 	.data       start:0x8034BA10 end:0x8034BA38
+	.sdata      start:0x8049D6E8 end:0x8049D700
+	.sdata2     start:0x804A33D0 end:0x804A33E0
 
 plugPikiYamashita/P2DOrthoGraph.cpp:
 	.text       start:0x80255A70 end:0x80255EF4
 	.ctors      start:0x802F6278 end:0x802F627C
 	.data       start:0x8034BA38 end:0x8034BA60
+	.sdata      start:0x8049D700 end:0x8049D718
+	.sdata2     start:0x804A33E0 end:0x804A33F0
 
 plugPikiYamashita/P2DPane.cpp:
 	.text       start:0x80255EF4 end:0x802576B4
 	.ctors      start:0x802F627C end:0x802F6280
 	.data       start:0x8034BA60 end:0x8034BAA0
+	.sdata      start:0x8049D718 end:0x8049D7B8
+	.sdata2     start:0x804A33F0 end:0x804A3408
 
 plugPikiYamashita/P2DPerspGraph.cpp:
 	.text       start:0x802576B4 end:0x80257BE8
 	.ctors      start:0x802F6280 end:0x802F6284
 	.data       start:0x8034BAA0 end:0x8034BAC8
+	.sdata      start:0x8049D7B8 end:0x8049D818
+	.sdata2     start:0x804A3408 end:0x804A3430
 
 plugPikiYamashita/P2DPicture.cpp:
 	.text       start:0x80257BE8 end:0x80258F68
 	.ctors      start:0x802F6284 end:0x802F6288
 	.data       start:0x8034BAC8 end:0x8034BB08
+	.sdata      start:0x8049D818 end:0x8049D898
+	.sdata2     start:0x804A3430 end:0x804A3458
 
 plugPikiYamashita/P2DPrint.cpp:
 	.text       start:0x80258F68 end:0x8025A344
 	.ctors      start:0x802F6288 end:0x802F628C
+	.sdata      start:0x8049D898 end:0x8049D8B0
+	.sdata2     start:0x804A3458 end:0x804A3480
 
 plugPikiYamashita/P2DScreen.cpp:
 	.text       start:0x8025A344 end:0x8025AA60
 	.ctors      start:0x802F628C end:0x802F6290
 	.data       start:0x8034BBB8 end:0x8034BBF8
+	.sdata      start:0x8049D8B0 end:0x8049D8C8
 
 plugPikiYamashita/P2DStream.cpp:
 	.text       start:0x8025AA60 end:0x8025AC08
 	.ctors      start:0x802F6290 end:0x802F6294
+	.sdata      start:0x8049D8C8 end:0x8049D8E0
 
 plugPikiYamashita/P2DTextBox.cpp:
 	.text       start:0x8025AC08 end:0x8025B354
 	.ctors      start:0x802F6294 end:0x802F6298
 	.data       start:0x8034BBF8 end:0x8034BC38
+	.sdata      start:0x8049D8E0 end:0x8049D960
+	.sdata2     start:0x804A3480 end:0x804A3498
 
 plugPikiYamashita/P2DWindow.cpp:
 	.text       start:0x8025B354 end:0x8025C174
 	.ctors      start:0x802F6298 end:0x802F629C
-	.data       start:0x8034BC38 end:0x8034BCC0
+	.data       start:0x8034BC38 end:0x8034BC74
+	.sdata      start:0x8049D960 end:0x8049D9E0
+	.sdata2     start:0x804A3498 end:0x804A34A8
 
 plugPikiYamashita/particleGenerator.cpp:
 	.text       start:0x8025C174 end:0x8026041C
 	.ctors      start:0x802F629C end:0x802F62A0
-	.data       start:0x8034BCC0 end:0x8034BD78
-	.sdata      start:0x8049DA00 end:0x8049DA20
+	.data       start:0x8034BC80 end:0x8034BD78
+	.sdata      start:0x8049D9E0 end:0x8049DA20
+	.sdata2     start:0x804A34A8 end:0x804A34E0
 
 plugPikiYamashita/particleLoader.cpp:
 	.text       start:0x8026041C end:0x802605E8
@@ -3197,11 +3253,15 @@ plugPikiYamashita/particleLoader.cpp:
 plugPikiYamashita/particleManager.cpp:
 	.text       start:0x802605E8 end:0x80260CEC
 	.ctors      start:0x802F62A0 end:0x802F62A4
+	.sdata      start:0x8049DA20 end:0x8049DA38
+	.sdata2     start:0x804A34E0 end:0x804A34E8
 
 plugPikiYamashita/particleMdlManager.cpp:
 	.text       start:0x80260CEC end:0x80261298
 	.ctors      start:0x802F62A4 end:0x802F62A8
 	.data       start:0x8034BD88 end:0x8034BDB8
+	.sdata      start:0x8049DA38 end:0x8049DA80
+	.sdata2     start:0x804A34E8 end:0x804A34F0
 
 plugPikiYamashita/solidField.cpp:
 	.data       start:0x8034BDB8 end:0x8034EDD0
@@ -3212,6 +3272,7 @@ plugPikiYamashita/PSUList.cpp:
 plugPikiYamashita/ptclGenPack.cpp:
 	.text       start:0x802614F0 end:0x802616F8
 	.ctors      start:0x802F62A8 end:0x802F62AC
+	.sdata      start:0x8049DA80 end:0x8049DA98
 
 plugPikiYamashita/PUTRect.cpp:
 	.text       start:0x802616F8 end:0x80261898
@@ -3219,17 +3280,21 @@ plugPikiYamashita/PUTRect.cpp:
 plugPikiYamashita/simpleParticle.cpp:
 	.text       start:0x80261898 end:0x80261DF0
 	.ctors      start:0x802F62AC end:0x802F62B0
+	.sdata      start:0x8049DA98 end:0x8049DAB0
+	.sdata2     start:0x804A34F0 end:0x804A3518
 
 plugPikiYamashita/spectrumCursorMgr.cpp:
 	.text       start:0x80261DF0 end:0x802627B8
 	.ctors      start:0x802F62B0 end:0x802F62B4
 	.rodata     start:0x8030C9B0 end:0x8030C9E8
+	.sdata      start:0x8049DAB0 end:0x8049DAC8
 	.sdata2     start:0x804A3518 end:0x804A3548
 
 plugPikiYamashita/TAIAattack.cpp:
 	.text       start:0x802627B8 end:0x80263B00
 	.ctors      start:0x802F62B4 end:0x802F62B8
 	.data       start:0x8034EDD0 end:0x8034EE10
+	.sdata      start:0x8049DAC8 end:0x8049DB28
 	.sdata2     start:0x804A3548 end:0x804A3568
 
 plugPikiYamashita/TAIAeffect.cpp:
@@ -3969,7 +4034,8 @@ System12/system12DvdLoader.cpp:
 System12/system12FrameCounter.cpp:
 	.text       start:0x802BF524 end:0x802BFB70
 	.rodata     start:0x80310278 end:0x803102F0
-	.data       start:0x80351538 end:0x80351568
+	.data       start:0x80351538 end:0x80351564
+	.sdata2     start:0x804A3F60 end:0x804A3F68
 
 System12/system12Layout.cpp:
 	.text       start:0x802BFB70 end:0x802C2CC4
@@ -3990,13 +4056,14 @@ System12/sys12DebugDrawer.cpp:
 System12/system12WPMessage.cpp:
 	.text       start:0x802C48C8 end:0x802C56D0
 	.rodata     start:0x80310620 end:0x803108B0
-	.data       start:0x80351938 end:0x80351C00
+	.data       start:0x80351938 end:0x803519C0
 	.sbss       start:0x8049F148 end:0x8049F150
 
 System12/system12WPTagProcessor.cpp:
 	.text       start:0x802C56D0 end:0x802C7494
 	.ctors      start:0x802F6324 end:0x802F6328
 	.rodata     start:0x803108B0 end:0x803109A0
+	.data       start:0x803519C0 end:0x80351C00
 
 System12/system12WPWideTextWriter.cpp:
 	.text       start:0x802C7494 end:0x802C7D68

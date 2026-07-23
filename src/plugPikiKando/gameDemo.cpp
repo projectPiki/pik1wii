@@ -245,9 +245,13 @@ void DemoFlags::setFlag(int index, Creature* obj)
 		return;
 	}
 
+#ifdef DEVELOP
 	PRINT("FLAG <%s> SET\n", getDemoFlag(index)->mName);
+#endif
 	mStoredFlags[id] |= 1 << index - id * 8;
+#ifdef DEVELOP
 	PRINT("MOVIE INDEX = %d\n", getDemoFlag(index)->mIndex);
+#endif
 
 	int test = 0;
 	if (getDemoFlag(index)->_0A) {
@@ -257,8 +261,6 @@ void DemoFlags::setFlag(int index, Creature* obj)
 	if (getDemoFlag(index)->mMovieIndex == 0) {
 		return;
 	}
-
-	STACK_PAD_VAR(3);
 
 	if (index == DEMOFLAG_PluckRedPikmin) {
 		Vector3f objPosition = obj->mSRT.t;
@@ -278,8 +280,6 @@ void DemoFlags::setFlag(int index, Creature* obj)
 			                               obj ? &obj->mSRT.r : nullptr, CAF_AllVisibleMask, true);
 		}
 	}
-
-	STACK_PAD_VAR(1);
 }
 
 /**
@@ -302,7 +302,9 @@ void DemoFlags::setTimer(f32 time, int index, Creature* target)
 {
 	mWaitTimer        = time;
 	mCurrentDemoIndex = index;
+#ifdef DEVELOP
 	PRINT("TIMER SET (%f seconds) <%s>\n", mWaitTimer, getDemoFlag(index)->mName);
+#endif
 	mTargetCreature = target;
 }
 

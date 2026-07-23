@@ -47,8 +47,8 @@ void ActMine::init(Creature* target)
  */
 void ActMine::initWatch()
 {
-	PaniMotionInfo anim1(PIKIANIM_Sagasu2, this);
-	PaniMotionInfo anim2(PIKIANIM_Sagasu2);
+	PaniMotionInfo anim1(PIKIANIM_Sagasu2);
+	PaniMotionInfo anim2(PIKIANIM_Sagasu2, this);
 	mPiki->startMotion(anim1, anim2);
 	mPiki->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 }
@@ -86,8 +86,8 @@ int ActMine::exeGo()
  */
 void ActMine::initMine()
 {
-	PaniMotionInfo anim1(PIKIANIM_Pick, this);
-	PaniMotionInfo anim2(PIKIANIM_Pick);
+	PaniMotionInfo anim1(PIKIANIM_Pick);
+	PaniMotionInfo anim2(PIKIANIM_Pick, this);
 	mPiki->startMotion(anim1, anim2);
 	mPiki->enableMotionBlend();
 	mIsMineActionReady = false;
@@ -99,8 +99,8 @@ void ActMine::initMine()
  */
 void ActMine::initGo()
 {
-	PaniMotionInfo anim1(PIKIANIM_Walk, this);
-	PaniMotionInfo anim2(PIKIANIM_Walk);
+	PaniMotionInfo anim1(PIKIANIM_Walk);
+	PaniMotionInfo anim2(PIKIANIM_Walk, this);
 	mPiki->startMotion(anim1, anim2);
 }
 

@@ -22,7 +22,7 @@ static u8 lpsPos[48] ATTRIBUTE_ALIGN(32) = {
 	0,   0,   0, 25, 255, 231, 0, 0,  0, 25, 0, 25, 0, 0,  255, 231, 0, 25, 0,   0,   255, 231, 255, 231,
 };
 
-static u8 lpsCoord[8] = {
+static u8 lpsCoord[8] ATTRIBUTE_ALIGN(32) = {
 	0, 0, 1, 0, 1, 1, 0, 1,
 };
 
@@ -758,9 +758,9 @@ void zen::particleGenerator::pmCalcAccel(zen::particleMdl* ptcl)
 		ptcl->mVelocity.x = ptcl->mVelocity.y = ptcl->mVelocity.z = 0.0f;
 		f32 dot1 = mLineFieldAxis.x * ptcl->mLocalPosition.x + mLineFieldAxis.y * ptcl->mLocalPosition.y
 		         + mLineFieldAxis.z * ptcl->mLocalPosition.z;
-		diffX = mLineFieldAxis.x * dot1 - ptcl->mLocalPosition.x;
-		diffY = mLineFieldAxis.y * dot1 - ptcl->mLocalPosition.y;
-		diffZ = mLineFieldAxis.z * dot1 - ptcl->mLocalPosition.z;
+		diffX    = mLineFieldAxis.x * dot1 - ptcl->mLocalPosition.x;
+		diffY    = mLineFieldAxis.y * dot1 - ptcl->mLocalPosition.y;
+		diffZ    = mLineFieldAxis.z * dot1 - ptcl->mLocalPosition.z;
 
 		ptcl->mAcceleration.x += mLineFieldAxialForce * mLineFieldAxis.x + mLineFieldRadialForce * diffX;
 		ptcl->mAcceleration.y += mLineFieldAxialForce * mLineFieldAxis.y + mLineFieldRadialForce * diffY;
@@ -960,8 +960,7 @@ void zen::particleGenerator::drawPtclBillboard(Graphics& gfx)
 			           RoundOff(ptcl->mPrimaryColor.a * ptcl->mAlphaFactor));
 			gfx.setPrimEnv(&col, &ptcl->mEnvColor);
 			Vector3f ptclpos(ptcl->mLocalPosition + ptcl->mGlobalPosition);
-			gfx.drawRotParticle(*gfx.mCamera, ptclpos, -ptcl->mRotAngle,
-			                    ptcl->mSize * ptcl->mScaleFactor * 25.0f);
+			gfx.drawRotParticle(*gfx.mCamera, ptclpos, -ptcl->mRotAngle, ptcl->mSize * ptcl->mScaleFactor * 25.0f);
 
 			list = next;
 		}
@@ -992,12 +991,10 @@ void zen::particleGenerator::drawPtclOriented(Graphics& gfx)
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
 	Vector3f vec1;
-	STACK_PAD_VAR(3);
 	Matrix4f mtx1; // 0x104
 	Mtx mtx2;      // 0xD4
 	Mtx mtx3;      // 0xA4
 	Vector3f vec2;
-	STACK_PAD_VAR(3);
 	Vector3f vec3;
 	mtx3[2][3]      = 0.0f;
 	mtx3[0][3]      = 0.0f;
@@ -1022,13 +1019,8 @@ void zen::particleGenerator::drawPtclOriented(Graphics& gfx)
 		sinVal = sinShort(ptcl->mRotAngle);
 		(this->*mRotAxisCallBack)(mtx3, sinVal, cosVal);
 
-#if defined(VERSION_G98E01_PIKIDEMO)
 		PSMTXTrans(mtx1.mMtx, ptcl->mLocalPosition.x + ptcl->mGlobalPosition.x, ptcl->mLocalPosition.y + ptcl->mGlobalPosition.y,
 		           ptcl->mLocalPosition.z + ptcl->mGlobalPosition.z);
-#else
-		MTXTrans(mtx1.mMtx, ptcl->mLocalPosition.x + ptcl->mGlobalPosition.x, ptcl->mLocalPosition.y + ptcl->mGlobalPosition.y,
-		         ptcl->mLocalPosition.z + ptcl->mGlobalPosition.z);
-#endif
 		PSMTXConcat(gfx.mCamera->mLookAtMtx.mMtx, mtx1.mMtx, mtx1.mMtx);
 
 		Vector3f* vec;
@@ -1748,7 +1740,7 @@ void zen::particleGenerator::drawPtclChildren(Graphics& gfx)
 		next                    = list->mNext;
 
 		gfx.setPrimEnv(&child->mPrimaryColor, &child->mPrimaryColor);
-		Vector3f childpos(child->mLocalPosition + child->mGlobalPosition);
+		const Vector3f childpos(child->mLocalPosition + child->mGlobalPosition);
 		gfx.drawParticle(*gfx.mCamera, childpos, 25.0f * child->mSize);
 
 		list = next;

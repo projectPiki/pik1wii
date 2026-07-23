@@ -37,18 +37,16 @@ public:
 
 	const void* GetCurrentPos() const { return mCharStrm; }
 
-	void Set(const char* pStrm) { mCharStrm = pStrm; }
-	void Set(const wchar_t* pStrm) { mCharStrm = pStrm; }
-	
-	void SetAssert(const char* pStrm) { //temporary until it's figured out how to get nw4r asserts everywhere but in actual nw4r
+	void Set(const char* stream) {
         NW4R_ASSERT_PTR(this, 50);
-        NW4R_ASSERT_PTR(pStrm, 51);
+        NW4R_ASSERT_PTR(stream, 51);
 
-
+        
         NW4R_ASSERT(mReadFunc == ReadNextCharUTF8 || mReadFunc == ReadNextCharCP1252 || mReadFunc == ReadNextCharSJIS, 54);
 
-        mCharStrm = pStrm;
+        mCharStrm = stream;
     }
+	void Set(const wchar_t* pStrm) { mCharStrm = pStrm; }
 
 private:
 	template <typename T>
