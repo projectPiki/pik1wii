@@ -269,11 +269,11 @@ protected:
 	void createSteamEffect(Teki& teki)
 	{
 		// interesting...
-		zen::particleGenerator* ptclGen;
-		CollPart* kutiPart;
-		CollPart* steamEffectPart;
 
-		int i = 0;
+		CollPart* steamEffectPart = nullptr;
+		CollPart* kutiPart;
+
+		int i;
 
 		int collPartIDs[6];
 		for (i = 0; i < 6; i++) {
@@ -330,7 +330,8 @@ protected:
 			}
 
 			if (steamEffectPart != nullptr) {
-				ptclGen = effectMgr->create(EffectMgr::EFF_Beatle_Flick2, steamEffectPart->mCentre, nullptr, nullptr);
+				zen::particleGenerator* ptclGen
+				    = effectMgr->create(EffectMgr::EFF_Beatle_Flick2, steamEffectPart->mCentre, nullptr, nullptr);
 				if (ptclGen != nullptr) {
 					ptclGen->setEmitPosPtr(&steamEffectPart->mCentre);
 				}
@@ -345,7 +346,7 @@ protected:
 			Vector3f emitDir;
 			emitDir.set(mtx.mMtx[0][0], mtx.mMtx[1][0], mtx.mMtx[2][0]);
 
-			ptclGen = effectMgr->create(EffectMgr::EFF_Beatle_Flick3, kutiPart->mCentre, nullptr, nullptr);
+			zen::particleGenerator* ptclGen = effectMgr->create(EffectMgr::EFF_Beatle_Flick3, kutiPart->mCentre, nullptr, nullptr);
 			if (ptclGen != nullptr) {
 				ptclGen->setEmitPosPtr(&kutiPart->mCentre);
 				ptclGen->setEmitDir(emitDir);
