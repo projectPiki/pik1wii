@@ -86,7 +86,8 @@ static void sprintID(char*, u32)
  * @todo: Documentation
  */
 GenBase::GenBase(u32 id, immut char* type, immut char* name)
-    : mID(id)
+    : Parameters("gen base")
+    , mID(id)
     , mType(type)
     , mName(name)
 {

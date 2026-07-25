@@ -80,25 +80,19 @@ struct BaseParm {
  * @note Constructor and members differ slightly between the DLL and DOL - the name is removed in the DOL.
  * @note Size: 0x4 (0x8 in DLL).
  */
-struct Parameters {
-
-#ifdef WIN32
+class Parameters {
+public:
 	/**
-	 * @brief Constructs an empty (named) parameters list (DLL only).
+	 * @brief Constructs an empty parameters list.
 	 * @param name Name for this collection of parameters.
 	 */
 	Parameters(immut char* name)
-	    : mFirstParm(nullptr)
 	{
+		mFirstParm = nullptr;
+#if defined(WIN32)
 		mName = name;
-	}
-#else
-	/// Constructs an empty parameters list (DOL only).
-	Parameters()
-	    : mFirstParm(nullptr)
-	{
-	}
 #endif
+	}
 
 	void write(RandomAccessStream&);
 	void read(RandomAccessStream&);
@@ -128,12 +122,14 @@ struct Parm : public BaseParm {
 	Parm(Parameters* owner, T value, T min, T max, ayuID id, immut char* name)
 	    : BaseParm(owner, id)
 	{
-		mValue = value;
 #ifdef WIN32
+		mName         = name;
+		mValue        = value;
 		mDefaultValue = value;
 		mMinValue     = min;
 		mMaxValue     = max;
-		mName         = name;
+#else
+		mValue = value;
 #endif
 	}
 
@@ -160,6 +156,10 @@ struct Parm : public BaseParm {
 };
 
 // For some reason, giving `CreatureProp::Parms` its parameter strings messes up matching.
-#define MATCHING_PARM_NAME(name) TERNARY_BUILD_MATCHING(nullptr, name)
+#if defined(BUILD_MATCHING) && !defined(WIN32)
+#define MATCHING_PARM_NAME(name) nullptr
+#else
+#define MATCHING_PARM_NAME(name) name
+#endif
 
 #endif

@@ -593,7 +593,8 @@ struct GameFlow : public Node {
 
 		/// Constructs parameters - default values are overwritten on file read.
 		inline Parms()
-		    : mStartHour(this, 7.0f, 0.0f, 0.0f, "t00", "startHour")
+		    : Parameters("GameFlow::Preferences")
+		    , mStartHour(this, 7.0f, 0.0f, 0.0f, "t00", "startHour")
 		    , mEndHour(this, 19.0f, 0.0f, 0.0f, "t01", "endHour")
 		    , mRealMinutesPerGameDay(this, 20.0f, 0.0f, 0.0f, "p00", "daySpeed")
 		    , mMorningStart(this, 7.0f, 0.0f, 0.0f, "p01", "mornStart")

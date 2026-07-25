@@ -95,10 +95,7 @@ void ChannelMgr::start(int idx, f32* valuePtr)
 	mActiveType  = idx;
 	if (valuePtr) {
 		if (*valuePtr < 0.0f) {
-#if defined(VERSION_GPIJ01_01)
-#else
 			ERROR("変な値が入ってます"); // 'there is a weird value' (lol)
-#endif
 		}
 
 		if (*valuePtr < 1000.0f) {
@@ -134,6 +131,8 @@ f32 ChannelMgr::update()
 
 	mRumbleIntensity *= mRumbleScale;
 	return mRumbleIntensity;
+
+	FORCE_DONT_INLINE;
 }
 
 /**
