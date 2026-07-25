@@ -964,7 +964,7 @@ config.libs = [
     },
     {
         "lib": "plugPikiColin",
-        "cflags": cflags_pikmin,
+        "cflags": [*cflags_pikmin, "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
@@ -1007,7 +1007,7 @@ config.libs = [
     },
     {
         "lib": "plugPikiKando",
-        "cflags": cflags_pikmin,
+        "cflags": [*cflags_pikmin, "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
@@ -1254,7 +1254,7 @@ config.libs = [
     },
     {
         "lib": "plugPikiOgawa",
-        "cflags": cflags_pikmin,
+        "cflags": [*cflags_pikmin, "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "game",
         "objects": [
@@ -1286,7 +1286,7 @@ config.libs = [
     },
     {
         "lib": "plugPikiYamashita",
-        "cflags": cflags_pikmin,
+        "cflags": [*cflags_pikmin, "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "game",
         "objects": [
@@ -1599,8 +1599,8 @@ config.libs = [
             Object(NonMatching, "System12/sys12GameConfig.cpp"),
             Object(NonMatching, "System12/sys12GamePointer.cpp"),
             Object(NonMatching, "System12/sys12NANDMgr.cpp"),
-            Object(NonMatching, "System12/sys12SDMgr.cpp"),
-            Object(NonMatching, "System12/sys12TagParms.cpp"),
+            Object(Matching, "System12/sys12SDMgr.cpp"),
+            Object(Matching, "System12/sys12TagParms.cpp"),
             Object(NonMatching, "System12/sys12gameNand.cpp"),
             Object(NonMatching, "System12/sys12Language.cpp"),
             Object(NonMatching, "System12/sys12HomeButtonMgr.cpp"),
@@ -1634,7 +1634,7 @@ config.libs = [
             Object(NonMatching, "System12/SpkSpeakerCtrl.cpp"),
             Object(NonMatching, "System12/SpkSystem.cpp"),
             Object(Matching, "System12/SpkTable.cpp"),
-            Object(NonMatching, "System12/SpkWave.cpp"),
+            Object(Matching, "System12/SpkWave.cpp"),
         ],
     },
     {
