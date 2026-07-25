@@ -84,10 +84,6 @@ static immut char* arambundleList[][2] = {
 	{ "archives/bosses.dir", "dataDir/archives/bosses.arc" },
 	{ "archives/tekipara.dir", "dataDir/archives/tekipara.arc" },
 	{ "archives/tekikey.dir", "dataDir/archives/tekikey.arc" },
-#if defined(VERSION_GPIP01_00)
-#else
-	{ "archives/plants.dir", "dataDir/archives/plants.arc" },
-#endif
 	{ "archives/ufopartsbin.dir", "dataDir/archives/ufopartsbin.arc" },
 	{ "archives/bridges.dir", "dataDir/archives/bridges.arc" },
 	{ "archives/gates.dir", "dataDir/archives/gates.arc" },
@@ -99,10 +95,7 @@ static immut char* arambundleList[][2] = {
 	{ "archives/pikihead.dir", "dataDir/archives/pikihead.arc" },
 	{ "archives/effshapes.dir", "dataDir/archives/effshapes.arc" },
 	{ "archives/weeds.dir", "dataDir/archives/weeds.arc" },
-#if defined(VERSION_G98E01_PIKIDEMO)
-#else
 	{ "archives/goal.dir", "dataDir/archives/goal.arc" },
-#endif
 	{ nullptr, nullptr },
 };
 
@@ -126,21 +119,9 @@ void GameSetupSection::preCacheShapes()
 		gsys->parseArchiveDirectory(bundlePair[0], bundlePair[1]);
 	}
 
-	// Colin: "lemme yell at you real quick"
 	BOOL print         = gsys->mTogglePrint;
 	gsys->mTogglePrint = TRUE;
-#if defined(VERSION_G98E01_PIKIDEMO)
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	AramAllocator* alloc = &gsys->mShapeAramAllocator;
-	_Print("!!!!!!!!!!!!!!!!! %d bytes still in aramHeap\n", alloc->getFreeSize());
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	_Print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-#endif
-	gsys->mTogglePrint = print; // "back to regularly scheduled programming"
+	gsys->mTogglePrint = print;
 
 	// load in pikmin models/anims (and some seemingly unused pellet ones)
 	for (bundlePair = shapeList[0]; bundlePair[0]; bundlePair += 2) {
@@ -232,47 +213,9 @@ GameSetupSection::GameSetupSection()
  */
 void GameSetupSection::update()
 {
-#if defined(VERSION_G98E01_PIKIDEMO)
-	// the only thing the demo will load into is the Forest of Hope challenge mode
-
-	STACK_PAD_VAR(1);
-	flowCont.mCurrentStage = nullptr;
-	playerState->initGame();
-	generatorCache->initGame();
-	pikiInfMgr.initGame();
-
-	// reset all our story mode stages to be re-initialised
-	StageInfo* stage = (StageInfo*)flowCont.mStageList.mChild;
-	while (stage) {
-		stage->mHasInitialised = FALSE;
-		stage->mStageInf.initGame();
-		stage = (StageInfo*)stage->mNext;
-	}
-
-	gameflow.mGamePrefs.mMemCardSaveIndex = 0;
-	gameflow.mGamePrefs.mHasSaveGame      = false;
-
-	// put us in challenge mode
-	playerState->setChallengeMode();
-
-	stage = (StageInfo*)flowCont.mStageList.mChild;
-	while (stage) {
-		if ((int)stage->mChalStageID == CHALSTAGE_Forest) {
-			// if we have it, load into Forest of Hope challenge mode!
-			flowCont.mCurrentStage = stage;
-			sprintf(flowCont.mCurrStageFilePath, "%s", stage->mFileName);
-			sprintf(flowCont.mDoorStageFilePath, "%s", stage->mFileName);
-			gameflow.mNextOnePlayerSectionID = ONEPLAYER_NewPikiGame;
-			gameflow.mWorldClock.setTime(gameflow.mParameters->mStartHour());
-			break;
-		}
-		stage = (StageInfo*)stage->mNext;
-	}
-#else
 	PRINT("reset!\n");
 	// queue up card select as the next section (either for story mode or challenge mode, doesn't matter)
 	gameflow.mNextOnePlayerSectionID = ONEPLAYER_CardSelect;
-#endif
 
 	// force transit to new subsection
 	gsys->softReset();

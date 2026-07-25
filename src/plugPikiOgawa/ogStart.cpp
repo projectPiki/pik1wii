@@ -17,7 +17,7 @@ DEFINE_ERROR(__LINE__) // Never used in the DLL
  * @todo: Documentation
  * @note UNUSED Size: 0000F4
  */
-DEFINE_PRINT("TODO: Replace")
+DEFINE_PRINT("OgStartSection")
 
 /**
  * @todo: Documentation
@@ -79,7 +79,7 @@ zen::ogScrStartMgr::StartStatus zen::ogScrStartMgr::update(Controller* controlle
 		return mState;
 	}
 
-	// triggered if we hit START
+	// triggered if we hit A
 	if (mState == START_FadeOut) {
 		if (mFadeTimer < 0.25f) {
 			P2DPaneLibrary::setFamilyAlpha(mPressStartScreen, 255 - u8(255.0f * mFadeTimer / 0.25f));
@@ -105,7 +105,7 @@ zen::ogScrStartMgr::StartStatus zen::ogScrStartMgr::update(Controller* controlle
 
 		P2DPaneLibrary::setFamilyAlpha(mPressStartScreen, 255.0f * (0.5f - 0.5f * cosf(TAU * mFadeTimer)));
 
-		if (controller->keyClick(KBBTN_START)) {
+		if (controller->keyClick(KBBTN_A)) {
 			mExitState = START_Exit;
 			mState     = START_FadeOut;
 			mFadeTimer = 0.0f;

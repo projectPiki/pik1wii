@@ -413,12 +413,13 @@ static s32 StreamAudio_Callback(void* data)
 	StreamCtrl_* ctrl       = (StreamCtrl_*)data;
 	int bufferUpdatePending = 0;
 	u32 channelIdx;
-	STACK_PAD_VAR(2);
 
 	if (!ctrl->dspch[0]) {
 		for (channelIdx = 0; channelIdx < 2; channelIdx++) {
-			ctrl->dspch[channelIdx]       = AllocDSPchannel(0, (u32)&ctrl->dspch[channelIdx]);
-			ctrl->dspch[channelIdx]->prio = DSPCHAN_MAX_PRIO;
+			ctrl->dspch[channelIdx] = AllocDSPchannel(0, (u32)&ctrl->dspch[channelIdx]);
+			if (ctrl->dspch[channelIdx]) {
+				ctrl->dspch[channelIdx]->prio = DSPCHAN_MAX_PRIO;
+			}
 		}
 	}
 
@@ -660,6 +661,38 @@ void RegisterStreamCallback(StreamCallback callback)
 /**
  * @TODO: Documentation
  */
+static u32 __DecodePCM(StreamCtrl_* ctrl)
+{
+	u32 activeBufIdx;
+	s32 usedSize;
+	s16* rightSamples;
+	u32 sampleCount;
+	s16* leftSamples;
+	s16* sourceSamples;
+	u8* sourceBytes;
+	size_t i;
+
+	activeBufIdx = ctrl->buffCtrlMain.activeBufIdx;
+	leftSamples  = ctrl->leftChanBufs[ctrl->buffCtrlMain2.currentBufIdx];
+	sourceBytes  = ctrl->data[activeBufIdx].data;
+	usedSize     = ctrl->buffCtrl[activeBufIdx].usedSize;
+	sampleCount  = ((s32)ctrl->buffCtrl[activeBufIdx].pos - usedSize) / 4;
+	sourceBytes += usedSize;
+	rightSamples  = ctrl->rightChanBufs[ctrl->buffCtrlMain2.currentBufIdx];
+	sourceSamples = (s16*)sourceBytes;
+
+	for (i = 0; i < sampleCount; i++) {
+		*leftSamples++  = sourceSamples[0];
+		*rightSamples++ = sourceSamples[1];
+		sourceSamples += 2;
+	}
+	ctrl->samplesDecoded += sampleCount;
+	return sampleCount;
+}
+
+/**
+ * @TODO: Documentation
+ */
 void Jac_Decode_ADPCM(u8* src, s16* dst1, s16* dst2, u32 count, u8 arg4, s16* state)
 {
 	s16 sa = state[0];
@@ -821,6 +854,11 @@ static u32 __Decode(StreamCtrl_* ctrl)
 {
 	u32 size;
 	switch (ctrl->header.audioFormat) {
+	case AUDIOFRMT_16BIT_PCM:
+	{
+		size = __DecodePCM(ctrl);
+		break;
+	}
 	case AUDIOFRMT_ADPCM:
 	{
 		size = __DecodeADPCM(ctrl);
@@ -993,13 +1031,6 @@ void StreamChgPitch(void)
  */
 static void __StreamChgVolume(StreamCtrl_* ctrl)
 {
-#if defined(VERSION_GPIJ01_01)
-	if (ctrl->dspch[0]) {
-		for (u32 i = 0; i < 2; i++) {
-			DSP_SetMixerVolume(ctrl->dspch[i]->buffer_idx, i, ctrl->volume[i], 0);
-		}
-	}
-#else
 	if (ctrl->dspch[0]) {
 		u32 i;
 		u8 mode = Jac_GetOutputMode();
@@ -1021,7 +1052,6 @@ static void __StreamChgVolume(StreamCtrl_* ctrl)
 			}
 		}
 	}
-#endif
 }
 
 /**

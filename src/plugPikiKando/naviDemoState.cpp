@@ -84,7 +84,7 @@ void NaviDemoSunsetState::GoState::exec(NaviDemoSunsetState* state)
 		transit(state, DEMOSTATE_Look);
 
 	} else {
-		diff                          = (diff * C_NAVI_PROP(state->mNavi)._CC()) * (nrm * 0.6f + 0.4f);
+		diff                          = (diff * C_NAVI_PROP(state->mNavi).mMoveSpeed()) * (nrm * 0.6f + 0.4f);
 		state->mNavi->mTargetVelocity = diff;
 	}
 }

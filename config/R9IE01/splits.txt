@@ -1470,8 +1470,10 @@ plugPikiColin/cinePlayer.cpp:
 plugPikiColin/dayMgr.cpp:
 	.text       start:0x800E502C end:0x800EAB38
 	.ctors      start:0x802F5DF8 end:0x802F5DFC
+	.rodata     start:0x802FF518 end:0x802FF6B8
 	.data       start:0x80336CC8 end:0x80337390
-	.sdata      start:0x80498200 end:0x80498210
+	.sdata      start:0x80498140 end:0x804982C0
+	.sdata2     start:0x8049FF50 end:0x8049FFA8
 
 plugPikiColin/dynsimulator.cpp:
 	.text       start:0x800EAB38 end:0x800EB118
@@ -1498,13 +1500,13 @@ plugPikiColin/gameflow.cpp:
 plugPikiColin/gamePrefs.cpp:
 	.text       start:0x800EDA78 end:0x800EEB1C
 	.ctors      start:0x802F5E0C end:0x802F5E10
-	.data       start:0x80337568 end:0x803375C0
+	.data       start:0x80337568 end:0x80337590
 
 plugPikiColin/gameSetup.cpp:
 	.text       start:0x800EEB1C end:0x800EF020
 	.ctors      start:0x802F5E10 end:0x802F5E14
 	.rodata     start:0x802FFB80 end:0x80300408
-	.data       start:0x803375C0 end:0x80337880
+	.data       start:0x80337590 end:0x80337880
 
 plugPikiColin/gauges.cpp:
 	.text       start:0x800EF020 end:0x800F0998
@@ -1731,8 +1733,11 @@ plugPikiKando/aiChase.cpp:
 
 plugPikiKando/aiConstants.cpp:
 	.text       start:0x8011F9F0 end:0x8011FF88
+	.rodata     start:0x80301768 end:0x803017A0
 	.data       start:0x8033A3B8 end:0x8033A3F8
-	.sbss       start:0x8049ECE0 end:0x8049ECE8
+	.sdata      start:0x80498FE0 end:0x8049903C
+	.sbss       start:0x8049ECE0 end:0x8049ECE4
+	.sdata2     start:0x804A0648 end:0x804A0668
 
 plugPikiKando/aiCrowd.cpp:
 	.text       start:0x8011FF88 end:0x80121D10
@@ -1870,56 +1875,77 @@ plugPikiKando/aiWeed.cpp:
 plugPikiKando/animPellet.cpp:
 	.text       start:0x8013690C end:0x801370A4
 	.ctors      start:0x802F5F10 end:0x802F5F14
+	.rodata     start:0x80301D40 end:0x80301DD0
 	.data       start:0x8033B240 end:0x8033B278
+	.sdata      start:0x804998B0 end:0x804998C8
+	.sdata2     start:0x804A0B48 end:0x804A0B50
 
 plugPikiKando/bombItem.cpp:
 	.text       start:0x801370A4 end:0x801375F0
 	.ctors      start:0x802F5F14 end:0x802F5F18
 	.data       start:0x8033B278 end:0x8033B3E8
+	.sdata      start:0x804998C8 end:0x804998E8
+	.sdata2     start:0x804A0B50 end:0x804A0B68
 
 plugPikiKando/collInfo.cpp:
 	.text       start:0x801375F0 end:0x8013AFC8
 	.ctors      start:0x802F5F18 end:0x802F5F1C
 	.bss        start:0x8046DB70 end:0x8046DBB0
+	.sdata      start:0x804998E8 end:0x80499908
+	.sdata2     start:0x804A0B68 end:0x804A0B90
 
 plugPikiKando/complexCreature.cpp:
 	.text       start:0x8013AFC8 end:0x8013B014
 	.ctors      start:0x802F5F1C end:0x802F5F20
+	.sdata      start:0x80499908 end:0x80499920
 
 plugPikiKando/conditions.cpp:
 	.text       start:0x8013B014 end:0x8013B068
 	.ctors      start:0x802F5F20 end:0x802F5F24
 	.data       start:0x8033B3E8 end:0x8033B430
+	.sdata      start:0x80499920 end:0x80499938
 
 plugPikiKando/courseDebug.cpp:
 	.text       start:0x8013B068 end:0x8013B270
 	.ctors      start:0x802F5F24 end:0x802F5F28
+	.rodata     start:0x80301DD0 end:0x80301E10
+	.sdata      start:0x80499938 end:0x80499950
 	.sbss       start:0x8049ED28 end:0x8049ED38
 
 plugPikiKando/cPlate.cpp:
 	.text       start:0x8013B270 end:0x8013C8BC
 	.ctors      start:0x802F5F28 end:0x802F5F2C
+	.rodata     start:0x80301E10 end:0x80301E40
 	.data       start:0x8033B430 end:0x8033B488
+	.sdata      start:0x80499950 end:0x804999F8
+	.sdata2     start:0x804A0B90 end:0x804A0BD8
 
 plugPikiKando/creature.cpp:
 	.text       start:0x8013C8BC end:0x80140088
 	.ctors      start:0x802F5F2C end:0x802F5F30
 	.data       start:0x8033B488 end:0x8033B5A8
 	.bss        start:0x8046DBB0 end:0x8046E3B0
+	.sdata      start:0x804999F8 end:0x80499B68
 	.sbss       start:0x8049ED38 end:0x8049ED48
+	.sdata2     start:0x804A0BD8 end:0x804A0C28
 
 plugPikiKando/creatureCollision.cpp:
 	.text       start:0x80140088 end:0x8014083C
 	.ctors      start:0x802F5F30 end:0x802F5F34
+	.sdata      start:0x80499B68 end:0x80499B80
+	.sdata2     start:0x804A0C28 end:0x804A0C40
 
 plugPikiKando/creatureCollPart.cpp:
 	.text       start:0x8014083C end:0x80140A88
 	.ctors      start:0x802F5F34 end:0x802F5F38
 	.data       start:0x8033B5A8 end:0x8033B5F0
+	.sdata      start:0x80499B80 end:0x80499BA0
 
 plugPikiKando/creatureMove.cpp:
 	.text       start:0x80140A88 end:0x801420B0
 	.ctors      start:0x802F5F38 end:0x802F5F3C
+	.sdata      start:0x80499BA0 end:0x80499C18
+	.sdata2     start:0x804A0C40 end:0x804A0C78
 
 plugPikiKando/creatureStick.cpp:
 	.text       start:0x801420B0 end:0x80144454
@@ -2293,6 +2319,7 @@ plugPikiKando/ropeItem.cpp:
 plugPikiKando/routeMgr.cpp:
 	.text       start:0x8019D874 end:0x801A1B24
 	.ctors      start:0x802F6020 end:0x802F6024
+	.rodata     start:0x80303888 end:0x803038C0
 	.data       start:0x80341348 end:0x80341378
 	.sbss       start:0x8049EE98 end:0x8049EEA0
 
@@ -2309,23 +2336,33 @@ plugPikiKando/searchSystem.cpp:
 
 plugPikiKando/seConstants.cpp:
 	.text       start:0x801A306C end:0x801A3178
+	.rodata     start:0x803038C0 end:0x803038F8
 	.data       start:0x803414E0 end:0x80341510
+	.sdata      start:0x8049B2B0 end:0x8049B2C0
+	.sdata2     start:0x804A15C0 end:0x804A15D0
 
 plugPikiKando/seedItem.cpp:
 	.text       start:0x801A3178 end:0x801A36F8
 	.ctors      start:0x802F602C end:0x802F6030
 	.data       start:0x80341510 end:0x80341630
+	.sdata      start:0x8049B2C0 end:0x8049B2F8
+	.sdata2     start:0x804A15D0 end:0x804A1618
 
 plugPikiKando/seMgr.cpp:
 	.text       start:0x801A36F8 end:0x801A3918
 	.ctors      start:0x802F6030 end:0x802F6034
+	.rodata     start:0x803038F8 end:0x803039A8
 	.data       start:0x80341630 end:0x80341660
+	.sdata      start:0x8049B2F8 end:0x8049B310
 	.sbss       start:0x8049EEC0 end:0x8049EEC8
 
 plugPikiKando/simpleAI.cpp:
 	.text       start:0x801A3918 end:0x801A4210
 	.ctors      start:0x802F6034 end:0x802F6038
+	.rodata     start:0x803039A8 end:0x803039D8
 	.data       start:0x80341660 end:0x80341858
+	.sdata      start:0x8049B310 end:0x8049B340
+	.sdata2     start:0x804A1618 end:0x804A1620
 
 plugPikiKando/smartPtr.cpp:
 	.text       start:0x801A4210 end:0x801A4260
@@ -2612,6 +2649,7 @@ plugPikiNakata/taicollec.cpp:
 	.text       start:0x801CE0D4 end:0x801D1288
 	.ctors      start:0x802F60E0 end:0x802F60E4
 	.data       start:0x803460C0 end:0x80346448
+	.sdata2     start:0x804A1DC0 end:0x804A1E30
 
 plugPikiNakata/taicollisionactions.cpp:
 	.text       start:0x801D1288 end:0x801D1368
@@ -2627,16 +2665,23 @@ plugPikiNakata/taiiwagen.cpp:
 	.text       start:0x801D1498 end:0x801D21B0
 	.ctors      start:0x802F60EC end:0x802F60F0
 	.data       start:0x803464F8 end:0x80346600
+	.sdata      start:0x8049BBC8 end:0x8049BC30
+	.sdata2     start:0x804A1E30 end:0x804A1E68
 
 plugPikiNishimura/Pom.cpp:
 	.text       start:0x801D21B0 end:0x801D28C0
 	.ctors      start:0x802F60F0 end:0x802F60F4
+	.rodata     start:0x803064A8 end:0x803064C8
 	.data       start:0x80346600 end:0x80346748
+	.sdata      start:0x8049BC30 end:0x8049BC78
+	.sdata2     start:0x804A1E68 end:0x804A1EA0
 
 plugPikiNishimura/PomAi.cpp:
 	.text       start:0x801D28C0 end:0x801D40B0
 	.ctors      start:0x802F60F4 end:0x802F60F8
 	.data       start:0x80346748 end:0x80346778
+	.sdata      start:0x8049BC78 end:0x8049BCB0
+	.sdata2     start:0x804A1EA0 end:0x804A1EE0
 
 plugPikiNishimura/RumbleData.cpp:
 	.data       start:0x80346778 end:0x80347228
@@ -2645,51 +2690,77 @@ plugPikiNishimura/RumbleData.cpp:
 plugPikiNishimura/Slime.cpp:
 	.text       start:0x801D40B0 end:0x801D5374
 	.ctors      start:0x802F60F8 end:0x802F60FC
+	.rodata     start:0x803064C8 end:0x803064E8
 	.data       start:0x80347228 end:0x803473C8
+	.sdata      start:0x8049BD00 end:0x8049BDA0
+	.sdata2     start:0x804A1EE0 end:0x804A1F40
 
 plugPikiNishimura/SlimeAi.cpp:
 	.text       start:0x801D5374 end:0x801D98C8
 	.ctors      start:0x802F60FC end:0x802F6100
+	.sdata      start:0x8049BDA0 end:0x8049BE20
+	.sdata2     start:0x804A1F40 end:0x804A1FC0
 
 plugPikiNishimura/SlimeBody.cpp:
 	.text       start:0x801D98C8 end:0x801DA538
 	.ctors      start:0x802F6100 end:0x802F6104
+	.sdata      start:0x8049BE20 end:0x8049BE58
+	.sdata2     start:0x804A1FC0 end:0x804A1FD0
 
 plugPikiNishimura/SlimeCreature.cpp:
 	.text       start:0x801DA538 end:0x801DA750
 	.ctors      start:0x802F6104 end:0x802F6108
 	.data       start:0x803473F0 end:0x80347510
+	.sdata      start:0x8049BE58 end:0x8049BE70
+	.sdata2     start:0x804A1FD0 end:0x804A1FE0
 
 plugPikiNishimura/Snake.cpp:
 	.text       start:0x801DA750 end:0x801DB634
 	.ctors      start:0x802F6108 end:0x802F610C
+	.rodata     start:0x803064E8 end:0x80306508
 	.data       start:0x80347510 end:0x80347680
+	.sdata      start:0x8049BE70 end:0x8049BF60
+	.sdata2     start:0x804A1FE0 end:0x804A2068
 
 plugPikiNishimura/SnakeAi.cpp:
 	.text       start:0x801DB634 end:0x801DFE2C
 	.ctors      start:0x802F610C end:0x802F6110
+	.rodata     start:0x80306508 end:0x80306520
 	.data       start:0x80347680 end:0x803476D8
+	.sdata      start:0x8049BF60 end:0x8049BFB0
+	.sdata2     start:0x804A2068 end:0x804A20A8
 
 plugPikiNishimura/SnakeBody.cpp:
 	.text       start:0x801DFE2C end:0x801E3F68
 	.ctors      start:0x802F6110 end:0x802F6114
+	.rodata     start:0x80306520 end:0x80306560
 	.data       start:0x803476D8 end:0x803476F0
+	.sdata      start:0x8049BFB0 end:0x8049C020
+	.sdata2     start:0x804A20A8 end:0x804A20E0
 
 plugPikiNishimura/Spider.cpp:
 	.text       start:0x801E3F68 end:0x801E4FC4
 	.ctors      start:0x802F6114 end:0x802F6118
+	.rodata     start:0x80306560 end:0x80306588
 	.data       start:0x803476F0 end:0x80347878
+	.sdata      start:0x8049C020 end:0x8049C110
+	.sdata2     start:0x804A20E0 end:0x804A2190
 
 plugPikiNishimura/SpiderAi.cpp:
 	.text       start:0x801E4FC4 end:0x801E702C
 	.ctors      start:0x802F6118 end:0x802F611C
 	.data       start:0x80347878 end:0x803478C0
+	.sdata      start:0x8049C110 end:0x8049C128
+	.sdata2     start:0x804A2190 end:0x804A21D8
 
 plugPikiNishimura/SpiderLeg.cpp:
 	.text       start:0x801E702C end:0x801EBAE4
 	.ctors      start:0x802F611C end:0x802F6120
+	.rodata     start:0x80306588 end:0x803065A8
 	.data       start:0x803478C0 end:0x80347938
+	.sdata      start:0x8049C128 end:0x8049C1D8
 	.sbss       start:0x8049EEF8 end:0x8049EF00
+	.sdata2     start:0x804A21D8 end:0x804A2250
 
 plugPikiNishimura/Boss.cpp:
 	.text       start:0x801EBAE4 end:0x801EDC54
@@ -2729,83 +2800,122 @@ plugPikiNishimura/BossShapeObj.cpp:
 plugPikiNishimura/CoreNucleus.cpp:
 	.text       start:0x801F0884 end:0x801F0C04
 	.ctors      start:0x802F6130 end:0x802F6134
+	.rodata     start:0x80306970 end:0x803069A0
 	.data       start:0x80347BC8 end:0x80347D10
+	.sdata      start:0x8049C2F0 end:0x8049C318
+	.sdata2     start:0x804A22F0 end:0x804A2308
 
 plugPikiNishimura/CoreNucleusAi.cpp:
 	.text       start:0x801F0C04 end:0x801F12D0
 	.ctors      start:0x802F6134 end:0x802F6138
 	.data       start:0x80347D10 end:0x80347D20
+	.sdata      start:0x8049C318 end:0x8049C350
+	.sdata2     start:0x804A2308 end:0x804A2310
 
 plugPikiNishimura/genBoss.cpp:
 	.text       start:0x801F12D0 end:0x801F180C
 	.ctors      start:0x802F6138 end:0x802F613C
+	.rodata     start:0x803069A0 end:0x803069C8
 	.data       start:0x80347D20 end:0x80347D68
+	.sdata      start:0x8049C350 end:0x8049C368
 
 plugPikiNishimura/HmRumbleMgr.cpp:
 	.text       start:0x801F180C end:0x801F2528
 	.ctors      start:0x802F613C end:0x802F6140
+	.sdata      start:0x8049C368 end:0x8049C380
 	.sbss       start:0x8049EF08 end:0x8049EF10
+	.sdata2     start:0x804A2310 end:0x804A2320
 
 plugPikiNishimura/HmRumbleSample.cpp:
 	.text       start:0x801F2528 end:0x801F25A4
+	.sdata2     start:0x804A2320 end:0x804A2328
 
 plugPikiNishimura/King.cpp:
 	.text       start:0x801F25A4 end:0x801F33FC
 	.ctors      start:0x802F6140 end:0x802F6144
+	.rodata     start:0x803069C8 end:0x803069E8
 	.data       start:0x80347D68 end:0x80347EF0
+	.sdata      start:0x8049C380 end:0x8049C448
+	.sdata2     start:0x804A2328 end:0x804A23A8
 
 plugPikiNishimura/KingAi.cpp:
 	.text       start:0x801F33FC end:0x801F98EC
 	.ctors      start:0x802F6144 end:0x802F6148
 	.data       start:0x80347EF0 end:0x80347FE0
+	.sdata      start:0x8049C448 end:0x8049C490
+	.sdata2     start:0x804A23A8 end:0x804A2408
 
 plugPikiNishimura/KingBack.cpp:
 	.text       start:0x801F98EC end:0x801F9C78
 	.ctors      start:0x802F6148 end:0x802F614C
+	.rodata     start:0x803069E8 end:0x80306A10
 	.data       start:0x80347FE0 end:0x80348128
+	.sdata      start:0x8049C490 end:0x8049C4A8
+	.sdata2     start:0x804A2408 end:0x804A2418
 
 plugPikiNishimura/KingBody.cpp:
 	.text       start:0x801F9C78 end:0x801FCEFC
 	.ctors      start:0x802F614C end:0x802F6150
 	.data       start:0x80348128 end:0x80348170
+	.sdata      start:0x8049C4A8 end:0x8049C5C8
+	.sdata2     start:0x804A2418 end:0x804A2450
 
 plugPikiNishimura/Kogane.cpp:
 	.text       start:0x801FCEFC end:0x801FD504
 	.ctors      start:0x802F6150 end:0x802F6154
+	.rodata     start:0x80306A10 end:0x80306A30
 	.data       start:0x80348170 end:0x803482B8
+	.sdata      start:0x8049C5C8 end:0x8049C620
+	.sdata2     start:0x804A2450 end:0x804A248C
 
 plugPikiNishimura/KoganeAi.cpp:
 	.text       start:0x801FD504 end:0x801FF20C
 	.ctors      start:0x802F6154 end:0x802F6158
+	.rodata     start:0x80306A30 end:0x80306A40
 	.data       start:0x803482B8 end:0x803482F0
 	.sdata      start:0x8049C620 end:0x8049C6E0
+	.sdata2     start:0x804A2490 end:0x804A24E0
 
 plugPikiNishimura/Mizu.cpp:
 	.text       start:0x801FF20C end:0x801FF660
 	.ctors      start:0x802F6158 end:0x802F615C
+	.rodata     start:0x80306A40 end:0x80306A60
 	.data       start:0x803482F0 end:0x80348438
+	.sdata      start:0x8049C6E0 end:0x8049C710
+	.sdata2     start:0x804A24E0 end:0x804A24F4
 
 plugPikiNishimura/MizuAi.cpp:
 	.text       start:0x801FF660 end:0x802000EC
 	.ctors      start:0x802F615C end:0x802F6160
 	.data       start:0x80348438 end:0x80348450
+	.sdata      start:0x8049C710 end:0x8049C750
+	.sdata2     start:0x804A24F8 end:0x804A2510
 
 plugPikiNishimura/nscalculation.cpp:
 	.text       start:0x802000EC end:0x80200604
+	.sdata2     start:0x804A2510 end:0x804A2528
 
 plugPikiNishimura/Nucleus.cpp:
 	.text       start:0x80200604 end:0x8020092C
 	.ctors      start:0x802F6160 end:0x802F6164
+	.rodata     start:0x80306A60 end:0x80306A88
 	.data       start:0x80348450 end:0x80348598
+	.sdata      start:0x8049C750 end:0x8049C778
+	.sdata2     start:0x804A2528 end:0x804A2540
 
 plugPikiNishimura/NucleusAi.cpp:
 	.text       start:0x8020092C end:0x80200D70
 	.ctors      start:0x802F6164 end:0x802F6168
 	.data       start:0x80348598 end:0x803485A8
+	.sdata      start:0x8049C778 end:0x8049C7A8
+	.sdata2     start:0x804A2540 end:0x804A2548
 
 plugPikiOgawa/ogStart.cpp:
 	.text       start:0x80200D70 end:0x80201168
 	.ctors      start:0x802F6168 end:0x802F616C
+	.rodata     start:0x80306A88 end:0x80306AC0
+	.sdata      start:0x8049C7A8 end:0x8049C7C0
+	.sdata2     start:0x804A2548 end:0x804A2568
 
 plugPikiOgawa/ogSub.cpp:
 	.text       start:0x80201168 end:0x80203814
@@ -4042,10 +4152,12 @@ System12/system12Layout.cpp:
 	.ctors      start:0x802F6320 end:0x802F6324
 	.rodata     start:0x803102F0 end:0x803105B8
 	.data       start:0x80351568 end:0x80351910
+	.sdata2     start:0x804A3F68 end:0x804A3F78
 
 System12/sys12THPPlayer.cpp:
 	.text       start:0x802C334C end:0x802C4724
 	.sbss       start:0x8049F130 end:0x8049F140
+	.sdata2     start:0x804A3F78 end:0x804A3FC8
 
 System12/sys12DebugDrawer.cpp:
 	.text       start:0x802C4724 end:0x802C48C8
@@ -4058,12 +4170,14 @@ System12/system12WPMessage.cpp:
 	.rodata     start:0x80310620 end:0x803108B0
 	.data       start:0x80351938 end:0x803519C0
 	.sbss       start:0x8049F148 end:0x8049F150
+	.sdata2     start:0x804A3FC8 end:0x804A3FD0
 
 System12/system12WPTagProcessor.cpp:
 	.text       start:0x802C56D0 end:0x802C7494
 	.ctors      start:0x802F6324 end:0x802F6328
 	.rodata     start:0x803108B0 end:0x803109A0
 	.data       start:0x803519C0 end:0x80351C00
+	.sdata2     start:0x804A3FD0 end:0x804A3FF0
 
 System12/system12WPWideTextWriter.cpp:
 	.text       start:0x802C7494 end:0x802C7D68
@@ -4071,6 +4185,7 @@ System12/system12WPWideTextWriter.cpp:
 	.rodata     start:0x803109A0 end:0x80310A00
 	.data       start:0x80351C00 end:0x80351C20
 	.sbss       start:0x8049F150 end:0x8049F158
+	.sdata2     start:0x804A3FF0 end:0x804A3FF8
 
 System12/sys12CursorMgr.cpp:
 	.text       start:0x802C7D68 end:0x802CA9D0
@@ -4086,6 +4201,7 @@ System12/sys12DvdErrorMsg.cpp:
 System12/system123D.cpp:
 	.text       start:0x802CBDC8 end:0x802CDA2C
 	.data       start:0x80351F50 end:0x80352188
+	.sdata2     start:0x804A40B0 end:0x804A40C8
 
 System12/sys12Renderer.cpp:
 	.text       start:0x802CDA2C end:0x802CDCE4
@@ -4094,6 +4210,7 @@ System12/sys12Renderer.cpp:
 
 System12/sys12Window.cpp:
 	.text       start:0x802CDCE4 end:0x802CDFDC
+	.sdata2     start:0x804A40C8 end:0x804A40E0
 
 System12/system12ResourceMgr.cpp:
 	.text       start:0x802CDFDC end:0x802CE1D4
@@ -4111,19 +4228,28 @@ System12/sys12DpdState.cpp:
 System12/PSSpkSystem.cpp:
 	.text       start:0x802D251C end:0x802D2E6C
 	.rodata     start:0x80311970 end:0x803119C8
+	.data       start:0x803522F8 end:0x80352318
 	.sbss       start:0x8049F198 end:0x8049F1C0
+	.sdata2     start:0x804A41D0 end:0x804A41D8
 
 System12/SpkData.cpp:
 	.text       start:0x802D2E6C end:0x802D302C
+	.rodata     start:0x803119C8 end:0x80311A08
 
 System12/SpkGadget.cpp:
 	.text       start:0x802D302C end:0x802D34E4
+	.rodata     start:0x80311A08 end:0x80311A78
 
 System12/SpkMixingBuffer.cpp:
 	.text       start:0x802D34E4 end:0x802D3890
+	.rodata     start:0x80311A78 end:0x80311B00
+	.sdata2     start:0x804A41D8 end:0x804A41E0
 
 System12/SpkSound.cpp:
 	.text       start:0x802D3890 end:0x802D4968
+	.rodata     start:0x80311B00 end:0x80311BF8
+	.data       start:0x80352318 end:0x80352380
+	.sdata2     start:0x804A41E0 end:0x804A4208
 
 System12/SpkSpeakerCtrl.cpp:
 	.text       start:0x802D4968 end:0x802D52F8
@@ -4132,12 +4258,16 @@ System12/SpkSpeakerCtrl.cpp:
 
 System12/SpkSystem.cpp:
 	.text       start:0x802D52F8 end:0x802D5968
+	.rodata     start:0x80311BF8 end:0x80311CB0
+	.data       start:0x80352380 end:0x803523A0
+	.sdata2     start:0x804A4208 end:0x804A4210
 
 System12/SpkTable.cpp:
 	.text       start:0x802D5968 end:0x802D59F0
 
 System12/SpkWave.cpp:
 	.text       start:0x802D59F0 end:0x802D5E6C
+	.rodata     start:0x80311CB0 end:0x80311CF0
 
 homebuttonLib/HBMFrameController.cpp:
 	.text       start:0x802D5E6C end:0x802D6014

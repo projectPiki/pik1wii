@@ -731,7 +731,8 @@ struct GameCourseClearScreen : public Node {
 	 */
 	struct Parms : public Parameters {
 		Parms()
-		    : mFloatTest(this, 300.0f, 0.0f, 1000.0f, "p00", "floatテストだぴょ−ン") // 'float test'
+		    : Parameters(TERNARY_BUGFIX("Spider::Parms", "GameCourseClearScreen::Parms"))
+		    , mFloatTest(this, 300.0f, 0.0f, 1000.0f, "p00", "floatテストだぴょ−ン") // 'float test'
 		    , mIntTest(this, 1, 0, 100, "i00", "intテストだぴょ−ン")                 // 'int test'
 		{
 		}
