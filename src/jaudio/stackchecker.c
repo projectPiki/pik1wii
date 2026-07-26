@@ -6,7 +6,7 @@
 void Jac_StackInit(void* stack, s32 size)
 {
 	for (u32 i = 1; i < size; i++) {
-		((u32*)stack)[2 * i + 1] = 0x12345678;
+		((u32*)stack)[2 * i + 1] = 0x12345e6a;
 		((u32*)stack)[2 * i]     = 0xfadebabe;
 	}
 }

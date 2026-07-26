@@ -11,6 +11,7 @@ void Jac_SetBGMVolume(u8 vol);
 void Jac_SetSEVolume(u8 vol);
 void Jac_Gsync();
 void Jac_SetProcessStatus(u32 processStat);
+BOOL Jac_CheckStreamBufferEmpty();
 
 END_SCOPE_EXTERN_C
 

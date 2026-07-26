@@ -11,16 +11,9 @@ static u32 FORCE_RELEASE_TABLE[3] = { 5, 15, 0 };
 /**
  * @TODO: Documentation
  */
-Inst_* Bank_InstChange(Bank_* bank, volatile u32 VOLATILE_index)
+Inst_* Bank_InstChange(Bank_* bank, u32 index)
 {
-	STACK_PAD_VAR(1);
-	u32 index;
-
-	index = VOLATILE_index;
-	if (!bank) {
-		return NULL;
-	}
-	return bank->mInstruments[index];
+	return !bank ? NULL : bank->mInstruments[index];
 }
 
 /**
@@ -42,29 +35,22 @@ Voice_* Bank_VoiceChange(Bank_* bank, volatile u32 VOLATILE_index)
 /**
  * @TODO: Documentation
  */
-Perc_* Bank_PercChange(Bank_* bank, volatile u32 VOLATILE_index)
+Perc_* Bank_PercChange(Bank_* bank, u32 index)
 {
-	STACK_PAD_VAR(1);
-	u32 index;
-
-	index = VOLATILE_index;
-	if (!bank) {
-		return NULL;
-	}
-	return bank->mPercs[index];
+	return !bank ? NULL : bank->mPercs[index];
 }
 
 /**
  * @TODO: Documentation
  */
-int Bank_GetInstKeymap(Inst_* inst, u8 param_2)
+int Bank_GetInstKeymap(Inst_* inst, u8 key)
 {
 	if (!inst) {
 		return 0;
 	}
 
 	for (u32 i = 0; i < inst->mKeyRegionCount; i++) {
-		if (param_2 <= inst->mKeyRegions[i]->mBaseKey) {
+		if (key <= inst->mKeyRegions[i]->mBaseKey) {
 			return i; // Return the index of the keymap
 		}
 	}
@@ -75,21 +61,18 @@ int Bank_GetInstKeymap(Inst_* inst, u8 param_2)
 /**
  * @TODO: Documentation
  */
-int Bank_GetInstVmap(Inst_* inst, u8 param_2, u8 param_3)
+int Bank_GetInstVmap(Inst_* inst, u8 key, u8 velocity)
 {
-	STACK_PAD_VAR(1);
-
 	if (!inst) {
 		return 0;
 	}
 
-	int instIndex = Bank_GetInstKeymap(inst, param_2);
+	int instIndex = Bank_GetInstKeymap(inst, key);
 	if (instIndex != -1) {
-		u8* REF_p3       = &param_3;
-		InstKeymap_* key = inst->mKeyRegions[instIndex];
-		for (u32 i = 0; i < key->mVelocityCount; i++) {
-			Vmap_* vmap = key->mVelocities[i];
-			if (param_3 <= vmap->mBaseVelocity) {
+		InstKeymap_* keymap = inst->mKeyRegions[instIndex];
+		for (u32 i = 0; i < keymap->mVelocityCount; i++) {
+			Vmap_* vmap = keymap->mVelocities[i];
+			if (velocity <= vmap->mBaseVelocity) {
 				return (int)vmap;
 			}
 		}
@@ -128,27 +111,27 @@ Vmap_* Bank_GetPercVmap(Perc_* perc, u8 keyIdx, u8 vel)
  */
 int Bank_GetVoiceMap(Voice_* voice, u16 id)
 {
-	// UNUSED FUNCTION
+
 }
 
 /**
  * @TODO: Documentation
  */
-f32 Bank_SenseToOfs(Sense_* sensor, u8 p2)
+f32 Bank_SenseToOfs(Sense_* sensor, u8 inputValue)
 {
 	if (!sensor) {
 		return 1.0f;
 	}
 
 	if (sensor->threshold == 127 || sensor->threshold == 0) {
-		return sensor->min + (f32)p2 * (sensor->max - sensor->min) / 127.0f;
+		return sensor->min + (f32)inputValue * (sensor->max - sensor->min) / 127.0f;
 	}
 
-	if (p2 < sensor->threshold) {
-		return sensor->min + (1.0f - sensor->min) * ((f32)p2 / (f32)sensor->threshold);
+	if (inputValue < sensor->threshold) {
+		return sensor->min + (1.0f - sensor->min) * ((f32)inputValue / (f32)sensor->threshold);
 	}
 
-	int a = p2 - sensor->threshold;
+	int a = inputValue - sensor->threshold;
 	int b = 127 - sensor->threshold;
 
 	return 1.0f + (sensor->max - 1.0f) * ((f32)a / (f32)b);

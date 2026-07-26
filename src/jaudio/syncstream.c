@@ -1152,11 +1152,14 @@ u8 StreamCheckAudioFormat(u32 ctrlID)
 
 /**
  * @TODO: Documentation
- * @note UNUSED Size: 000038
  */
-void StreamCheckBufferEmpty(void)
+BOOL StreamCheckBufferEmpty(u32 ctrlID)
 {
-	// UNUSED FUNCTION
+	StreamCtrl_* ctrl = &SC[ctrlID];
+	if (ctrl->playbackState == 5){
+		return TRUE;
+	}
+	return FALSE;
 }
 
 /**

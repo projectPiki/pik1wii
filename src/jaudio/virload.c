@@ -31,8 +31,6 @@ void JV_InitHeader(immut char*)
  */
 BOOL JV_InitHeader_M(immut char* fileName, u8* barcData, u8* p3)
 {
-	STACK_PAD_VAR(1);
-	immut char** REF_p1 = &fileName;
 	if (!barcData) {
 		// if no barc data, read from disk
 		u32 size = DVDT_CheckFile(fileName);
@@ -164,9 +162,7 @@ u32 JV_CheckSize(u32 handle)
 	BarcEntry* entry;
 
 	entry = JV_GetRealHandle(handle);
-	if (!entry)
-		return 0;
-	return entry->size;
+	return !entry ? 0 : entry->size;
 }
 
 /**
@@ -188,16 +184,11 @@ u32 JV_LoadFile(u32 handle, u8* dst, u32 param_3, u32 length)
 	char name[128];
 	volatile u32 status;
 
-	u32* REF_handle = &handle;
-	u8** REF_dst    = &dst;
-	u32* REF_length = &length;
-
 	u32 idx = handle >> 16;
 	status  = 0;
 
 	src = JV_GetRealHandle(handle)->offset;
 	src += param_3;
-	u32* REF_src = &src;
 
 	strcpy(name, JV_DIR_NAME[idx]);
 	strcat(name, "/");
@@ -208,7 +199,6 @@ u32 JV_LoadFile(u32 handle, u8* dst, u32 param_3, u32 length)
 		;
 	}
 
-	STACK_PAD_VAR(2);
 	return status;
 }
 
@@ -218,19 +208,13 @@ u32 JV_LoadFile(u32 handle, u8* dst, u32 param_3, u32 length)
 u32 JV_LoadFile_Async2(u32 handle, u8* dst, u32 p3, u32 length, void (*callback)(u32), u32 owner)
 {
 	static u32 first = TRUE;
-	STACK_PAD_VAR(1);
 	u32 idx;
 	u32 src;
 	char name[128];
-	u32* REF_handle = &handle;
-	u8** REF_dst    = &dst;
-	u32* REF_length = &length;
-	STACK_PAD_VAR(3);
 
 	idx = handle >> 16;
 	src = JV_GetRealHandle(handle)->offset;
 	src += p3;
-	u32* REF_src = &src;
 
 	strcpy(name, JV_DIR_NAME[idx]);
 	strcat(name, "/");

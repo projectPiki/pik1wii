@@ -46,9 +46,9 @@ static void __ResetCounter();
  */
 static BOOL InitQueue()
 {
-	STACK_PAD_VAR(4);
-	seqp_* handle;
+	OSReport("♪APP-PIKI::Init CmdQueue  : \n");
 
+	seqp_* handle;
 	handle = Jam_GetTrackHandle(0x10009);
 	if (!handle)
 		return FALSE;
@@ -62,6 +62,7 @@ static BOOL InitQueue()
  */
 void Jac_StopSe(s32)
 {
+	OSReport("♪APP-PIKI:: STOPSE : Not yet initialized CMD Queue\n");
 	if (cmdqueue_reset) {
 		(cmdqueue_reset != 0);
 	}
@@ -95,6 +96,7 @@ void Jac_SysSEDemoFadeCheck()
 
 	if (sys_voldown_flag == 1) {
 		if (!StreamSyncCheckBusy(0, 5)) {
+			OSReport("Fade Recover\n");
 			Jac_DemoFade(0, 100, 1.0f);
 			sys_voldown_flag = 0;
 		}
@@ -111,6 +113,7 @@ void Jac_PlaySystemSe(s32 id)
 	if (!cmdqueue_reset) {
 		cmdqueue_reset = InitQueue();
 		if (!cmdqueue_reset) {
+			OSReport("♪APP-PIKI/SysSE::SystemSE is NOT ready...\n");
 			return;
 		}
 	}
@@ -161,11 +164,8 @@ void Jac_PlaySystemSe(s32 id)
 			container = FALSE;
 			Jam_UnPauseTrack(Jam_GetTrackHandle(0x20000), 1);
 			Jac_UnPauseOrimaSe();
-#if defined(VERSION_GPIJ01_01)
-#else
 			Jac_StopSystemSe(JACSYS_MenuScroll);
 			Jac_StopSystemSe(JACSYS_MenuZoomIn);
-#endif
 			break;
 		}
 		return;
@@ -173,6 +173,7 @@ void Jac_PlaySystemSe(s32 id)
 	case JACSYS_Pause:
 	{
 		if (container == FALSE) {
+			OSReport("♪APP-PIKI/SysSE::Pause\n");
 			Jac_SetBgmModeFlag(0, 4, 1);
 			Jac_SetBgmModeFlag(1, 4, 1);
 			Jam_PauseTrack(Jam_GetTrackHandle(0x20000), 1);
@@ -186,6 +187,7 @@ void Jac_PlaySystemSe(s32 id)
 	{
 		if (pausemode != FALSE) {
 			if (container == FALSE) {
+				OSReport("♪APP-PIKI/SysSE::UnPause\n");
 				Jac_SetBgmModeFlag(0, 4, 0);
 				Jac_SetBgmModeFlag(1, 4, 0);
 				Jam_UnPauseTrack(Jam_GetTrackHandle(0x20000), 1);
@@ -216,6 +218,7 @@ void Jac_PlaySystemSe(s32 id)
 	}
 	case JACSYS_DVDPause:
 	{
+		OSReport("♪Jac/App-Piki::DVD pause \n");
 		Jam_PauseTrack(Jam_GetTrackHandle(0x20000), 1);
 		Jam_PauseTrack(Jam_GetTrackHandle(0x1000f), 1);
 		Jac_PauseOrimaSe();
@@ -228,6 +231,7 @@ void Jac_PlaySystemSe(s32 id)
 	}
 	case JACSYS_DVDUnpause:
 	{
+		OSReport("♪Jac/App-Piki::DVD Unpause \n");
 		Jam_UnPauseTrack(Jam_GetTrackHandle(0x20000), 1);
 		Jam_UnPauseTrack(Jam_GetTrackHandle(0x1000f), 1);
 		Jac_UnPauseOrimaSe();
@@ -238,6 +242,7 @@ void Jac_PlaySystemSe(s32 id)
 	}
 	case JACSYS_Unk40:
 	{
+		OSReport("♪APP-PIKI/SysSE::Down-Pause\n");
 		Jam_PauseTrack(Jam_GetTrackHandle(0x20000), 1);
 		Jac_Orima_Formation(0, 0);
 		pausemode = TRUE;
@@ -292,6 +297,7 @@ static void Jac_PlayInit()
 	Init_StreamAudio();
 	Jac_ConnectTableInit();
 	Jaf_InitSeqArchive2("/Seqs/pikiseq.hed", HEAD_pikiseq, 0);
+	OSReport("♪APP-PIKI/Init::SEシーケンス自動起動します\n");
 	Jac_InitBgm();
 	Bank_Setup("Banks/pikibank.bx");
 }
@@ -301,6 +307,7 @@ static void Jac_PlayInit()
  */
 static void Jac_Archiver_Init()
 {
+	OSReport("♪APP-PIKI/Init::----アーカイブ 事前登録---------\n");
 }
 
 /**
@@ -308,7 +315,6 @@ static void Jac_Archiver_Init()
  */
 static u16 TrackReceive(seqp_* track, u16 param_2)
 {
-	STACK_PAD_VAR(1);
 	u8 childTrackIndex;
 	u8 childSlotIndex;
 	u16 eventActionId;
@@ -338,10 +344,7 @@ static u16 TrackReceive(seqp_* track, u16 param_2)
  */
 static void AuxBusInit()
 {
-	u32* REF_alloc2Size;
 	u32 alloc2Size;
-
-	STACK_PAD_VAR(2);
 
 	u32 i;
 	s16* circularBufferBase;
@@ -354,13 +357,16 @@ static void AuxBusInit()
 	};
 
 	for (i = 0; i < 4; ++i) {
-		if (i < 3) {
-			alloc2Size         = fx_config[i].circularBufferSize * 0xa0; // TODO: What is 160 bytes large?
-			REF_alloc2Size     = &alloc2Size;
-			circularBufferBase = (s16*)OSAlloc2(alloc2Size);
+
+		alloc2Size = fx_config[i].circularBufferSize * 0xa0; // TODO: What is 160 bytes large?
+		void* mem = OSAlloc2(alloc2Size);
+		if (!mem) {
+			OSReport("No... I cannot alloc FX buffer (%d bytes)\n", alloc2Size);
 		} else {
-			circularBufferBase = NULL;
+			OSReport("I alloc FX buffer (%d bytes)\n", alloc2Size);
 		}
+		circularBufferBase = (s16*)mem;
+
 		DFX_SetFxLine(i, circularBufferBase, &fx_config[i]);
 	}
 }
@@ -377,8 +383,9 @@ void Jac_SetThreadPriority(void)
 /**
  * @TODO: Documentation
  */
-static void __BootSoundOK(u32)
+static void __BootSoundOK(u32 param_1)
 {
+	OSReport("♪APP-PIKI/Init::　__BootSoundO %dK\n", param_1);
 	boot_ok = TRUE;
 }
 
@@ -395,8 +402,6 @@ BOOL Jac_CheckBootOk()
  */
 void Jac_Start(void* heap, u32 heapSize, u32 aramSize, immut char* rootPath)
 {
-	STACK_PAD_VAR(1);
-
 	if (rootPath) {
 		DVDT_SetRootPath(rootPath);
 	}
@@ -422,6 +427,7 @@ void Jac_Start(void* heap, u32 heapSize, u32 aramSize, immut char* rootPath)
 	Jac_FatMemory_Init(0x10000);
 	Jac_Archiver_Init();
 	Jac_PlayInit();
+	OSReport("♪APP-PIKI/Init::サウンド波形のロードを行います\n");
 	WaveScene_Set(0, 0);
 	DVDT_CheckPass(0, 0, __BootSoundOK);
 	Jac_Portcmd_Init();
@@ -447,6 +453,7 @@ void Jac_StopSoundAll(void)
  */
 void Jac_Freeze_Precall()
 {
+	Jac_SetMixerLevel(0.0f, 0.0f);
 	BOOL level   = OSDisableInterrupts();
 	jcs_* handle = Get_GlobalHandle();
 	AllStop_1Shot(handle);

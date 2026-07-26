@@ -38,6 +38,7 @@ jaudio/dummyrom.c:
 
 jaudio/audiothread.c:
 	.text       start:0x80007FE0 end:0x80008620
+	.rodata     start:0x802F63D8 end:0x802F6710
 	.bss        start:0x80356620 end:0x80356680
 	.sbss       start:0x8049E060 end:0x8049E080
 
@@ -64,13 +65,16 @@ jaudio/dvdthread.c:
 
 jaudio/rate.c:
 	.sdata      start:0x80497368 end:0x80497378
-	.sbss       start:0x8049E0E0 end:0x8049E0E8
+	.sbss       start:0x8049E0E0 end:0x8049E0E4
 
 jaudio/audiomesg.c:
 	.text       start:0x80009E40 end:0x80009FC0
 
 jaudio/stackchecker.c:
-	.text       start:0x80009FC0 end:0x8000AFA0
+	.text       start:0x80009FC0 end:0x8000A090
+
+jaudio/homemenu.c:
+	.text       start:0x8000A0A0 end:0x8000AFA0
 	.bss        start:0x8035F2D8 end:0x80360140
 	.sdata      start:0x80497378 end:0x80497380
 
@@ -206,6 +210,7 @@ jaudio/interface.c:
 
 jaudio/verysimple.c:
 	.text       start:0x80019AE0 end:0x8001A660
+	.rodata     start:0x802F6A08 end:0x802F6D78
 	.data       start:0x80315608 end:0x80315688
 	.bss        start:0x803C4138 end:0x803C4210
 	.sbss       start:0x8049E188 end:0x8049E1B0
@@ -226,20 +231,21 @@ jaudio/piki_player.c:
 	.sbss       start:0x8049E1C8 end:0x8049E200
 
 jaudio/piki_bgm.c:
-	.text       start:0x8001BF20 end:0x8001D100
+	.text       start:0x8001BF20 end:0x8001CD40
 	.data       start:0x80315D50 end:0x80315E68
-	.bss        start:0x803C4368 end:0x803C50B8
+	.bss        start:0x803C4368 end:0x803C50A0
 	.sdata      start:0x804973D0 end:0x80497450
 	.sbss       start:0x8049E200 end:0x8049E218
 
 jaudio/piki_scene.c:
-	.text       start:0x8001D100 end:0x8001DAE0
+	.text       start:0x8001CD40 end:0x8001DAC0
 	.data       start:0x80315E68 end:0x803160D0
+	.bss        start:0x803C50A0 end:0x803C50B8
 	.sdata      start:0x80497450 end:0x80497468
 	.sbss       start:0x8049E218 end:0x8049E248
 
 jaudio/pikidemo.c:
-	.text       start:0x8001DAE0 end:0x8001EDC0
+	.text       start:0x8001DAC0 end:0x8001EDC0
 	.data       start:0x803160D0 end:0x80316B60
 	.bss        start:0x803C50B8 end:0x803C5128
 	.sdata      start:0x80497468 end:0x804974A8
@@ -247,9 +253,9 @@ jaudio/pikidemo.c:
 
 jaudio/file_seq.c:
 	.text       start:0x8001EDC0 end:0x8001F440
-	.bss        start:0x803C5128 end:0x803C9940
-	.sdata      start:0x804974A8 end:0x804974B0
-	.sbss       start:0x8049E270 end:0x8049E278
+	.bss        start:0x803C5128 end:0x803C9928
+	.sdata      start:0x804974A8 end:0x804974AC
+	.sbss       start:0x8049E270 end:0x8049E274
 
 jaudio/cmdqueue.c:
 	.text       start:0x8001F440 end:0x8001F620
@@ -269,12 +275,12 @@ jaudio/pikiseq.c:
 	.data       start:0x80316BC0 end:0x80316EA0
 
 jaudio/bankloader.c:
-	.text       start:0x80021500 end:0x80021600
+	.text       start:0x80021500 end:0x800215E4
 
 jaudio/interleave.c:
 	.text       start:0x80021600 end:0x800216DC
-	.bss        start:0x803EB3A8 end:0x803EB3C8
-	.sdata      start:0x804974B8 end:0x804974C0
+	.bss        start:0x803EB3A8 end:0x803EB3C4
+	.sdata      start:0x804974B8 end:0x804974BC
 
 aralt/aralt.c:
 	.text       start:0x800216DC end:0x80021DFC

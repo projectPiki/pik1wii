@@ -6,6 +6,7 @@
 #include "jaudio/pikidemo.h"
 #include "jaudio/pikiinter.h"
 #include "jaudio/verysimple.h"
+#include "jaudio/syncstream.h"
 
 static int process_stack[4];
 
@@ -53,10 +54,7 @@ void Jac_Gsync()
 	}
 	Jac_DemoEventUnPauseCheck();
 	Jac_SysSEDemoFadeCheck();
-#if defined(VERSION_GPIJ01_01)
-#else
 	Jac_EventFrameCheck();
-#endif
 }
 
 /**
@@ -100,9 +98,8 @@ void Jac_SetProcessStatus(u32 processStat)
 
 /**
  * @TODO: Documentation
- * @note UNUSED Size: 000024
  */
-void Jac_CheckStreamBufferEmpty(void)
+BOOL Jac_CheckStreamBufferEmpty()
 {
-	// UNUSED FUNCTION
+	return StreamCheckBufferEmpty(0);
 }

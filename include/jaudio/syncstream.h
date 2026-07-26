@@ -31,7 +31,7 @@ int StreamGetCurrentFrame(u32, u32);
 BOOL StreamSetDVDPause(u32, BOOL);
 void StreamCheckRemainBuffers(void);
 u8 StreamCheckAudioFormat(u32);
-void StreamCheckBufferEmpty(void);
+BOOL StreamCheckBufferEmpty(u32);
 void StreamCheckBufferRemainSize(void);
 
 // size 0x10

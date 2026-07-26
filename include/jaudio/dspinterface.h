@@ -42,6 +42,7 @@ void DSP_InvalChannelAll();
 void DSP_ClearBuffer();
 void DSP_SetupBuffer();
 void DSP_InitBuffer();
+u16 DSP_CreateMap2(u32 msg);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Based on `ZeldaAudioRenderer::VPB` from Dolphin Emulator. Thank you all!

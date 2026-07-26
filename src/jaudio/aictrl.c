@@ -349,6 +349,10 @@ void Jac_VframeWork()
 
 	s16* mixedTrack = MixDsp(DAC_SIZE / 2);
 	s16* x          = &mixedTrack[JAC_FRAMESAMPLES];
+	
+	if (DAC_CALLBACK_FUNC != NULL) {
+		(*DAC_CALLBACK_FUNC)(last_rsp_madep, DAC_SIZE / 2);
+	}
 	Jac_imixcopy(x, &mixedTrack[0], dac[dacp], DAC_SIZE / 2);
 
 	if (ext_mixcallback != NULL) {
@@ -410,10 +414,6 @@ void Jac_UpdateDAC()
 	}
 
 	StreamMain();
-
-	if (DAC_CALLBACK_FUNC != NULL) {
-		(*DAC_CALLBACK_FUNC)(last_rsp_madep, DAC_SIZE / 2);
-	}
 }
 
 /**
