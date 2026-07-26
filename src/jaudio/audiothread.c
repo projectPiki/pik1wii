@@ -69,13 +69,14 @@ void Jac_GetDacRate(void)
 static void DspSync()
 {
 	if (audioproc_mq_init) {
-		OSSendMessage(&audioproc_mq, AUDIOPROC_MESSAGE_DSP_SYNC, OS_MESSAGE_NOBLOCK);
+		if (!OSSendMessage(&audioproc_mq, AUDIOPROC_MESSAGE_DSP_SYNC, OS_MESSAGE_NOBLOCK)) {
+			OSReport("DSPSync:: SendMiss\n");
+			Console_printf("send Miss \n");
+		}
 	} else {
 		DSPReleaseHalt();
 	}
 }
-
-#if defined(VERSION_GPIP01_00)
 /**
  * @TODO: Documentation
  */
@@ -99,7 +100,6 @@ static void DspSync2(void*)
 		}
 	}
 }
-#endif
 
 /**
  * @TODO: Documentation
@@ -143,60 +143,24 @@ void NeosSync()
 /**
  * @TODO: Documentation
  */
-static void __DspSync(__OSInterrupt interrupt, OSContext* context)
-{
-	u16 reg                       = __DSPRegs[DSP_CONTROL_STATUS];
-	reg                           = (1 << 7) | reg & -0x29; /* clear AR + AI interrupt, set DSP interrupt */
-	__DSPRegs[DSP_CONTROL_STATUS] = reg;
-
-	OSContext tmp_context;
-	OSClearContext(&tmp_context);
-	OSSetCurrentContext(&tmp_context);
-	DspSync();
-	OSClearContext(&tmp_context);
-	OSSetCurrentContext(context);
-}
-
-/**
- * @TODO: Documentation
- */
-static void __DspReg()
-{
-	BOOL enable = OSDisableInterrupts();
-	__OSSetInterruptHandler(__OS_INTERRUPT_DSP_DSP, &__DspSync);
-	OSRestoreInterrupts(enable);
-}
-
-/**
- * @TODO: Documentation
- */
 static void* audioproc(void*)
 {
+	OSReport("\n♪Jac/Thread/Proc:: オーディオスレッドが開始しました\n");
 	OSInitFastCast();
 	OSInitMessageQueue(&audioproc_mq, msgbuf, AUDIOPROC_MQ_BUF_COUNT);
 	audioproc_mq_init = TRUE;
-#if defined(VERSION_GPIP01_00)
 	ResetPlayerCallback();
 	Jac_Init();
 	Jac_InitSinTable();
-#else
-	Jac_Init();
-	Jac_InitSinTable();
-	ResetPlayerCallback();
-#endif
 	DspbufProcess(DSPBUF_EVENT_INIT);
 	CpubufProcess(DSPBUF_EVENT_INIT);
-#if defined(VERSION_GPIP01_00)
 	DspBoot(DspSync2);
 	DSP_InitBuffer();
-#else
-	DspBoot();
-	DSP_InitBuffer();
-	__DspReg();
-#endif
 	AISetDSPSampleRate(JAC_AI_SETTING);
 	AIRegisterDMACallback(&AudioSync);
 	AIStartDMA();
+	OSReport("♪Jac/Thread/Proc::オーディオシステムのイニシャルが終了しました\n");
+	OSReport("\t\t\t\t\t ここからはループになります\n\n");
 
 	while (TRUE) {
 		OSMessage msg;
@@ -211,6 +175,8 @@ static void* audioproc(void*)
 		case (int)AUDIOPROC_MESSAGE_DSP_SYNC:
 		{
 			if (intcount == 0) {
+				OSReport("♪Jac/thread/DSPSync:: 余分な割り込みが発生...\n");
+				Console_printf("余分\n");
 				return;
 			}
 
@@ -233,13 +199,13 @@ static void* audioproc(void*)
 		}
 		case (int)AUDIOPROC_MESSAGE_3:
 		{
+			OSReport("オーディオスレッドを終了します\n");
 			OSExitThread(NULL);
+			OSReport("これは侮ｦされたらおかしいです\n");
 			break;
 		}
 		}
 	}
-
-	STACK_PAD_VAR(3);
 }
 
 static BOOL priority_set        = FALSE;
@@ -265,36 +231,41 @@ void StartAudioThread(void* heap, s32 heapSize, u32 aramSize, u32 flags)
 		OSPriority base_prio = OSGetThreadPriority(OSGetCurrentThread()) - 3;
 
 		pri = base_prio;
-
-		OSPriority p = pri;
-		pri3         = p + 1;
-		pri2         = p + 2;
+		pri3         = base_prio + 1;
+		pri2         = base_prio + 2;
+		OSReport("♪Jac/Thread/Init:: デフォルトのスレッドプライオリティ値を使用します\n");
+	} else {
+		OSReport("♪Jac/Thread/Init:: 蘭 済みのスレッドプライオリティ値を使用します\n");
 	}
 
 	u32 neos_flag;
 
+	OSReport("\n♪Jac/Thread/Init:: オーディオスレッドを起動します\n");
 	Jac_HeapSetup(heap, heapSize);
 	Jac_SetAudioARAMSize(aramSize);
 
 	neos_flag = flags & AUDIO_THREAD_FLAG_NEOS;
 	Jac_InitARAM(neos_flag);
 
-	Jac_StackInit(jac_audioStack, 0x200);
+	OSReport("♪Jac/Thread/Init:: 　スレッドの優先順位は %d  です\n", pri);
+	Jac_StackInit(jac_audioStack, 0x400);
 	if ((flags & AUDIO_THREAD_FLAG_AUDIO)) {
 		// point to top of audioStack
 		u8* stack_p = jac_audioStack;
 		OSCreateThread(&jac_audioThread.thread, &audioproc, NULL, stack_p + AUDIO_STACK_SIZE, AUDIO_STACK_SIZE, pri, OS_THREAD_ATTR_DETACH);
 		OSResumeThread(&jac_audioThread.thread);
+		OSReport("♪Jac/Thread/Init:: 　オーディオスレッドを起動終了しました(prio:%d)\n\n", pri);
 	}
 
-	Jac_StackInit(jac_dvdStack, 0x200);
+	Jac_StackInit(jac_dvdStack, 0x400);
 	if ((flags & AUDIO_THREAD_FLAG_DVD)) {
 		jac_dvdproc_init();
 		// point to top of dvdStack
 		u8* stack_p = jac_dvdStack;
 		OSCreateThread(&jac_dvdThread, &jac_dvdproc, NULL, stack_p + AUDIO_STACK_SIZE, AUDIO_STACK_SIZE, pri3, OS_THREAD_ATTR_DETACH);
 		OSResumeThread(&jac_dvdThread);
+		OSReport("♪Jac/Thread/Init:: 　DVDスレッドを起動終了しました(prio:%d)\n\n", pri3);
+	} else {
+		OSReport("♪Jac/Thread/Init:: 　DVDスレッドを起動しませんでした\n\n");
 	}
-
-	STACK_PAD_VAR(2);
 }

@@ -2,8 +2,6 @@
 #include "RevoSDK/os.h"
 #include <stddef.h>
 
-#if defined(VERSION_GPIP01_00)
-
 DSPTaskInfo* __DSP_tmp_task;
 
 /**
@@ -44,5 +42,3 @@ void DSPAddPriorTask(DSPTaskInfo* info)
 	__DSP_boot_task(info);
 	OSRestoreInterrupts(inter);
 }
-
-#endif

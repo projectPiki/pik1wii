@@ -158,21 +158,15 @@ void Jac_InitBgm(void)
 		bgm[i].trackHandle      = -1;
 	}
 
-	u32* REF_i = &i;
-
 	if (!buffer[0]) {
 		int vals1[5] = { 0, 1, 11, 13, 16 };
 		int vals2[5] = { 0, 1, -1, 2, -1 };
-		STACK_PAD_VAR(1);
 
 		for (i = 0; i < 5; i++) {
 			u32 size;
 			u8* seqbuf;
-			STACK_PAD_VAR(1);
 			size            = Jaf_CheckSeqSize(vals1[i]);
-			u32* REF_size   = &size;
 			seqbuf          = (u8*)OSAlloc2(size);
-			u8** REF_seqbuf = &seqbuf;
 			if ((u32)Jaf_LoadSeq(vals1[i], seqbuf)) {
 				int* pVals = &vals2[i];
 				if (*pVals != -1) {
@@ -212,7 +206,6 @@ void Jac_StopBgm(u32 id)
  */
 void Jac_ReadyBgm(u32 id)
 {
-	u32* REF_id = &id;
 	if (id < 2) {
 		id = 2;
 	}
@@ -233,8 +226,6 @@ void Jac_ReadyBgm(u32 id)
  */
 void Jac_PlayBgm(u32 trackNo, u32 bgmID)
 {
-	STACK_PAD_VAR(4);
-	u32* REF_b = &bgmID;
 	u32 check;
 	seqp_* track;
 	Jac_SetProcessStatus(8);
@@ -262,7 +253,7 @@ void Jac_PlayBgm(u32 trackNo, u32 bgmID)
 		}
 	}
 
-	track = Jaf_HandleToSeq(trackNo + 3);
+	track = Jaf_HandleToSeq(trackNo + 4);
 
 	bgm[trackNo].isActive        = 1;
 	bgm[trackNo].needsInit       = 1;
@@ -270,21 +261,20 @@ void Jac_PlayBgm(u32 trackNo, u32 bgmID)
 	bgm[trackNo].transitionTimer = 0;
 	bgm[trackNo].currentMode     = 0;
 	bgm[trackNo].songId          = bgmID - 2;
-	bgm[trackNo].trackHandle     = trackNo + 3;
+	bgm[trackNo].trackHandle     = trackNo + 4;
 
-#if defined(VERSION_GPIP01_00)
 	call_counter = 6000;
-#endif
+
 	Jac_SetBgmModeFlag(trackNo, 2, 0);
 	Jac_SetBgmModeFlag(trackNo, 1, 0);
 	Jac_SetBgmModeFlag(trackNo, 4, 0);
 	Jac_SetBgmModeFlag(trackNo, 8, 0);
-#if defined(VERSION_GPIP01_00)
+
 	call_counter = 0;
-#endif
-	Jaf_ReadySeq(trackNo + 3, bgmID);
+
+	Jaf_ReadySeq(trackNo + 4, bgmID);
 	Jac_BgmFrameWork();
-	Jaq_SetBankNumber(Jaf_HandleToSeq(trackNo + 3), bgmID);
+	Jaq_SetBankNumber(Jaf_HandleToSeq(trackNo + 4), bgmID);
 	bgm[trackNo].crossfade = 0;
 
 	if (trackNo == 0) {
@@ -307,7 +297,7 @@ void Jac_PlayBgm(u32 trackNo, u32 bgmID)
 		Jam_OffExtSwitch(track, 0x40);
 	}
 	track->pauseStatus = 74;
-	Jaf_PlaySeq(trackNo + 3);
+	Jaf_PlaySeq(trackNo + 4);
 	Jac_SetProcessStatus(9);
 }
 
@@ -335,12 +325,10 @@ BOOL Jac_ChangeBgmMode(u32 trackNo, u8 mode)
  */
 void Jac_SetBgmModeFlag(u32 trackNo, u8 flag, u8 doSet)
 {
-#if defined(VERSION_GPIP01_00)
 	int stack[2];
 	if (call_counter < 6000 && Jac_GetCurrentScene() == SCENE_Course && flag != 8 && flag != 4) {
 		return;
 	}
-#endif
 	u32 x, y, z;
 	BgmControl_* thisBgm = &bgm[trackNo];
 	switch (flag) {
@@ -439,7 +427,6 @@ void Jac_MoveBgmTrackVol(BgmControl_* control)
  */
 void Jac_ChangeBgmTrackVol(BgmControl_* control)
 {
-	STACK_PAD_VAR(4);
 	u32 i;
 	seqp_* track2 = Jaf_HandleToSeq(control->trackHandle);
 	if (!track2) {
@@ -526,8 +513,6 @@ void Jac_GameVolume(u8 bgmVol, u8 seVol)
  */
 void Jac_EasyCrossFade(u8 mode, u32 fadeTime)
 {
-	u8* REF_type = &mode;
-	u32* REF_val = &fadeTime;
 	switch (mode) {
 	case 0: // exit boss mode
 	{
@@ -563,10 +548,6 @@ void Jac_EasyCrossFade(u8 mode, u32 fadeTime)
  */
 void Jac_DemoFade(u8 type, u32 val, f32 multiplier)
 {
-	u8* REF_type  = &type;
-	u32* REF_val  = &val;
-	f32* REF_mult = &multiplier;
-
 	switch (type) {
 	case 0:
 	{

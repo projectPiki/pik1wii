@@ -195,7 +195,6 @@ int FixAllocChannel(jcs_* sys, u32 size)
 
 		List_AddChannel(&sys->freeChannels, chan);
 		chan->chanMgr = sys;
-		Channel_Init(chan);
 		num++;
 	}
 
@@ -1021,11 +1020,7 @@ BOOL ResetInitialVolume(jc_* jc)
  */
 BOOL Add_WaitDSPChannel(jc_* jc)
 {
-	if (cur_waits == 32) {
-		return FALSE;
-	}
-
-	if (BreakLowerDSPchannel(jc->channelPriority) == FALSE) {
+	if (cur_waits == 64) {
 		return FALSE;
 	}
 
@@ -1034,12 +1029,10 @@ BOOL Add_WaitDSPChannel(jc_* jc)
 	cur_tail++;
 	cur_waits++;
 
-	if (cur_tail == 32) {
+	if (cur_tail == 64) {
 		cur_tail = 0;
 	}
 	return TRUE;
-
-	STACK_PAD_VAR(2);
 }
 
 /**

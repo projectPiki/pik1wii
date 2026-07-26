@@ -4,7 +4,7 @@
 #include "jaudio/sample.h"
 
 static u16 SEND_TABLE[] = {
-	0x0D00, 0x0D60, 0x0DC0, 0x0E20, 0x0E80, 0x0EE0, 0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0, 0x0000,
+	0x0D00, 0x0D60, 0x0DC8, 0x0E28, 0x0E88, 0x0EE8, 0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0, 0x0000,
 };
 
 /**
@@ -12,9 +12,6 @@ static u16 SEND_TABLE[] = {
  */
 BOOL DFX_SetFxLine(u8 idx, s16* circularBufferBase, FxlineConfig* config)
 {
-	STACK_PAD_VAR(2);
-	s16** REF_circularBufferBase;
-
 	FXBuffer* buf;
 	BOOL restoreInterrupts;
 
@@ -30,7 +27,7 @@ BOOL DFX_SetFxLine(u8 idx, s16* circularBufferBase, FxlineConfig* config)
 		buf->circularBufferSize = config->circularBufferSize;
 		DSP_SetFilterTable(buf->filterCoeffs, config->filterCoeffs, 8);
 	}
-	REF_circularBufferBase = &circularBufferBase;
+
 	if (circularBufferBase && config) {
 		int size = config->circularBufferSize * 0xa0; // TODO: What is 160 bytes large?
 

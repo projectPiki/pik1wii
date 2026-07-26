@@ -53,10 +53,6 @@ s16* DspbufProcess(DSPBUF_EVENTS event)
 	}
 	case DSPBUF_EVENT_FRAME_END:
 	{
-#if defined(VERSION_GPIP01_00)
-#else
-		DspExtraTaskCheck();
-#endif
 		u8 write = write_buffer + 1;
 
 		if (write == DSPBUF_NUM) {
@@ -69,11 +65,7 @@ s16* DspbufProcess(DSPBUF_EVENTS event)
 			write_buffer = write;
 			DspSyncCountClear(JAC_SUBFRAMES);
 			Probe_Start(7, "DSP-MAIN");
-#if defined(VERSION_GPIP01_00)
-			DsyncFrame2(JAC_SUBFRAMES, (u32)dsp_buf[write_buffer], (u32)&dsp_buf[write_buffer][JAC_FRAMESAMPLES]);
-#else
-			DsyncFrame(JAC_SUBFRAMES, (u32)dsp_buf[write_buffer], (u32)&dsp_buf[write_buffer][JAC_FRAMESAMPLES]);
-#endif
+			DsyncFrame2ch(JAC_SUBFRAMES, (u32)dsp_buf[write_buffer], (u32)&dsp_buf[write_buffer][JAC_FRAMESAMPLES]);
 			dspstatus = 1;
 			UpdateDSP();
 		}
@@ -122,13 +114,10 @@ s16* DspbufProcess(DSPBUF_EVENTS event)
 void UpdateDSP()
 {
 	dac_sync_counter++;
-	Probe_Start(3, "SFR-UPDATE");
 	DSP_InvalChannelAll();
 	DspPlayerCallback();
 	UpdateDSPchannelAll();
-	DSPReleaseHalt();
 	PlayerCallback();
-	Probe_Finish(3);
 }
 
 /**

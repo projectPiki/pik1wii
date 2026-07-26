@@ -68,7 +68,7 @@ static int tbl_stage_to_bgm[STAGE_COUNT] = {
 	BGM_Flow,      // STAGE_Last (Final Trial)
 };
 
-char filelist[][32] = { "piki.stx",    "o_dead.stx",  "d_end1.stx",    "gyoku.stx",    "d_end3.stx",   "fanf5.stx",   "badend0.stx",
+char filelist[][32] = { "piki.stx",    "o_dead.stx",  "d_end1.stx",    "piki.stx",    "d_end3.stx",   "fanf5.stx",   "badend0.stx",
 	                    "badend1.stx", "opening.stx", "happyend1.stx", "compend1.stx", "compend0.stx", "badend2.stx", "onion.stx" };
 
 static u8 header[] = { 0x00, 0x64, 0x0C, 0x62, 0x00, 0x58, 0xEE, 0x80, 0xBB, 0x80, 0x00, 0x04, 0x00, 0x10, 0x00, 0x1e,
