@@ -364,10 +364,10 @@ config.libs = [
     {
         "lib": "sysBootup",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "game",
         "objects": [
-            Object(NonMatching, "sysBootup.cpp"),
+            Object(Matching, "sysBootup.cpp"),
         ],
     },
     {
@@ -1238,7 +1238,7 @@ config.libs = [
             Object(NonMatching, "plugPikiNishimura/CoreNucleusAi.cpp"),
             Object(NonMatching, "plugPikiNishimura/genBoss.cpp"),
             Object(NonMatching, "plugPikiNishimura/HmRumbleMgr.cpp"),
-            Object(NonMatching, "plugPikiNishimura/HmRumbleSample.cpp"),
+            Object(Matching, "plugPikiNishimura/HmRumbleSample.cpp"),
             Object(NonMatching, "plugPikiNishimura/King.cpp"),
             Object(NonMatching, "plugPikiNishimura/KingAi.cpp"),
             Object(NonMatching, "plugPikiNishimura/KingBack.cpp"),
@@ -1410,7 +1410,7 @@ config.libs = [
                 "egg/gfx/eggProjection.cpp",
                 extra_cflags=["-RTTI on"],
             ),
-            Object(NonMatching, "egg/gfx/eggViewport.cpp"),
+            Object(Matching, "egg/gfx/eggViewport.cpp"),
         ],
     },
     {
@@ -1448,8 +1448,8 @@ config.libs = [
             Object(NonMatching, "egg/core/eggSystem.cpp"),
             Object(NonMatching, "egg/core/eggController.cpp"),
             Object(NonMatching, "egg/core/eggStream.cpp"),
-            Object(NonMatching, "egg/core/eggDvdRipper.cpp"),
-            Object(NonMatching, "egg/core/eggDvdFile.cpp"),
+            Object(Matching, "egg/core/eggDvdRipper.cpp"),
+            Object(Matching, "egg/core/eggDvdFile.cpp"),
             Object(Matching, "egg/core/eggDisposer.cpp"),
             Object(Matching, "egg/core/eggArchive.cpp"),
             Object(Matching, "egg/core/eggLongStopWatch.cpp"),

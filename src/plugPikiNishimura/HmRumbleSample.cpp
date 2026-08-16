@@ -1,4 +1,4 @@
-#include "RevoSDK/pad.h"
+#include "RevoSDK/wpad.h"
 #include "RumbleMgr.h"
 
 /**
@@ -25,7 +25,7 @@ void RumbleSample::init()
  */
 void RumbleSample::simpleStop()
 {
-	PADStopMotorHard(mChannel);
+	WPADStopMotor(mChannel);
 }
 
 /**
@@ -36,13 +36,13 @@ void RumbleSample::simpleStart(f32 intensity)
 	mCurrentIntensity = intensity;
 	mTotalIntensity += mCurrentIntensity;
 	if (mCurrentIntensity <= 0.0f) {
-		PADStopMotorHard(mChannel);
+		WPADStopMotor(mChannel);
 
 	} else if (mTotalIntensity < 1.0f) {
-		PADStopMotor(mChannel);
+		WPADStopMotor(mChannel);
 
 	} else {
 		mTotalIntensity -= 1.0f;
-		PADStartMotor(mChannel);
+		WPADStartMotor(mChannel);
 	}
 }
