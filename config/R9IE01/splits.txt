@@ -2637,7 +2637,7 @@ plugPikiNakata/pcamcameramanager.cpp:
 	.ctors      start:0x802F60BC end:0x802F60C0
 	.rodata     start:0x80305E40 end:0x80305E80
 	.data       start:0x80345AC0 end:0x80345AF0
-	.sdata      start:0x8049BA28 end:0x8049BA3C
+	.sdata      start:0x8049BA28 end:0x8049BA40
 	.sdata2     start:0x804A1C40 end:0x804A1C60
 
 plugPikiNakata/pcamcameraparameters.cpp:
@@ -2650,7 +2650,7 @@ plugPikiNakata/pcammotionevents.cpp:
 	.text       start:0x801C9A84 end:0x801CA06C
 	.ctors      start:0x802F60C0 end:0x802F60C4
 	.data       start:0x80345B20 end:0x80345C10
-	.sdata      start:0x8049BA3C end:0x8049BA58
+	.sdata      start:0x8049BA40 end:0x8049BA58
 	.sdata2     start:0x804A1CF8 end:0x804A1D18
 
 plugPikiNakata/peve.cpp:
