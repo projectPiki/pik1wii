@@ -1339,19 +1339,25 @@ sysCommon/baseApp.cpp:
 sysCommon/camera.cpp:
 	.text       start:0x800B6D10 end:0x800B9204
 	.ctors      start:0x802F5DA8 end:0x802F5DAC
+	.rodata     start:0x802FE018 end:0x802FE040
+	.sdata2     start:0x8049FC78 end:0x8049FCC0
 
 sysCommon/cmdStream.cpp:
 	.text       start:0x800B9204 end:0x800B9C7C
-	.sbss       start:0x8049EB58 end:0x8049EB68
+	.sbss       start:0x8049EB58 end:0x8049EB5C
 
 sysCommon/controller.cpp:
 	.text       start:0x800B9C7C end:0x800B9E58
 	.data       start:0x80335538 end:0x80335568
+	.sdata2     start:0x8049FCC0 end:0x8049FCD0
 
 sysCommon/graphics.cpp:
 	.text       start:0x800B9E58 end:0x800BE278
 	.ctors      start:0x802F5DAC end:0x802F5DB0
+	.rodata     start:0x802FE040 end:0x802FE160
 	.data       start:0x80335580 end:0x803360D8
+	.sbss       start:0x8049EB60 end:0x8049EB61
+	.sdata2     start:0x8049FCD0 end:0x8049FD28
 
 sysCommon/grLight.cpp:
 	.text       start:0x800BE278 end:0x800BE934
@@ -1505,24 +1511,31 @@ plugPikiColin/dayMgr.cpp:
 plugPikiColin/dynsimulator.cpp:
 	.text       start:0x800EAB38 end:0x800EB118
 	.ctors      start:0x802F5DFC end:0x802F5E00
+	.sdata      start:0x804982C0 end:0x80498318
+	.sdata2     start:0x8049FFA8 end:0x8049FFC0
 
 plugPikiColin/game.cpp:
 	.text       start:0x800EB118 end:0x800EBD18
 	.ctors      start:0x802F5E00 end:0x802F5E04
 	.data       start:0x80337390 end:0x80337450
 	.bss        start:0x80460130 end:0x80460398
+	.sdata      start:0x80498318 end:0x80498338
+	.sdata2     start:0x8049FFC0 end:0x8049FFC8
 
 plugPikiColin/gameExit.cpp:
 	.text       start:0x800EBD18 end:0x800EBE54
 	.ctors      start:0x802F5E04 end:0x802F5E08
 	.data       start:0x80337450 end:0x80337488
+	.sdata      start:0x80498338 end:0x80498350
 
 plugPikiColin/gameflow.cpp:
 	.text       start:0x800EBE54 end:0x800EDA78
 	.ctors      start:0x802F5E08 end:0x802F5E0C
 	.data       start:0x80337488 end:0x80337568
 	.bss        start:0x80460398 end:0x80460700
+	.sdata      start:0x80498350 end:0x804983A8
 	.sbss       start:0x8049EBE0 end:0x8049EBF0
+	.sdata2     start:0x8049FFC8 end:0x804A0030
 
 plugPikiColin/gamePrefs.cpp:
 	.text       start:0x800EDA78 end:0x800EEB1C
