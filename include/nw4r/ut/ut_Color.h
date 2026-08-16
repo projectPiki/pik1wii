@@ -73,7 +73,7 @@ public:
 	static const u32 ELEMENT_MAX = 0xFFFFFFFF;
 
 	// _00-_04 = GXColor
-};
+} ATTRIBUTE_ALIGN(4);
 
 ////////////////////////////////////////////////////////
 
