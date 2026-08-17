@@ -23,7 +23,7 @@ struct CmdStream {
 
 	Stream* mStream;           // _00, backing stream
 	char* mBuffer;             // _04, pointer into statbuff (sliding window)
-	char mCurrentToken[0x100]; // _08, token/line scratch buffer
+	char mCurrentToken[0x200]; // _08, token/line scratch buffer
 	int mTotalStreamSize;      // _108, total readable bytes in stream
 	int mBufferUsed;           // _10C, bytes currently loaded in buffer
 	int mBufferOffset;         // _110, absolute stream offset corresponding to buffer[0]
