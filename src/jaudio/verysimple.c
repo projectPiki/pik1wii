@@ -344,10 +344,9 @@ static u16 TrackReceive(seqp_* track, u16 param_2)
  */
 static void AuxBusInit()
 {
-	u32 alloc2Size;
-
 	u32 i;
 	s16* circularBufferBase;
+	u32 alloc2Size;
 
 	static FxlineConfig fx_config[] = {
 		{ 1, 0x000A, 0x6000, 0x000B, 0x0000, 0x00000032, { 0x0000, 0x0000, 0x0000, 0x01F4, 0x03E8, 0x0FA0, 0x1B58, 0x1F40 } },
@@ -357,16 +356,13 @@ static void AuxBusInit()
 	};
 
 	for (i = 0; i < 4; ++i) {
-
 		alloc2Size = fx_config[i].circularBufferSize * 0xa0; // TODO: What is 160 bytes large?
-		void* mem = OSAlloc2(alloc2Size);
-		if (!mem) {
+		circularBufferBase = (s16*)OSAlloc2(alloc2Size);
+		if (!circularBufferBase) {
 			OSReport("No... I cannot alloc FX buffer (%d bytes)\n", alloc2Size);
 		} else {
 			OSReport("I alloc FX buffer (%d bytes)\n", alloc2Size);
 		}
-		circularBufferBase = (s16*)mem;
-
 		DFX_SetFxLine(i, circularBufferBase, &fx_config[i]);
 	}
 }
