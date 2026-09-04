@@ -11,7 +11,7 @@
 
 class SpkSystem : protected SpkGlobalInstance<SpkSystem> {
 public:
-	SpkSystem(EGG::Heap* heap);
+	SpkSystem();
 	void setResource(EGG::Archive* resArc, const char*, const char*);
 	void framework(void);
 	void startSound(s32 chan, s32 param_1, SpkSoundHandle* handle);

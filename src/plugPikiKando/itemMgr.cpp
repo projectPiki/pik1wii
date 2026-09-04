@@ -26,6 +26,7 @@
 #include "RumbleMgr.h"
 #include "SeedItem.h"
 #include "Shape.h"
+#include "System12/PSSpkSystem.h"
 #include "UfoItem.h"
 #include "WeedsItem.h"
 #include "gameflow.h"
@@ -863,6 +864,7 @@ bool InteractBomb::actItem(ItemCreature* item) immut
 				if (wall->mCurrStage >= wall->mNumStages) {
 					item->mHealth = 0.0f;
 					SeSystem::playSysSe(SYSSE_WORK_FINISH);
+					PSSpkSystem::start(PSSPK_WORK_FINISH, WPAD_CHAN0);
 					check = true;
 				}
 
@@ -929,6 +931,7 @@ bool InteractAttack::actItem(ItemCreature* item) immut
 				wall->mCurrStage++;
 				if (wall->mCurrStage >= wall->mNumStages) {
 					item->mHealth = 0.0f;
+					PSSpkSystem::start(PSSPK_WORK_FINISH, WPAD_CHAN0);
 					SeSystem::playSysSe(SYSSE_WORK_FINISH);
 					check = true;
 				}

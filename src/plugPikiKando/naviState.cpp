@@ -37,6 +37,7 @@
 #include "DebugLog.h"
 #include "GoalItem.h"
 #include "RevoSDK/wpad.h"
+#include "System12/PSSpkSystem.h"
 #include "UtEffect.h"
 #include "jaudio/pikidemo.h"
 
@@ -146,13 +147,23 @@ void NaviPelletState::exec(Navi* navi)
 		navi->startMotion(anim1, anim2);
 	}
 
+	bool moved = false;
+
+	EGG::CoreController* controller = EGG_INSTANCE(EGG::CoreControllerMgr)->getNthController(0);
+
+	if (controller && controller->isConnected()) {
+		if (controller->down(EGG::cCORE_FSSTICK_UP | EGG::cCORE_FSSTICK_DOWN | EGG::cCORE_FSSTICK_LEFT | EGG::cCORE_FSSTICK_RIGHT)) {
+			moved = true;
+		}
+	}
+
 	if (!mIsFinished
 	    && (navi->mKontroller->keyDown(KBBTN_A) || navi->mKontroller->keyDown(KBBTN_B) || navi->mKontroller->keyDown(KBBTN_X)
 	        || navi->mKontroller->keyDown(KBBTN_L) || navi->mKontroller->keyDown(KBBTN_R) || navi->mKontroller->keyDown(KBBTN_MSTICK_LEFT)
 	        || navi->mKontroller->keyDown(KBBTN_MSTICK_RIGHT) || navi->mKontroller->keyDown(KBBTN_MSTICK_UP)
 	        || navi->mKontroller->keyDown(KBBTN_MSTICK_DOWN) || navi->mKontroller->keyDown(KBBTN_CSTICK_LEFT)
 	        || navi->mKontroller->keyDown(KBBTN_CSTICK_RIGHT) || navi->mKontroller->keyDown(KBBTN_CSTICK_UP)
-	        || navi->mKontroller->keyDown(KBBTN_CSTICK_DOWN))) {
+	        || navi->mKontroller->keyDown(KBBTN_CSTICK_DOWN) || moved)) {
 		mIsFinished = true;
 		if (navi->mPellet) {
 			navi->mPellet->kill(false);
@@ -1694,6 +1705,8 @@ void NaviGatherState::exec(Navi* navi)
 		return;
 	}
 
+	PSSpkSystem::startLevel(PSSPK_SHUGO_ORIMA, WPAD_CHAN0);
+
 	bool check = false;
 	Iterator it(itemMgr);
 	CI_LOOP(it)
@@ -1861,7 +1874,10 @@ void NaviReleaseState::init(Navi* navi)
 	PaniMotionInfo anim2(PIKIANIM_Fue, navi);
 	navi->startMotion(anim1, anim2);
 	navi->enableMotionBlend();
-	seSystem->playPlayerSe(SE_BREAKUP);
+
+	if (!PSSpkSystem::start(PSSPK_KAISAN_ORIMA, WPAD_CHAN0)) {
+		seSystem->playPlayerSe(SE_BREAKUP);
+	}
 	_10 = false;
 }
 
@@ -2194,7 +2210,9 @@ void NaviThrowState::procAnimMsg(Navi* navi, MsgAnim* msg)
 		Vector3f speed = unused + navi->mSRT.t;
 
 		speed = navi->mCursorWorldPos;
+		PSSpkSystem::start(PSSPK_THROW_PIKI, WPAD_CHAN0);
 		navi->throwPiki(_14, speed);
+		_14->mFSM->transit(_14, PIKISTATE_Flying);
 		_10 = true;
 		break;
 	}
@@ -2462,7 +2480,9 @@ void NaviNukuState::init(Navi* navi)
 	_14        = false;
 	_13        = false;
 	_15        = false;
-	seSystem->playPlayerSe(SE_PIKI_PULLING);
+	if (!PSSpkSystem::start(PSSPK_GRAB_PIKI, WPAD_CHAN0)) {
+		seSystem->playPlayerSe(SE_PIKI_PULLING);
+	}
 }
 
 /**
@@ -2844,7 +2864,10 @@ void NaviAttackState::init(Navi* navi)
 	_10                                                     = 0;
 	_18                                                     = 0.0f;
 	_14                                                     = 0.0f;
-	seSystem->playPlayerSe(SE_PLAYER_PUNCH);
+	if (!PSSpkSystem::start(PSSPK_PUNCH_SWING, WPAD_CHAN0)) {
+		seSystem->playPlayerSe(SE_PLAYER_PUNCH);
+	}
+
 #if defined(DEVELOP) || defined(WIN32)
 	if (AIPerf::moveType != 0) {
 		f32 faceDir     = navi->mFaceDirection;

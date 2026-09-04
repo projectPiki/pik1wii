@@ -4152,7 +4152,7 @@ System12/sys12NANDMgr.cpp:
 
 System12/sys12SDMgr.cpp:
 	.text       start:0x802B9F60 end:0x802BA098
-	.rodata     start:0x8030FA68 end:0x8030FAC4
+	.rodata     start:0x8030FA68 end:0x8030FAC2
 	.data       start:0x803510A0 end:0x803510B0
 	.sbss       start:0x8049F0F0 end:0x8049F0F8
 
@@ -4162,23 +4162,29 @@ System12/sys12TagParms.cpp:
 
 System12/sys12gameNand.cpp:
 	.text       start:0x802BA324 end:0x802BACB0
+	.rodata     start:0x8030FAC8 end:0x8030FBB0
 	.data       start:0x803510E0 end:0x803510F0
 	.sbss       start:0x8049F0F8 end:0x8049F100
 
 System12/sys12Language.cpp:
 	.text       start:0x802BACB0 end:0x802BB028
+	.rodata     start:0x8030FBB0 end:0x8030FC70
 	.data       start:0x803510F0 end:0x80351168
 	.sbss       start:0x8049F100 end:0x8049F108
 
 System12/sys12HomeButtonMgr.cpp:
 	.text       start:0x802BB028 end:0x802BC368
-	.data       start:0x80351168 end:0x803511C0
+	.rodata     start:0x8030FC70 end:0x8030FE78
+	.data       start:0x80351168 end:0x80351190
 	.sbss       start:0x8049F108 end:0x8049F118
+	.sdata2     start:0x804A3E98 end:0x804A3EE8
 
 System12/sys12RenderMode.cpp:
 	.text       start:0x802BC368 end:0x802BCD74
 	.ctors      start:0x802F631C end:0x802F6320
-	.data       start:0x803511C0 end:0x80351450
+	.rodata     start:0x8030FE78 end:0x8030FEE0
+	.data       start:0x80351190 end:0x80351450
+	.sdata2     start:0x804A3EE8 end:0x804A3F10
 
 System12/sys12TransparentMgr.cpp:
 	.text       start:0x802BCD74 end:0x802BD4AC
@@ -4282,12 +4288,14 @@ System12/sys12DpdState.cpp:
 	.text       start:0x802D0C40 end:0x802D251C
 	.ctors      start:0x802F6330 end:0x802F6334
 	.rodata     start:0x80311908 end:0x80311970
+	.sdata      start:0x8049DFD8 end:0x8049DFE8
 	.sbss       start:0x8049F190 end:0x8049F198
 
 System12/PSSpkSystem.cpp:
 	.text       start:0x802D251C end:0x802D2E6C
 	.rodata     start:0x80311970 end:0x803119C8
 	.data       start:0x803522F8 end:0x80352318
+	.sdata      start:0x8049DFE8 end:0x8049DFF0
 	.sbss       start:0x8049F198 end:0x8049F1C0
 	.sdata2     start:0x804A41D0 end:0x804A41D8
 
@@ -4308,6 +4316,7 @@ System12/SpkSound.cpp:
 	.text       start:0x802D3890 end:0x802D4968
 	.rodata     start:0x80311B00 end:0x80311BF8
 	.data       start:0x80352318 end:0x80352380
+	.sdata      start:0x8049DFF0 end:0x8049DFF8
 	.sdata2     start:0x804A41E0 end:0x804A4208
 
 System12/SpkSpeakerCtrl.cpp:

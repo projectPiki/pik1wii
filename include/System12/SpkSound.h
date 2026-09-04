@@ -19,7 +19,7 @@ public:
 	inline bool isSoundAttached() const { return mSound != nullptr; }
 	inline SpkSound* operator->(void) const
 	{
-		EGG_ASSERT(62, mSound != nullptr);
+		EGG_ASSERT(65, mSound != NULL);
 		return mSound;
 	}
 	inline operator bool() const { return isSoundAttached(); }

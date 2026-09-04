@@ -3,6 +3,7 @@
 #include "P2D/Graph.h"
 #include "P2D/Picture.h"
 #include "P2D/Window.h"
+#include "System12/PSSpkSystem.h"
 #include "zen/Math.h"
 #include "zen/Number.h"
 #include "zen/TexAnim.h"
@@ -183,6 +184,7 @@ void zen::DrawContainer::start(zen::DrawContainer::containerType color, int p2, 
 		pic = (P2DPicture*)mScreen.search('ws8l', true);
 		pic->setTexture(mWindowTextures[mColor], 0);
 		SeSystem::playSysSe(SYSSE_CMENU_ON);
+		PSSpkSystem::start(PSSPK_ONYON_MENU_OPEN, WPAD_CHAN0);
 	}
 }
 
@@ -306,10 +308,11 @@ bool zen::DrawContainer::operationStatus()
 
 	setDispParam();
 
-	if (mController->keyClick(KBBTN_START | KBBTN_A)) {
+	if (mController->keyClick(KBBTN_A)) {
 		mFrameTimer = 0.0f;
 		mState      = STATE_End;
 		SeSystem::playSysSe(SYSSE_CMENU_OFF);
+		PSSpkSystem::start(PSSPK_ONYON_MENU_CLOSE, WPAD_CHAN0);
 	}
 
 	if (mController->keyClick(KBBTN_B)) {
@@ -317,9 +320,9 @@ bool zen::DrawContainer::operationStatus()
 		mState         = STATE_End;
 		mTransferDelta = 0;
 		SeSystem::playSysSe(SYSSE_CMENU_OFF);
+		PSSpkSystem::start(PSSPK_ONYON_MENU_CLOSE, WPAD_CHAN0);
 	}
 
-	STACK_PAD_VAR(2);
 	return false;
 }
 

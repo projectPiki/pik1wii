@@ -10,6 +10,7 @@
 #include "PlayerState.h"
 #include "RadarInfo.h"
 #include "SoundMgr.h"
+#include "System12/PSSpkSystem.h"
 #include "UfoItem.h"
 #include "jaudio/verysimple.h"
 #include "sysNew.h"
@@ -259,7 +260,7 @@ void zen::ogRaderMgr::getOrimaPos()
 	_44C = _43C.z;
 	_6C->move(_448, _44C);
 	_6C->setScale(10.0f / _428);
-	_450 = PI - navi->mSRT.r.y;
+	_450 = PI + -navi->mSRT.r.y; // needed to match ??
 	_6C->rotate(P2DROTATE_Unk2, _450);
 	f32 x = (_428 * -(_43C.x + _34)) / 10.0f;
 	f32 y = (_428 * -(_43C.z + _38)) / 10.0f;
@@ -543,10 +544,14 @@ void zen::ogRaderMgr::AreaScroll(f32* p1, f32* p2, f32 p3, f32 p4)
 	if (dist < _2C) {
 		*p1 = a;
 		*p2 = b;
-		seSystem->playSysSe(SYSSE_YMENU_SCROLL);
+		if (!PSSpkSystem::startLevel(PSSPK_MAP_SCROLL, WPAD_CHAN0)) {
+			seSystem->playSysSe(SYSSE_YMENU_SCROLL);
+		}
 		_00 = true;
 	} else {
-		seSystem->stopSysSe(SYSSE_YMENU_SCROLL);
+		if (!PSSpkSystem::startLevel(PSSPK_MAP_SCROLL, WPAD_CHAN0)) {
+			seSystem->stopSysSe(SYSSE_YMENU_SCROLL);
+		}
 		_00 = false;
 	}
 }
@@ -560,10 +565,9 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 		return;
 	}
 	f32 x  = _428;
-	f32 y  = input->getSubStickY();
 	int se = 0;
 
-	if (y > 0.3f) {
+	if (input->mCoreController->down(EGG::cCORE_BUTTON_UP)) {
 		x *= 1.1f;
 		if (x > 10.0f) {
 			se = 0;
@@ -571,7 +575,7 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 		} else {
 			se = 1;
 		}
-	} else if (y < -0.3f) {
+	} else if (input->mCoreController->down(EGG::cCORE_BUTTON_DOWN)) {
 		x *= 0.9f;
 		if (x < 1.0f) {
 			x  = 1.0f;
@@ -599,10 +603,6 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 		_00 = false;
 	}
 
-	if ((y > -0.2f) && (y < 0.2f)) {
-		se = 0;
-	}
-
 	if (_01) {
 		switch (se) {
 		case 0:
@@ -612,7 +612,10 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 		}
 		case -1:
 		{
-			seSystem->playSysSe(SYSSE_YMENU_ZOOMOUT);
+			if (!PSSpkSystem::startLevel(PSSPK_MAP_ZOOMOUT, WPAD_CHAN0)) {
+				seSystem->playSysSe(SYSSE_YMENU_ZOOMOUT);
+			}
+
 			break;
 		}
 		}
@@ -625,7 +628,10 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 		}
 		case 1:
 		{
-			seSystem->playSysSe(SYSSE_YMENU_ZOOMIN);
+			if (!PSSpkSystem::startLevel(PSSPK_MAP_ZOOMIN, WPAD_CHAN0)) {
+				seSystem->playSysSe(SYSSE_YMENU_ZOOMIN);
+			}
+
 			break;
 		}
 		}
@@ -633,12 +639,16 @@ void zen::ogRaderMgr::updateMenu(Controller* input)
 		switch (se) {
 		case -1:
 		{
-			seSystem->playSysSe(SYSSE_YMENU_ZOOMOUT);
+			if (!PSSpkSystem::startLevel(PSSPK_MAP_ZOOMOUT, WPAD_CHAN0)) {
+				seSystem->playSysSe(SYSSE_YMENU_ZOOMOUT);
+			}
 			break;
 		}
 		case 1:
 		{
-			seSystem->playSysSe(SYSSE_YMENU_ZOOMIN);
+			if (!PSSpkSystem::startLevel(PSSPK_MAP_ZOOMIN, WPAD_CHAN0)) {
+				seSystem->playSysSe(SYSSE_YMENU_ZOOMIN);
+			}
 			break;
 		}
 		}

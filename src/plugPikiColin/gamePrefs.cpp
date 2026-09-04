@@ -42,8 +42,6 @@ void PlayState::openStage(int storyStageID)
 	SET_STAGE_OPEN(mCourseOpenFlags, storyStageID);
 }
 
-// This is a weak inline in US but a full function in PAL
-#if defined(VERSION_GPIP01_00)
 /**
  * @brief Initialises game preferences with basic default values.
  */
@@ -73,7 +71,6 @@ void GamePrefs::Initialise()
 	mChangesPending        = false;
 	mHiscores.Initialise();
 }
-#endif
 
 /**
  * @brief Sets background music volume.
@@ -117,7 +114,6 @@ void GamePrefs::setStereoMode(bool set)
 	mFlags = (set ? GAMEPREF_Stereo : 0) | mFlags & ~GAMEPREF_Stereo;
 
 	Jac_OutputMode((mFlags & GAMEPREF_Stereo) ? 1 : 0);
-	OSSetSoundMode(set);
 }
 
 /**
@@ -143,7 +139,7 @@ void GamePrefs::setVibeMode(bool set)
 	rumbleMgr->rumbleOption(set);
 }
 
-#if defined(VERSION_GPIP01_00)
+
 /**
  * @brief Gets language preference - PAL exclusive version.
  *
@@ -180,22 +176,6 @@ void GamePrefs::setChildMode(int lang)
 	gsys->mLanguageID = (LanguageID)lang;
 	mFlags            = PACK_LANG_FLAG(mFlags, lang);
 }
-
-#else
-/**
- * @brief Sets language mode to child or adult - there's no difference outside of JP (and demo?).
- *
- * @param set True = set to child, false = set to adult.
- */
-void GamePrefs::setChildMode(bool set)
-{
-	if (set != getChildMode()) {
-		mChangesPending = true;
-	}
-
-	mFlags = (set ? GAMEPREF_Child : 0) | mFlags & ~GAMEPREF_Child;
-}
-#endif
 
 /**
  * @brief Gets all existing challenge mode hiscores for a given course.

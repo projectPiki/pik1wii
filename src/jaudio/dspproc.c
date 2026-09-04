@@ -6,6 +6,7 @@
 
 static u16 DSP_MIXERLEVEL = 0x4000;
 volatile static int flag;
+volatile static int d_waitflag;
 
 /**
  * @TODO: Documentation
@@ -137,4 +138,28 @@ void DsyncFrame4ch(u32 param_0, u32 param_1, u32 param_2, u32 param_3, u32 param
 	commands[3] = param_3;
 	commands[4] = param_4;
 	DSPSendCommands2(commands, ARRAY_SIZE(commands), NULL);
+}
+
+/**
+ * @TODO: Documentation
+ */
+static void dummy_callback(u16 param_0) {
+    d_waitflag = FALSE;
+    OSReport("D-Wait end\n", param_0);
+}
+
+/**
+ * @TODO: Documentation
+ */
+void DsetVARAM(u32 param_0) {
+    u32 msgs[2];
+    msgs[0] = 0x8E000000;
+    msgs[1] = param_0;
+
+    d_waitflag = TRUE;
+    DSPSendCommands2(msgs, 2, dummy_callback);
+    do {
+    } while (d_waitflag);
+	
+	lbl_8049E0F0 = param_0;
 }

@@ -69,7 +69,7 @@ enum TimerState {
  */
 enum LanguageID {
 	LANG_FORCE_CHANGE = -1, ///< -1, index to set if language requires re-loading.
-#if defined(VERSION_GPIP01_00)
+
 	LANG_English = 0, ///< 0, PAL English. NB: for PAL, Dutch OS language also maps to this.
 	LANG_French  = 1, ///< 1, PAL French.
 	LANG_German  = 2, ///< 2, PAL Italian.
@@ -78,11 +78,6 @@ enum LanguageID {
 
 	LANG_MIN = LANG_English, ///< 0, for bounds checks.
 	LANG_MAX = LANG_Italian, ///< 4, for bounds checks.
-
-#else
-	LANG_Adult = 0, ///< 0, "otona", only different in the demo, both are just "eng" in the US retail release.
-	LANG_Child = 1, ///< 1, "kodomo", only different in the demo, both are just "eng" in the US retail release.
-#endif
 
 	LANG_CAPACITY = 8,
 };

@@ -479,36 +479,14 @@ struct GamePrefs : public CoreNode {
 	virtual void read(RandomAccessStream& input);   // _0C
 	virtual void write(RandomAccessStream& output); // _10
 
-#if defined(VERSION_GPIP01_00)
 	void Initialise();
-#else
-
-	/// Initialises game preferences with basic default values.
-	void Initialise()
-	{
-		mFlags                 = GAMEPREF_Vibe | GAMEPREF_Stereo;
-		mBgmVol                = 8;
-		mSfxVol                = 8;
-		mMostRecentFileSlot    = 0;
-		mHasSaveGame           = false;
-		mMemCardSaveIndex      = 0;
-		mSpareMemCardSaveIndex = 0;
-		_1F                    = 0;                           // unused
-		mChalCourseOpenFlags   = TERNARY_DEVELOP(0b11111, 0); // All stages are unlocked in the DLL
-		mChangesPending        = false;
-		mHiscores.Initialise();
-	}
-#endif
 
 	void setBgmVol(u8 vol);
 	void setSfxVol(u8 vol);
 	void setStereoMode(bool set);
 	void setVibeMode(bool set);
-#if defined(VERSION_GPIP01_00)
 	void setChildMode(int lang);
-#else
-	void setChildMode(bool set);
-#endif
+
 	void getChallengeScores(GameChalQuickInfo& info);
 	void checkIsHiscore(GameChalQuickInfo& info);
 	void checkIsHiscore(GameQuickInfo& info);
@@ -542,13 +520,7 @@ struct GamePrefs : public CoreNode {
 	/// Checks if sound is in stereo mode.
 	bool getStereoMode() { return (mFlags & GAMEPREF_Stereo) != 0; }
 
-#if defined(VERSION_GPIP01_00)
 	int getChildMode();
-#else
-
-	/// Checks if language is in child mode (false = adult mode).
-	bool getChildMode() { return (mFlags & GAMEPREF_Child) != 0; }
-#endif
 
 	/// Gets the background music volume.
 	u8 getBgmVol() { return mBgmVol; }

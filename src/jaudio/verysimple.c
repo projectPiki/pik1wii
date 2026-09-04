@@ -8,6 +8,7 @@
 #include "jaudio/cmdstack.h"
 #include "jaudio/connect.h"
 #include "jaudio/driverinterface.h"
+#include "jaudio/dspproc.h"
 #include "jaudio/dvdthread.h"
 #include "jaudio/fat.h"
 #include "jaudio/file_seq.h"
@@ -402,6 +403,7 @@ void Jac_Start(void* heap, u32 heapSize, u32 aramSize, immut char* rootPath)
 		DVDT_SetRootPath(rootPath);
 	}
 	StartAudioThread(heap, heapSize, aramSize, 3);
+	DsetVARAM(lbl_8049E0F0);
 	AuxBusInit();
 	Jac_RegisterExtFastOpen("/Seqs/pikiseq.arc");
 	Jac_RegisterExtFastOpen("/Banks/demose_0.aw");

@@ -4,6 +4,7 @@
 #include <RevoSDK/hbm.h>
 #include <RevoSDK/wpad.h>
 #include <egg/core/eggSingleton.h>
+#include <System12/HomeButtonMgr.h>
 #include <nw4r/ut.h>
 
 namespace System12 {
@@ -20,13 +21,6 @@ public:
 	u32 _04;
 	u32 _08;
 	u32 _0C;
-};
-
-class HomeMenuInitializeArg {
-public:
-	HomeMenuInitializeArg();
-
-	HBMSoundCallback mSoundCallback;
 };
 
 class GameNandInitializeArg {
@@ -54,7 +48,7 @@ public:
 		u16 mScreenY;
 		void* (*mHeapPrintFunc)(char, int);
 		WarnWindowInitializeArg mWarnWindowInitializeArg;
-		HomeMenuInitializeArg mHomeMenuInitializeArg;
+		HomeButtonMgr::InitializeArg mHomeButtonMgrInitializeArg;
 		GameNandInitializeArg mGameNandInitializeArg;
 		u32 _24;
 		const char* _28;

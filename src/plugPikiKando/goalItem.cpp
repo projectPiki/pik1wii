@@ -16,6 +16,7 @@
 #include "PlayerState.h"
 #include "Route.h"
 #include "SoundMgr.h"
+#include "System12/PSSpkSystem.h"
 #include "gameflow.h"
 #include "jaudio/pikiinter.h"
 
@@ -297,6 +298,7 @@ void GoalItem::setFlowEffect(bool set)
  */
 void GoalItem::setSpotActive(bool set)
 {
+	bool movieactive  = gameflow.mMoviePlayer->mIsActive;
 	mSpotEffectActive = set;
 
 	if (mSpotEffectActive) {
@@ -308,11 +310,15 @@ void GoalItem::setSpotActive(bool set)
 			if (mSpotEfx) {
 				mSpotEfx->setEmitPosPtr(&mSRT.t);
 			}
-			SeSystem::playSysSe(SYSSE_CONTAINER_OK);
+			if (!movieactive) {
+				SeSystem::playSysSe(SYSSE_CONTAINER_OK);
+			}
 		}
 	} else {
 		if (mSpotEfx) {
-			SeSystem::stopSysSe(SYSSE_CONTAINER_OK);
+			if (!movieactive) {
+				SeSystem::stopSysSe(SYSSE_CONTAINER_OK);
+			}
 			effectMgr->kill(mSpotEfx, false);
 			mSpotEfx = nullptr;
 		}
@@ -740,6 +746,9 @@ f32 GoalItem::getiMass()
  */
 void GoalItem::update()
 {
+	if (!gameflow.mMoviePlayer->mIsActive && mSpotEffectActive) {
+		PSSpkSystem::startLevel(PSSPK_ONYON_READY, WPAD_CHAN0);
+	}
 	mVelocity.set(0.0f, 0.0f, 0.0f);
 	ItemCreature::update();
 	if (mColourAnimationEnabled) {

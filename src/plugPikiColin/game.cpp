@@ -205,25 +205,14 @@ void FlowController::readMapList(immut char* fileName)
 	file->close();
 }
 
-#if defined(VERSION_G98E01_PIKIDEMO)
-/// Load banner textures for each map (as well as one for entering from title).
-static immut char* levNames[]
-    = { "intro/map0.bti", "intro/ot_map.bti", "intro/map2.bti", "intro/map3.bti", "intro/map4.bti", "intro/loading.bti" };
-#elif defined(VERSION_GPIP01_00)
 /// Load banner textures for each map.
 static immut char* levNames[STAGE_COUNT] = {
 	"map0.bti", "map1.bti", "map2.bti", "map3.bti", "map4.bti",
 };
-/// PAL-exclusive directory paths for load banner textures, since textures are split out into directories by language.
+/// Directory paths for load banner textures, since textures are split out into directories by language.
 static immut char* dirNames[] = {
-	"intro/eng_tex", "intro/fre_tex", "intro/ger_tex", "intro/spa_tex", "intro/ita_tex",
+	"intro/eng_tex", "intro/fre_tex", "intro/spa_tex",
 };
-#else
-/// Load banner textures for each map.
-static immut char* levNames[STAGE_COUNT] = {
-	"intro/map0.bti", "intro/map1.bti", "intro/map2.bti", "intro/map3.bti", "intro/map4.bti",
-};
-#endif
 
 /**
  * @brief Initialises the next queued up story or challenge mode game section.
@@ -249,12 +238,7 @@ void OnePlayerSection::init()
 			// loading section! (post-title screen, pre-file select)
 			PRINT("making new SETUP\n");
 			gsys->startLoading(&gameflow.mGameLoadIdler, true, 60);
-#if defined(VERSION_G98E01_PIKIDEMO)
-			// the demo has a single loading banner for the setup section
-			gameflow.mLevelBannerTex       = gameflow.setLoadBanner(levNames[5]);
-			gameflow.mLevelBannerFadeValue = 0.0f;
 
-#elif defined(VERSION_GPIP01_00)
 			// only show a loading banner during setup for the E3 demos
 			if (gameflow.mNextOnePlayerSectionOnDayEnd >= ONEPLAYER_E3_MIN && gameflow.mNextOnePlayerSectionOnDayEnd <= ONEPLAYER_E3_MAX) {
 				PRINT("setting banner!\n");
@@ -267,17 +251,6 @@ void OnePlayerSection::init()
 			} else {
 				gameflow.mLevelBannerTex = nullptr;
 			}
-#else
-			// only show a loading banner during setup for the E3 demos
-			if (gameflow.mNextOnePlayerSectionOnDayEnd >= ONEPLAYER_E3_MIN && gameflow.mNextOnePlayerSectionOnDayEnd <= ONEPLAYER_E3_MAX) {
-				PRINT("setting banner!\n");
-				gameflow.mLevelBannerTex
-				    = gameflow.setLoadBanner(levNames[gameflow.mNextOnePlayerSectionOnDayEnd - ONEPLAYER_E3_STAGE_OFFSET]);
-				gameflow.mLevelBannerFadeValue = 0.0f;
-			} else {
-				gameflow.mLevelBannerTex = nullptr;
-			}
-#endif
 
 			currentSection = new GameSetupSection();
 			gsys->endLoading();
@@ -304,14 +277,10 @@ void OnePlayerSection::init()
 			// tutorial level! (impact site for E3 demo)
 			if (!gameflow.mLevelBannerTex) {
 				PRINT("setting banner!\n");
-#if defined(VERSION_GPIP01_00)
 				char bannerTex[128];
 				sprintf(bannerTex, "%s/%s", dirNames[gameflow.mGamePrefs.getChildMode()],
 				        levNames[nextSectionType - ONEPLAYER_E3_STAGE_OFFSET]);
 				gameflow.mLevelBannerTex = gameflow.setLoadBanner(bannerTex);
-#else
-				gameflow.mLevelBannerTex = gameflow.setLoadBanner(levNames[nextSectionType - ONEPLAYER_E3_STAGE_OFFSET]);
-#endif
 			}
 
 			gsys->startLoading(&gameflow.mGameLoadIdler, true, 60);
@@ -332,13 +301,9 @@ void OnePlayerSection::init()
 			// forest level 1! (forest of hope day 1 for E3 demo)
 			if (!gameflow.mLevelBannerTex) {
 				PRINT("setting banner!\n");
-#if defined(VERSION_GPIP01_00)
 				char bannerTex[128];
 				sprintf(bannerTex, "%s/%s", dirNames[gameflow.mGamePrefs.getChildMode()], levNames[nextSectionType - 2]);
 				gameflow.mLevelBannerTex = gameflow.setLoadBanner(bannerTex);
-#else
-				gameflow.mLevelBannerTex = gameflow.setLoadBanner(levNames[nextSectionType - 2]);
-#endif
 			}
 			gsys->startLoading(&gameflow.mGameLoadIdler, true, 60);
 			flowCont.setStage("stages/stage1.ini");
@@ -358,13 +323,9 @@ void OnePlayerSection::init()
 			// forest level 2! (forest of hope day 2 for E3 demo)
 			if (!gameflow.mLevelBannerTex) {
 				PRINT("setting banner!\n");
-#if defined(VERSION_GPIP01_00)
 				char bannerTex[128];
 				sprintf(bannerTex, "%s/%s", dirNames[gameflow.mGamePrefs.getChildMode()], levNames[nextSectionType - 2]);
 				gameflow.mLevelBannerTex = gameflow.setLoadBanner(bannerTex);
-#else
-				gameflow.mLevelBannerTex = gameflow.setLoadBanner(levNames[nextSectionType - 2]);
-#endif
 			}
 
 			gsys->startLoading(&gameflow.mGameLoadIdler, true, 60);
@@ -410,13 +371,9 @@ void OnePlayerSection::init()
 
 			// if we're loading into a "valid" story or challenge mode stage, show the area title banner
 			if (stageID <= STAGE_COUNT - 1) {
-#if defined(VERSION_GPIP01_00)
 				char bannerTex[128];
 				sprintf(bannerTex, "%s/%s", dirNames[gameflow.mGamePrefs.getChildMode()], levNames[stageID]);
 				gameflow.mLevelBannerTex = tex = gameflow.setLoadBanner(bannerTex);
-#else
-				gameflow.mLevelBannerTex = tex = gameflow.setLoadBanner(levNames[stageID]);
-#endif
 				gameflow.mLevelBannerFadeValue = 0.0f;
 			} else {
 				gameflow.mLevelBannerTex = tex;

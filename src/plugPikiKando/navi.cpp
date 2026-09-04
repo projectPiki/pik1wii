@@ -36,6 +36,7 @@
 #include "SoundMgr.h"
 #include "StateMachine.h"
 #include "Stickers.h"
+#include "System12/PSSpkSystem.h"
 #include "UfoItem.h"
 #include "UtEffect.h"
 #include "WorkObject.h"
@@ -404,7 +405,11 @@ void Navi::startDamageEffect()
 	// int vib         = vibTypes[int(2.0f * randIdx * 0.9999999f)];
 	cameraMgr->startVibrationEvent(vibTypes[int(2.0f * randIdx * 0.9999999f)], mSRT.t);
 
-	SeSystem::playPlayerSe(SE_DAMAGED);
+	if (!PSSpkSystem::startLevel(PSSPK_PL_DAMAGE, WPAD_CHAN0)) {
+		SeSystem::playPlayerSe(SE_DAMAGED);
+		return;
+	}
+	PSSpkSystem::start(PSSPK_PL_DAMAGE, WPAD_CHAN0);
 }
 
 /**
@@ -2567,7 +2572,9 @@ bool InteractFire::actNavi(Navi* navi) immut
 	navi->mLifeGauge.updValue(navi->mHealth, C_NAVI_PROP(navi).mHealth());
 	navi->startDamageEffect();
 	rumbleMgr->start(RUMBLE_Unk1, 0, nullptr);
-	SeSystem::playPlayerSe(SE_FIRED);
+	if (!PSSpkSystem::startLevel(PSSPK_PL_DAMAGE_FIRE, WPAD_CHAN0)) {
+		SeSystem::playPlayerSe(SE_FIRED);
+	}
 	if (navi->mHealth <= 1.0f) {
 		GameCoreSection::startPause(COREPAUSE_Unk1 | COREPAUSE_Unk3 | COREPAUSE_Unk16);
 	}

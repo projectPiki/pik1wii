@@ -8,7 +8,6 @@
 #include "DayMgr.h"
 #include "DebugLog.h"
 #include "Demo.h"
-#include "RevoSDK/pad.h"
 #include "DynParticle.h"
 #include "FlowController.h"
 #include "Font.h"
@@ -37,8 +36,10 @@
 #include "PlantMgr.h"
 #include "PlayerState.h"
 #include "RadarInfo.h"
+#include "RevoSDK/wpad.h"
 #include "RumbleMgr.h"
 #include "SoundMgr.h"
+#include "System12/PSSpkSystem.h"
 #include "UfoItem.h"
 #include "UpdateMgr.h"
 #include "UtEffect.h"
@@ -436,7 +437,8 @@ void GameCoreSection::enterFreePikmins()
 	{
 		Piki* piki = (Piki*)*it;
 		u32 mode   = piki->mMode;
-		if (!piki->isKinoko() && !piki->isHolding() && piki->isAlive() && (int)mode != PikiMode::FormationMode && (int)mode != PikiMode::ExitMode && (int)mode != PikiMode::EnterMode) {
+		if (!piki->isKinoko() && !piki->isHolding() && piki->isAlive() && (int)mode != PikiMode::FormationMode
+		    && (int)mode != PikiMode::ExitMode && (int)mode != PikiMode::EnterMode) {
 			int state = piki->getState();
 			if (state != PIKISTATE_Dead && state != PIKISTATE_Drown && state == PIKISTATE_Normal) {
 				for (int i = 0; i < 3; i++) {
@@ -486,6 +488,8 @@ void GameCoreSection::cleanupDayEnd()
 	clearDeadlyPikmins();
 	enterFreePikmins();
 	PRINT("________ CLEANUP DAYEND ____________________________\n");
+	PSSpkSystem::disconnect(WPAD_CHAN0);
+	PSSpkSystem::connect(WPAD_CHAN0);
 	rumbleMgr->stop();
 
 	switch (flowCont.mCurrentStage->mStageID) {
@@ -670,8 +674,7 @@ void GameCoreSection::cleanupDayEnd()
 		if (goal && playerState->hasContainer(goal->mOnionColour)) {
 			Vector3f vec1(1.0f, 1.0f, 1.0f);
 			Vector3f vec2(0.0f, 0.0f, 0.0f);
-			goal->mSpotModelEff
-			    = effectMgr->create((EffectMgr::modelTypeTable)i, goal->mSRT.t, vec1, vec2);
+			goal->mSpotModelEff = effectMgr->create((EffectMgr::modelTypeTable)i, goal->mSRT.t, vec1, vec2);
 		}
 	}
 
@@ -1084,8 +1087,7 @@ void GameCoreSection::initStage()
 	cameraMgr->update();
 	mNavi->mIsCursorVisible = TRUE;
 
-	if (!playerState->isChallengeMode())
-	{
+	if (!playerState->isChallengeMode()) {
 		StageInf* inf = &flowCont.mCurrentStage->mStageInf;
 #ifdef DEVELOP
 		PRINT("@@@@ FREE = %d ACTIVE = %d\n", inf->mBPikiInfMgr.getFreeNum(), inf->mBPikiInfMgr.getActiveNum());
@@ -1824,7 +1826,7 @@ void GameCoreSection::draw2D(Graphics& gfx)
 	Matrix4f orthoMtx;
 	const RectArea area1(AREA_FULL_SCREEN(gfx));
 	gfx.setOrthogonal(orthoMtx.mMtx, area1);
-#if defined (DEVELOP)
+#if defined(DEVELOP)
 	Colour colour1(COLOUR_WHITE);
 	gfx.setColour(colour1, true);
 	Colour colour2(COLOUR_WHITE);
@@ -1896,7 +1898,7 @@ void GameCoreSection::draw2D(Graphics& gfx)
 		}
 		const RectArea area4(AREA_FULL_SCREEN(gfx));
 		gfx.setOrthogonal(orthoMtx.mMtx, area4);
-		
+
 		if (!gameflow.mMoviePlayer->mIsActive && !gameflow.mIsUIOverlayActive) {
 			hurryupWindow->draw(gfx);
 		}

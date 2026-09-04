@@ -10,6 +10,7 @@
 #include "P2D/Screen.h"
 #include "PlayerState.h"
 #include "SoundMgr.h"
+#include "System12/PSSpkSystem.h"
 #include "gameflow.h"
 #include "jaudio/verysimple.h"
 #include "nlib/Math.h"
@@ -502,6 +503,7 @@ void zen::ogScrMenuMgr::start()
 	mScreenMenus[1]->start(2);
 	mScreenMenus[2]->start(1);
 	mRadarManager->startMenu(mMinimapScreen->getPaneMaps());
+	PSSpkSystem::start(PSSPK_ONYON_MENU_OPEN, WPAD_CHAN0);
 	seSystem->playSysSe(SYSSE_CMENU_ON);
 }
 
@@ -517,6 +519,7 @@ void zen::ogScrMenuMgr::updateInfo(Controller* input)
 		mCurrentScreenIndex++;
 		mSwitchRightRequested = true;
 		mRadarManager->end();
+		PSSpkSystem::start(PSSPK_MENU_PLUS_MINUS, WPAD_CHAN0);
 		seSystem->playSysSe(SYSSE_CMENU_SELECT);
 	}
 	// UNUSED FUNCTION
@@ -534,6 +537,7 @@ void zen::ogScrMenuMgr::updateCont(Controller* input)
 		mCurrentScreenIndex--;
 		mSwitchLeftRequested = true;
 		mRadarManager->MapOn();
+		PSSpkSystem::start(PSSPK_MENU_PLUS_MINUS, WPAD_CHAN0);
 		seSystem->playSysSe(SYSSE_CMENU_SELECT);
 	}
 	// UNUSED FUNCTION
@@ -665,8 +669,6 @@ bool zen::ogScrMenuMgr::draw(Graphics& gfx)
 		mScreenMenus[2]->draw(gfx);
 		mLeftRightIndicator->draw();
 	}
-
-	STACK_PAD_TERNARY(mStatus, 1);
 
 	return true;
 }

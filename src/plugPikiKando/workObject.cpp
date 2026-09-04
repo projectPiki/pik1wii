@@ -11,6 +11,7 @@
 #include "PlayerState.h"
 #include "RumbleMgr.h"
 #include "SoundMgr.h"
+#include "System12/PSSpkSystem.h"
 #include "gameflow.h"
 #include "jaudio/pikiinter.h"
 #include "sysNew.h"
@@ -838,6 +839,7 @@ void HinderRock::update()
 			mSRT.t = mDestinationPosition;
 			mState = 2;
 			mWayPoint->setFlag(true);
+			PSSpkSystem::start(PSSPK_WORK_FINISH, WPAD_CHAN0);
 			seSystem->playSysSe(SYSSE_WORK_FINISH);
 			PRINT("つきざました！\n"); // 'it's here!'
 			if (!playerState->mDemoFlags.isFlag(DEMOFLAG_FinishBoxPush)) {
@@ -1066,6 +1068,7 @@ void Bridge::update()
 		if (isFinished()) {
 			mStartWaypoint->setFlag(true);
 			mEndWaypoint->setFlag(true);
+			PSSpkSystem::start(PSSPK_WORK_FINISH, WPAD_CHAN0);
 			seSystem->playSysSe(SYSSE_WORK_FINISH);
 			PRINT("橋：完成しました\n"); // 'bridge: completed'
 			playerState->mResultFlags.setOn(zen::RESFLAG_BrokenBridge);
@@ -1361,9 +1364,9 @@ void Bridge::getBridgePos(immut Vector3f& origin, f32& xProjection, f32& zProjec
 	diff.y        = 0.0f;
 
 	Vector3f xVec = getBridgeXVec();
-	xProjection = diff.dot(xVec);
+	xProjection   = diff.dot(xVec);
 	Vector3f zVec = getBridgeZVec();
-	zProjection = diff.dot(zVec);
+	zProjection   = diff.dot(zVec);
 }
 
 /**

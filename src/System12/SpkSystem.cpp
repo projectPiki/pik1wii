@@ -15,7 +15,7 @@ SpkSoundHolder* SpkGlobalInstance<SpkSoundHolder>::sInstance;
 
 const static s32 cConfigVolumeMax = 15;
 
-SpkSystem::SpkSystem(EGG::Heap* heap)
+SpkSystem::SpkSystem()
     : SpkGlobalInstance(true)
 {
 	mData = nullptr;

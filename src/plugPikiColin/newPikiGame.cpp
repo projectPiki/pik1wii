@@ -23,6 +23,7 @@
 #include "Section.h"
 #include "SoundMgr.h"
 #include "System12/Config.h"
+#include "System12/PSSpkSystem.h"
 #include "gameflow.h"
 #include "jaudio/piki_scene.h"
 #include "jaudio/pikidemo.h"
@@ -987,6 +988,8 @@ ModeState* RunningModeState::update(u32& result)
 		// continue from last save/quit challenge mode selected
 		// take us back to card select
 		// (this ends up as file select for story mode, or a quick transit to map select for challenge mode)
+		PSSpkSystem::disconnect(WPAD_CHAN0);
+		PSSpkSystem::connect(WPAD_CHAN0);
 		mParentSection->mPendingOnePlayerSectionID = ONEPLAYER_CardSelect;
 		gsys->setFade(0.0f);
 		// transit to quitter

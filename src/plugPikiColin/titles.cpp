@@ -815,13 +815,10 @@ void TitlesSection::init()
 	gameflow.mLevelBannerTex         = nullptr;
 	gameflow.mLevelBannerFadeValue   = 1.0f;
 	gameflow.mGamePrefs.mHasSaveGame = true;
-#if defined(VERSION_G98E01_PIKIDEMO)
-	// no save games/memory card for demo
-#else
+
 	if (gameflow.mMemoryCard.getMemoryCardState(true) == CARD_RESULT_READY && gameflow.mMemoryCard.mSaveFileIndex >= 0) {
 		gameflow.mMemoryCard.loadOptions();
 	}
-#endif
 
 	// sync stereo/mono with OS settings
 	gameflow.mGamePrefs.fixSoundMode();
@@ -829,19 +826,11 @@ void TitlesSection::init()
 
 	// check if we need to reload the language, in case the preference has changed since last load
 	int beforeLang = gameflow.mLanguageIndex;
-#if defined(VERSION_GPIP01_00)
 	gameflow.mLanguageIndex = gameflow.mGamePrefs.getChildMode();
 	if (gameflow.mLanguageIndex < LANG_MIN || gameflow.mLanguageIndex > LANG_MAX) {
 		PRINT("trying to load language %d\n", gameflow.mLanguageIndex);
 		gameflow.mLanguageIndex = LANG_English;
 	}
-#else
-	if (!gameflow.mGamePrefs.getChildMode()) {
-		gameflow.mLanguageIndex = LANG_Adult;
-	} else {
-		gameflow.mLanguageIndex = LANG_Child;
-	}
-#endif
 
 	if (gameflow.mLanguageIndex != beforeLang) {
 		preloadLanguage();
