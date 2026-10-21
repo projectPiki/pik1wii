@@ -1598,6 +1598,7 @@ config.libs = [
             Object(NonMatching, "System12/system12Controller.cpp"),
             Object(Matching, "System12/sys12GameConfig.cpp"),
             Object(NonMatching, "System12/sys12GamePointer.cpp"),
+            Object(Matching, "System12/sys12Heap.cpp"),
             Object(NonMatching, "System12/sys12NANDMgr.cpp"),
             Object(Matching, "System12/sys12SDMgr.cpp"),
             Object(Matching, "System12/sys12TagParms.cpp"),
