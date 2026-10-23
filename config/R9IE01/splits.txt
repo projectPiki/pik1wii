@@ -4139,9 +4139,13 @@ System12/sys12GameConfig.cpp:
 	.sdata2     start:0x804A3DE8 end:0x804A3DF0
 
 System12/sys12GamePointer.cpp:
-	.text       start:0x802B55DC end:0x802B91DC
-	.data       start:0x80350F40 end:0x80351090
+	.text       start:0x802B55DC end:0x802B5DB4
+	.data       start:0x80350F40 end:0x80350FA8
 	.sbss       start:0x8049F0D8 end:0x8049F0E0
+
+System12/sys12Heap.cpp:
+	.text       start:0x802B5DB4 end:0x802B5E44
+	.data       start:0x80350FA8 end:0x80350FD8
 
 System12/sys12NANDMgr.cpp:
 	.text       start:0x802B91DC end:0x802B9F60
