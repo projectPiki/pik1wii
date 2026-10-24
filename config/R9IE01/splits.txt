@@ -4140,12 +4140,20 @@ System12/sys12GameConfig.cpp:
 
 System12/sys12GamePointer.cpp:
 	.text       start:0x802B55DC end:0x802B5DB4
+	.rodata     start:0x8030F248 end:0x8030F2B0
 	.data       start:0x80350F40 end:0x80350FA8
 	.sbss       start:0x8049F0D8 end:0x8049F0E0
+	.sdata2     start:0x804A3DF0 end:0x804A3E08
 
 System12/sys12Heap.cpp:
 	.text       start:0x802B5DB4 end:0x802B5E44
 	.data       start:0x80350FA8 end:0x80350FD8
+
+System12/sys12CursorUnk.cpp:
+	.text       start:0x802B5E44 end:0x802B91DC
+	.rodata     start:0x8030F2B0 end:0x8030F318
+	.data       start:0x80350FD8 end:0x80351090
+	.sdata2     start:0x804A3E08 end:0x804A3E98
 
 System12/sys12NANDMgr.cpp:
 	.text       start:0x802B91DC end:0x802B9F60
@@ -4223,10 +4231,15 @@ System12/system12Layout.cpp:
 	.data       start:0x80351568 end:0x80351910
 	.sdata2     start:0x804A3F68 end:0x804A3F78
 
+System12/sys12HBMCapture.cpp:
+	.text       start:0x802C2CC4 end:0x802C334C
+	.data       start:0x80351910 end:0x80351928
+	.sdata2     start:0x804A3F78 end:0x804A3F88
+
 System12/sys12THPPlayer.cpp:
 	.text       start:0x802C334C end:0x802C4724
 	.sbss       start:0x8049F130 end:0x8049F140
-	.sdata2     start:0x804A3F78 end:0x804A3FC8
+	.sdata2     start:0x804A3F88 end:0x804A3FC8
 
 System12/sys12DebugDrawer.cpp:
 	.text       start:0x802C4724 end:0x802C48C8
@@ -4256,15 +4269,26 @@ System12/system12WPWideTextWriter.cpp:
 	.sbss       start:0x8049F150 end:0x8049F158
 	.sdata2     start:0x804A3FF0 end:0x804A3FF8
 
+System12/sys12Unk1.cpp:
+	.text       start:0x802C7D68 end:0x802C84BC
+	.sdata2     start:0x804A3FF8 end:0x804A4048
+
 System12/sys12CursorMgr.cpp:
-	.text       start:0x802C7D68 end:0x802CA9D0
+	.text       start:0x802C84BC end:0x802CA9D0
 	.rodata     start:0x80310A00 end:0x80310AC0
 	.data       start:0x80351C20 end:0x80351CE8
 	.sbss       start:0x8049F158 end:0x8049F168
+	.sdata2     start:0x804A4048 end:0x804A40B0
+
+System12/sys12CoreController.cpp:
+	.text       start:0x802CA9D0 end:0x802CB740
+	.data       start:0x80351CE8 end:0x80351DA8
+	.sbss       start:0x8049F168 end:0x8049F170
 
 System12/sys12DvdErrorMsg.cpp:
 	.text       start:0x802CB740 end:0x802CBDC8
 	.rodata     start:0x80310AC0 end:0x80311658
+	.data       start:0x80351DA8 end:0x80351F50
 	.sbss       start:0x8049F170 end:0x8049F178
 
 System12/system123D.cpp:
@@ -4283,17 +4307,47 @@ System12/sys12Window.cpp:
 
 System12/system12ResourceMgr.cpp:
 	.text       start:0x802CDFDC end:0x802CE1D4
-	.ctors      start:0x802F632C end:0x802F6330
 	.rodata     start:0x80311658 end:0x803116E8
 	.data       start:0x803521A8 end:0x803521C0
 	.sbss       start:0x8049F180 end:0x8049F188
 
+System12/sys12PikiUnk.cpp:
+	.text       start:0x802CE1D4 end:0x802CEB34
+	.rodata     start:0x803116E8 end:0x803117C0
+	.sdata2     start:0x804A40E0 end:0x804A4100
+
+System12/sys12StrapScreen.cpp:
+	.text       start:0x802CEB34 end:0x802CF544
+	.ctors      start:0x802F632C end:0x802F6330
+	.rodata     start:0x803117C0 end:0x803117F0
+	.data       start:0x803521C0 end:0x803521D0
+	.sbss       start:0x8049F188 end:0x8049F190
+	.sdata2     start:0x804A4100 end:0x804A4138
+
+System12/sys12MovieMessage.cpp:
+	.text       start:0x802CF544 end:0x802D058C
+	.rodata     start:0x803117F0 end:0x80311908
+	.data       start:0x803521D0 end:0x80352218
+	.sdata2     start:0x804A4138 end:0x804A4158
+
+System12/sys12Unk2.cpp:
+	.text       start:0x802D058C end:0x802D0C40
+	.data       start:0x80352218 end:0x80352288
+	.sdata2     start:0x804A4158 end:0x804A4190
+
 System12/sys12DpdState.cpp:
-	.text       start:0x802D0C40 end:0x802D251C
-	.ctors      start:0x802F6330 end:0x802F6334
+	.text       start:0x802D0C40 end:0x802D2140
 	.rodata     start:0x80311908 end:0x80311970
+	.data       start:0x80352288 end:0x803522C4
 	.sdata      start:0x8049DFD8 end:0x8049DFE8
 	.sbss       start:0x8049F190 end:0x8049F198
+	.sdata2     start:0x804A4190 end:0x804A41C8
+
+System12/sys12Unk3.cpp:
+	.text       start:0x802D2140 end:0x802D251C
+	.ctors      start:0x802F6330 end:0x802F6334
+	.data       start:0x803522C8 end:0x803522F8
+	.sdata2     start:0x804A41C8 end:0x804A41D0
 
 System12/PSSpkSystem.cpp:
 	.text       start:0x802D251C end:0x802D2E6C
